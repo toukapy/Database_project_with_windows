@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="555.0" prefWidth="964.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.QueriesPageController">
+   <children>
+      <Label alignment="CENTER" layoutX="275.0" layoutY="45.0" prefHeight="53.0" prefWidth="415.0" text="QUERIES">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button layoutX="71.0" layoutY="398.0" mnemonicParsing="false" onAction="#onClickMaximumGains" prefHeight="35.0" prefWidth="258.0" text="Trip with maximum gains" />
+      <Button layoutX="71.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickCustomerOptExcursion" prefHeight="62.0" prefWidth="258.0" text="Customers in all trip with optional excursion" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="71.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickGuidesCustomers" prefHeight="62.0" prefWidth="258.0" text="How many customers do guides have?" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="71.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickLikedAllManagers" prefHeight="62.0" prefWidth="258.0" text="What restaurants serve food liked by all managers?" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="354.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickFrequentsOneCity" prefHeight="62.0" prefWidth="258.0" text="Which employee frequents just one restaurant in the city?" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="353.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickAllCheapestRestaurants" prefHeight="62.0" prefWidth="258.0" text="Customers in all cheapest restaurants" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="354.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickGuideAllTripYear" prefHeight="62.0" prefWidth="258.0" text="Which tourguides have gone to all trips in a given year?" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="348.0" layoutY="398.0" mnemonicParsing="false" onAction="#onClickSpeakAllLanguages" prefHeight="35.0" prefWidth="270.0" text="Tourguides speaking all languages" />
+   </children>
+</AnchorPane>

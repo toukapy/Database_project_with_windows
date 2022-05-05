@@ -65,15 +65,10 @@ public class BlFacadeImplementation {
         Vector<String> answer = new Vector<String>();
         dbManager.open();
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
-        if(!customers.next()){
-            System.out.println("There is no such customer in the database!!");
-        }else{
-            customers.previous();
-            while(customers.next()){
-                answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
-            }
-        }
 
+        while(customers.next()){
+            answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
+        }
         dbManager.close();
         return answer;
     }
@@ -214,20 +209,24 @@ public class BlFacadeImplementation {
     /**
      *
      */
-    public void retrieveNumCustomerGuideResponsible(){
+    public Vector<String> retrieveNumCustomerGuideResponsible(){
+
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet numCustomers = dbManager.retrieveNumCustomerGuideResponsible();
-
             while(numCustomers.next()){
                 System.out.println("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
+                answer.add("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
             }
 
             dbManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
 

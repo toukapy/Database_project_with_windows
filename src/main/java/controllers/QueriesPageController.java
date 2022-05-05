@@ -26,7 +26,7 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickCustomerOptExcursion() {
+    void onClickCustomerOptExcursion() throws SQLException {
         queryPageWin.showCustomerAllOptExc();
     }
 
@@ -41,8 +41,8 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickGuidesCustomers() {
-
+    void onClickGuidesCustomers() throws SQLException {
+        queryPageWin.showQuantityCustomer();
     }
 
     @FXML

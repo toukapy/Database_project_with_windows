@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 
 public class MainGUI {
 
-    private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin;
+    private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -90,6 +90,7 @@ public class MainGUI {
         tranPageWin = load("/uis/transactionPage.fxml");
         allOptExcTripWin = load("/uis/customerAllOptExcTrip.fxml");
         maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
+        quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
 
         showMain();
     }
@@ -113,13 +114,26 @@ public class MainGUI {
     /**
      *
      */
-    public void showCustomerAllOptExc(){ setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);}
+    public void showCustomerAllOptExc() throws SQLException {
+        setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);
+        allOptExcTripWin.c.initializeInformation();
+    }
 
     /**
      *
      */
-    public void showMaximumGainedTrip() throws SQLException {setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
-    maximumGainedWin.c.initializeInformation();}
+    public void showMaximumGainedTrip() throws SQLException {
+        setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
+        maximumGainedWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showQuantityCustomer() throws SQLException {
+        setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 555);
+        quantityCustomerWin.c.initializeInformation();
+    }
 
 
 

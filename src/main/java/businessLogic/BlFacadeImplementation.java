@@ -43,18 +43,17 @@ public class BlFacadeImplementation {
      * Transaction 2 -> Retrieves the trip that has obtained the highest amount of gains
      * @throws SQLException
      */
-    public ResultSet getMaximumGainedTrip() throws SQLException {
-        ResultSet answer;
+    public Vector<String> getMaximumGainedTrip() throws SQLException {
+        Vector<String> answer = new Vector<>();
         dbManager.open();
 
         ResultSet trip = dbManager.getMaximumGainedTrip();
         if(trip.next()){
-            answer = trip;
-            dbManager.close();
-            return answer;
+            answer.add("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
+            System.out.println("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
         }
         dbManager.close();
-        return null;
+        return answer;
 
     }
 
@@ -66,15 +65,10 @@ public class BlFacadeImplementation {
         Vector<String> answer = new Vector<String>();
         dbManager.open();
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
-        if(!customers.next()){
-            System.out.println("There is no such customer in the database!!");
-        }else{
-            customers.previous();
-            while(customers.next()){
-                answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
-            }
-        }
 
+        while(customers.next()){
+            answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
+        }
         dbManager.close();
         return answer;
     }
@@ -215,20 +209,24 @@ public class BlFacadeImplementation {
     /**
      *
      */
-    public void retrieveNumCustomerGuideResponsible(){
+    public Vector<String> retrieveNumCustomerGuideResponsible(){
+
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet numCustomers = dbManager.retrieveNumCustomerGuideResponsible();
-
             while(numCustomers.next()){
                 System.out.println("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
+                answer.add("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
             }
 
             dbManager.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
 
@@ -328,20 +326,23 @@ public class BlFacadeImplementation {
     /**
      * This method gets the restaurants that provide food liked by all managers
      */
-    public void getRestaurantLikedManagers(){
+    public Vector<String> getRestaurantLikedManagers(){
+        Vector<String> answer = new Vector<String>();
         try {
             dbManager.open();
 
             ResultSet restaurants = dbManager.getRestaurantLikedManagers();
             if (restaurants==null) System.out.println("No restaurants matching the requirements were found.");
             else
-                while (restaurants.next())
+                while (restaurants.next()) {
                     System.out.println("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
-
+                    answer.add("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+                }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return answer;
     }
 
     /**

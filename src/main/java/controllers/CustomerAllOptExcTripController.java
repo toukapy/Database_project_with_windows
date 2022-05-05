@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +24,9 @@ public class CustomerAllOptExcTripController implements Controller {
     private ObservableList data;
 
     @FXML
-    private TableView<Object> customerTable;
+    private TableView<String> customerTable;
+    @FXML
+    private TableColumn<String, String> idColumn;
 
     @Override
     public void setMainApp(MainGUI main) {
@@ -34,7 +37,13 @@ public class CustomerAllOptExcTripController implements Controller {
     @Override
     public void initializeInformation() throws SQLException {
 
+        idColumn.setCellValueFactory(data ->{
+            return new SimpleStringProperty(data.getValue());
+        });
+
         Vector<String> rs = businessLogic.retrieveCustomerEveryTripExc();
+
+        customerTable.getItems().clear();
 
         if(rs.isEmpty()){
             System.out.println("There is no such customer in the database!!");
@@ -44,6 +53,11 @@ public class CustomerAllOptExcTripController implements Controller {
         }
 
 
+    }
+
+    @FXML
+    void onClickBack(){
+        allOptExcWin.showQuery();
     }
 
 

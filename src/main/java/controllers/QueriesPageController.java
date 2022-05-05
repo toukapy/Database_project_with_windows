@@ -26,7 +26,7 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickCustomerOptExcursion() {
+    void onClickCustomerOptExcursion() throws SQLException {
         queryPageWin.showCustomerAllOptExc();
     }
 
@@ -41,13 +41,13 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickGuidesCustomers() {
-
+    void onClickGuidesCustomers() throws SQLException {
+        queryPageWin.showQuantityCustomer();
     }
 
     @FXML
     void onClickLikedAllManagers() {
-
+        queryPageWin.showRestaurantFoodManager();
     }
 
     @FXML
@@ -58,6 +58,11 @@ public class QueriesPageController implements Controller {
     @FXML
     void onClickSpeakAllLanguages() {
 
+    }
+
+    @FXML
+    void onClickBack(){
+        queryPageWin.showMain();
     }
 
 }

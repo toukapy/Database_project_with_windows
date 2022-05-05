@@ -2,53 +2,51 @@ package controllers;
 
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uis.Controller;
 import uis.MainGUI;
 
-import java.sql.ResultSet;
+import javax.swing.text.BadLocationException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 
-public class maximumGainsTripController<TableColum> implements Controller {
+public class QuantityCustomerGuideController implements Controller {
 
-    private MainGUI maximumGainsWin;
+    private MainGUI customerGuideWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> customerTable;
+    private TableView<String> tblGuide;
     @FXML
-    private TableColumn<String,String> destColumn;
+    private TableColumn<String, String> guideColumn;
+
 
     @Override
     public void setMainApp(MainGUI main) {
-        maximumGainsWin = main;
+        customerGuideWin = main;
     }
 
     @Override
     public void initializeInformation() throws SQLException {
 
-        destColumn.setCellValueFactory(data -> {
+        guideColumn.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
 
-        customerTable.getItems().clear();
-        Vector<String> rs = businessLogic.getMaximumGainedTrip();
+        Vector<String> rs = businessLogic.retrieveNumCustomerGuideResponsible();
+
+        tblGuide.getItems().clear();
+
         if(!rs.isEmpty()){
-            System.out.println("Trip exists");
-            customerTable.getItems().addAll(rs);
+            tblGuide.getItems().addAll(rs);
         }
 
     }
 
     @FXML
     void onClickBack(){
-        maximumGainsWin.showQuery();
+        customerGuideWin.showQuery();
     }
-
 }

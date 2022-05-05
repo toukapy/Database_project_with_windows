@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+
 <AnchorPane prefHeight="555.0" prefWidth="964.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.QueriesPageController">
    <children>
       <Label alignment="CENTER" layoutX="275.0" layoutY="45.0" prefHeight="53.0" prefWidth="415.0" text="QUERIES">
@@ -20,6 +21,5 @@
       <Button layoutX="353.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickAllCheapestRestaurants" prefHeight="62.0" prefWidth="258.0" text="Customers in all cheapest restaurants" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="354.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickGuideAllTripYear" prefHeight="62.0" prefWidth="258.0" text="Which tourguides have gone to all trips in a given year?" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="348.0" layoutY="398.0" mnemonicParsing="false" onAction="#onClickSpeakAllLanguages" prefHeight="35.0" prefWidth="270.0" text="Tourguides speaking all languages" />
-      <Button layoutX="417.0" layoutY="484.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="133.0" text="Back" />
    </children>
 </AnchorPane>

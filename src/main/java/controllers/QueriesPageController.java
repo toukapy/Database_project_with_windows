@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import uis.Controller;
 import uis.MainGUI;
 
+import java.sql.SQLException;
+
 public class QueriesPageController implements Controller {
 
     private MainGUI queryPageWin;
@@ -11,6 +13,11 @@ public class QueriesPageController implements Controller {
     @Override
     public void setMainApp(MainGUI main) {
         queryPageWin = main;
+    }
+
+    @Override
+    public void initializeInformation() throws SQLException {
+
     }
 
     @FXML
@@ -44,8 +51,8 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickMaximumGains() {
-
+    void onClickMaximumGains() throws SQLException {
+        queryPageWin.showMaximumGainedTrip();
     }
 
     @FXML

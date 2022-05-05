@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import uis.Controller;
 import uis.MainGUI;
 
+import java.sql.SQLException;
+
 public class MainPageController implements Controller {
 
     @FXML
@@ -20,6 +22,11 @@ public class MainPageController implements Controller {
     @Override
     public void setMainApp(MainGUI main) {
         mainPageWin = main;
+    }
+
+    @Override
+    public void initializeInformation() throws SQLException {
+
     }
 
     @FXML

@@ -5,6 +5,11 @@ import businessLogic.BlFacadeImplementation;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+/**
+ * This class aims to provide a menu for the user.
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class Main {
 
     private static BlFacadeImplementation bl = new BlFacadeImplementation();
@@ -54,46 +59,46 @@ public class Main {
                             "9.- Exit\n");
                     choice = sc.nextInt();
                     switch (choice) {
-                        case 1:
+                        case 1: /* trip maximum gains */
                             bl.getMaximumGainedTrip();
                             System.out.println("Correctly executed!");
                             break;
-                        case 2:
+                        case 2: /* customers gone to all trips with excursions */
                             bl.retrieveCustomerEveryTripExc();
                             System.out.println("Correctly executed!");
                             break;
-                        case 3:
+                        case 3: /* restaurants offering food liked by all maagers */
                             bl.getRestaurantLikedManagers();
                             System.out.println("End of execution!");
                             break;
-                        case 4:
+                        case 4: /* employees who only frequent 1 restaurant of a given city */
                             System.out.println("Insert the city");
                             sc.nextLine();
                             String city = sc.nextLine();
                             bl.getEmployee1RestCity(city);
                             System.out.println("End of execution!");
                             break;
-                        case 5:
+                        case 5: /* customers gone to all cheapest trips */
                             bl.getCustomersAllCheapestTrips();
                             System.out.println("End of execution!");
                             break;
-                        case 6:
+                        case 6: /* tour-guides gone to all trips of a given year */
                             System.out.println("Insert the year:");
                             sc.nextLine();
                             String year = sc.nextLine();
                             bl.getTourguidesAllTripsYear(year);
                             System.out.println("End of execution!");
                             break;
-                        case 7:
+                        case 7: /* tour-guides who speak all languages */
                             bl.getTourguidesAllLanguages();
                             System.out.println("End of execution!");
                             break;
-                        case 8:
+                        case 8: /* number of customers associated to the guides */
                             System.out.println("Number of customers associated to the guides: \n");
                             bl.retrieveNumCustomerGuideResponsible();
                             System.out.println("End of execution!!");
                         default:
-                    }
+                    } /* switch queries*/
                     break;
 
                 case 2: /* transactions */
@@ -107,7 +112,7 @@ public class Main {
                             "7.- Exit\n");
                     choice = sc.nextInt();
                     switch (choice) {
-                        case 1:
+                        case 1: /* delete customer from trip */
                             System.out.println("Give me name, phone number, trip and date");
                             sc.nextLine();
                             String name = sc.nextLine();
@@ -123,7 +128,7 @@ public class Main {
                             System.out.println("Transaction done correctly!");
                             break;
 
-                        case 2:
+                        case 2: /* add a customer to a trip */
                             System.out.println("Give me customer's name, phone, hotel name and city, and the name of the city to go and date");
                             sc.nextLine();
                             String nameCust = sc.nextLine();
@@ -138,7 +143,7 @@ public class Main {
                             break;
 
 
-                        case 3:
+                        case 3: /* Update the tour-guide of trips in a given interval of time */
                             System.out.println("Insert the tour-guide to remove, the tour-guide to be set and the date interval:");
                             sc.nextLine();
                             String tgprev = sc.nextLine();
@@ -148,14 +153,14 @@ public class Main {
                             bl.updateTourguide(tgprev, tgnew, date1, date2);
                             System.out.println("End of execution!");
                             break;
-                        case 4:
+                        case 4: /* set a dish to half its price */
                             System.out.println("Insert the dish that is on sale:");
                             sc.nextLine();
                             String dish = sc.nextLine();
                             bl.updateDishPrice(dish);
                             System.out.println("End of execution!");
                             break;
-                        case 5:
+                        case 5: /* Make an order */
                             System.out.println("Insert the number of order, menu type, menu identifier and customer id:");
                             sc.nextLine();
                             String numord = sc.nextLine();
@@ -165,7 +170,7 @@ public class Main {
                             bl.insertMenuOrder(numord, menu_mtype, menu_id, customer_id);
                             System.out.println("End of execution!");
                             break;
-                        case 6:
+                        case 6: /* Swap guides between two trips */
                             System.out.println("Insert the data in this order (separated with enter)\n");
                             System.out.println("GuideName1, GuidePhone1, Destination1, Date1, GuideName2, GuidePHone2, Destination2, Date2");
                             sc.nextLine();
@@ -183,16 +188,16 @@ public class Main {
 
                             break;
                         default:
-                    }
+                    } /*switch transactions*/
                     break;
                     default:
-                } //outer switch
+                } /* outer switch */
                 System.out.println("-------- Choose an option between the following -------");
                 System.out.println("1.- Queries\n" +
                         "2.- Transactions\n" +
                         "3.- Exit\n");
                 choice = sc.nextInt();
-            } // while
+            } /* while */
         }
     }
 

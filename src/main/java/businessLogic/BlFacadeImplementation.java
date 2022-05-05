@@ -326,20 +326,23 @@ public class BlFacadeImplementation {
     /**
      * This method gets the restaurants that provide food liked by all managers
      */
-    public void getRestaurantLikedManagers(){
+    public Vector<String> getRestaurantLikedManagers(){
+        Vector<String> answer = new Vector<String>();
         try {
             dbManager.open();
 
             ResultSet restaurants = dbManager.getRestaurantLikedManagers();
             if (restaurants==null) System.out.println("No restaurants matching the requirements were found.");
             else
-                while (restaurants.next())
+                while (restaurants.next()) {
                     System.out.println("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
-
+                    answer.add("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+                }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return answer;
     }
 
     /**

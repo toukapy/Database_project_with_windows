@@ -14,6 +14,7 @@ import javax.swing.text.BadLocationException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class CustomerAllOptExcTripController implements Controller {
 
@@ -29,18 +30,19 @@ public class CustomerAllOptExcTripController implements Controller {
         allOptExcWin = main;
     }
 
-    @FXML
-    void initialize() throws SQLException {
 
-        ArrayList<String> rs = businessLogic.retrieveCustomerEveryTripExc();
+    @Override
+    public void initializeInformation() throws SQLException {
 
-        if(!rs.isEmpty()){
+        Vector<String> rs = businessLogic.retrieveCustomerEveryTripExc();
+
+        if(rs.isEmpty()){
             System.out.println("There is no such customer in the database!!");
             customerTable.getItems().add("There is no such customer!!");
-            return;
+        }else{
+            customerTable.getItems().addAll(rs);
         }
 
-        customerTable.getItems().addAll(rs);
 
     }
 

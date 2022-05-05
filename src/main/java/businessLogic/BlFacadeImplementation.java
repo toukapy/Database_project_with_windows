@@ -3,10 +3,12 @@ package businessLogic;
 import com.sun.security.jgss.GSSUtil;
 import dataAccess.DataManager;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class BlFacadeImplementation {
 
@@ -41,24 +43,27 @@ public class BlFacadeImplementation {
      * Transaction 2 -> Retrieves the trip that has obtained the highest amount of gains
      * @throws SQLException
      */
-    public void getMaximumGainedTrip() throws SQLException {
+    public ResultSet getMaximumGainedTrip() throws SQLException {
+        ResultSet answer;
         dbManager.open();
 
         ResultSet trip = dbManager.getMaximumGainedTrip();
-
-        while(trip.next()){
-            System.out.println("TripTo: "+ trip.getString("TripTo") + ", DepartureDate: "+ trip.getString("DepartureDate"));
+        if(trip.next()){
+            answer = trip;
+            dbManager.close();
+            return answer;
         }
-
         dbManager.close();
+        return null;
+
     }
 
     /**
      *
      * @throws SQLException
      */
-    public ArrayList<String> retrieveCustomerEveryTripExc() throws SQLException {
-        ArrayList<String> answer = new ArrayList<String>();
+    public Vector<String> retrieveCustomerEveryTripExc() throws SQLException {
+        Vector<String> answer = new Vector<String>();
         dbManager.open();
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
         if(!customers.next()){
@@ -413,5 +418,8 @@ public class BlFacadeImplementation {
     }
 
 
+    public void close() throws SQLException {
+        dbManager.close();
 
+    }
 }

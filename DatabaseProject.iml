@@ -10,6 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="mysql.connector.java" level="project" />
     <orderEntry type="library" name="Maven: org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:17.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:17.0.2" level="project" />
@@ -58,6 +59,5 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.8" level="project" />
-    <orderEntry type="library" name="mysql.connector.java" level="project" />
   </component>
 </module>

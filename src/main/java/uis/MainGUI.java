@@ -10,12 +10,13 @@ import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MainGUI {
 
-    private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin;
+    private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -88,6 +89,7 @@ public class MainGUI {
         queryPageWin = load("/uis/queriesPage.fxml");
         tranPageWin = load("/uis/transactionPage.fxml");
         allOptExcTripWin = load("/uis/customerAllOptExcTrip.fxml");
+        maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
 
         showMain();
     }
@@ -112,6 +114,12 @@ public class MainGUI {
      *
      */
     public void showCustomerAllOptExc(){ setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);}
+
+    /**
+     *
+     */
+    public void showMaximumGainedTrip() throws SQLException {setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
+    maximumGainedWin.c.initializeInformation();}
 
 
 

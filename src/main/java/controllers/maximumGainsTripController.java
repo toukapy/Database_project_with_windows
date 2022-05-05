@@ -22,12 +22,9 @@ public class maximumGainsTripController<TableColum> implements Controller {
     ObservableList<String> data;
 
     @FXML
-    private TableView<ResultSet> customerTable;
+    private TableView<String> customerTable;
     @FXML
-    private TableColumn<ResultSet,String> destColumn;
-    @FXML
-    private TableColumn<ResultSet,String> dateColumn;
-
+    private TableColumn<String,String> destColumn;
     @Override
     public void setMainApp(MainGUI main) {
         maximumGainsWin = main;
@@ -35,35 +32,17 @@ public class maximumGainsTripController<TableColum> implements Controller {
 
 
     public void initializeInformation() throws SQLException {
-        ResultSet rs = businessLogic.getMaximumGainedTrip();
+
         destColumn.setCellValueFactory(data -> {
-            try {
-                return new SimpleStringProperty(data.getValue().getString("TripTo"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return null;
+            return new SimpleStringProperty(data.getValue());
         });
-
-        dateColumn.setCellValueFactory(data ->{
-            try {
-                return new SimpleStringProperty(data.getValue().getString("DepartureDate"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-
 
         customerTable.getItems().clear();
-
-        if(rs != null){
+        Vector<String> rs = businessLogic.getMaximumGainedTrip();
+        if(!rs.isEmpty()){
             System.out.println("Trip exists");
-            customerTable.getItems().add(rs);
+            customerTable.getItems().addAll(rs);
         }
-
-        businessLogic.close();
-
 
     }
 

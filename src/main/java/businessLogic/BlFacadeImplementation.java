@@ -43,18 +43,17 @@ public class BlFacadeImplementation {
      * Transaction 2 -> Retrieves the trip that has obtained the highest amount of gains
      * @throws SQLException
      */
-    public ResultSet getMaximumGainedTrip() throws SQLException {
-        ResultSet answer;
+    public Vector<String> getMaximumGainedTrip() throws SQLException {
+        Vector<String> answer = new Vector<>();
         dbManager.open();
 
         ResultSet trip = dbManager.getMaximumGainedTrip();
         if(trip.next()){
-            answer = trip;
-            dbManager.close();
-            return answer;
+            answer.add("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
+            System.out.println("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
         }
         dbManager.close();
-        return null;
+        return answer;
 
     }
 

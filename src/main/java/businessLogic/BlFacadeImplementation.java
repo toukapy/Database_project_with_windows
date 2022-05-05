@@ -5,6 +5,7 @@ import dataAccess.DataManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BlFacadeImplementation {
@@ -56,7 +57,8 @@ public class BlFacadeImplementation {
      *
      * @throws SQLException
      */
-    public void retrieveCustomerEveryTripExc() throws SQLException {
+    public ArrayList<String> retrieveCustomerEveryTripExc() throws SQLException {
+        ArrayList<String> answer = new ArrayList<String>();
         dbManager.open();
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
         if(!customers.next()){
@@ -64,11 +66,12 @@ public class BlFacadeImplementation {
         }else{
             customers.previous();
             while(customers.next()){
-                System.out.println("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
+                answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
             }
         }
 
         dbManager.close();
+        return answer;
     }
 
     /**

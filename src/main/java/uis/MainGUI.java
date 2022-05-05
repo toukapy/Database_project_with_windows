@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class MainGUI {
 
-    private Window mainPageWin, queryPageWin,tranPageWin;
+    private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -52,7 +52,7 @@ public class MainGUI {
      */
     private Window load(String fxmlfile) throws IOException {
         Window window = new Window();
-        loader = new FXMLLoader(MainGUI.class.getResource(fxmlfile), ResourceBundle.getBundle("Etiquetas", Locale.getDefault()));
+        loader = new FXMLLoader(MainGUI.class.getResource(fxmlfile));
         loader.setControllerFactory(controllerClass -> {
 
             if (controllerClass == MainPageController.class) {
@@ -87,6 +87,7 @@ public class MainGUI {
         mainPageWin = load("/uis/mainPage.fxml");
         queryPageWin = load("/uis/queriesPage.fxml");
         tranPageWin = load("/uis/transactionPage.fxml");
+        allOptExcTripWin = load("/uis/customerAllOptExcTrip.fxml");
 
         showMain();
     }
@@ -106,6 +107,11 @@ public class MainGUI {
      *
      */
     public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",814,555);}
+
+    /**
+     *
+     */
+    public void showCustomerAllOptExc(){ setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);}
 
 
 

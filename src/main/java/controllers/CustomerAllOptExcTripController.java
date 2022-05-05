@@ -55,6 +55,11 @@ public class CustomerAllOptExcTripController implements Controller {
 
     }
 
+    @FXML
+    void onClickBack(){
+        allOptExcWin.showQuery();
+    }
+
 
 
 

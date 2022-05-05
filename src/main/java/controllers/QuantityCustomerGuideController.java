@@ -44,4 +44,9 @@ public class QuantityCustomerGuideController implements Controller {
         }
 
     }
+
+    @FXML
+    void onClickBack(){
+        customerGuideWin.showQuery();
+    }
 }

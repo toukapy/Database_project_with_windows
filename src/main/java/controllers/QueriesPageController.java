@@ -47,7 +47,7 @@ public class QueriesPageController implements Controller {
 
     @FXML
     void onClickLikedAllManagers() {
-
+        queryPageWin.showRestaurantFoodManager();
     }
 
     @FXML
@@ -58,6 +58,11 @@ public class QueriesPageController implements Controller {
     @FXML
     void onClickSpeakAllLanguages() {
 
+    }
+
+    @FXML
+    void onClickBack(){
+        queryPageWin.showMain();
     }
 
 }

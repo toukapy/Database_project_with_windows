@@ -19,18 +19,18 @@ public class maximumGainsTripController<TableColum> implements Controller {
 
     private MainGUI maximumGainsWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
-    ObservableList<String> data;
 
     @FXML
     private TableView<String> customerTable;
     @FXML
     private TableColumn<String,String> destColumn;
+
     @Override
     public void setMainApp(MainGUI main) {
         maximumGainsWin = main;
     }
 
-
+    @Override
     public void initializeInformation() throws SQLException {
 
         destColumn.setCellValueFactory(data -> {
@@ -44,6 +44,11 @@ public class maximumGainsTripController<TableColum> implements Controller {
             customerTable.getItems().addAll(rs);
         }
 
+    }
+
+    @FXML
+    void onClickBack(){
+        maximumGainsWin.showQuery();
     }
 
 }

@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
+    private Window restaurantFoodWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -91,6 +92,7 @@ public class MainGUI {
         allOptExcTripWin = load("/uis/customerAllOptExcTrip.fxml");
         maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
         quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
+        restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
 
         showMain();
     }
@@ -133,6 +135,13 @@ public class MainGUI {
     public void showQuantityCustomer() throws SQLException {
         setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 555);
         quantityCustomerWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showRestaurantFoodManager(){
+        setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
     }
 
 

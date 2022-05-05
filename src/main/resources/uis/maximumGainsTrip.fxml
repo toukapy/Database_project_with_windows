@@ -11,5 +11,5 @@
           <TableColumn fx:id="destColumn" prefWidth="669.0" text="Trip that has gained the maximum amount of money" />
       </columns>
     </TableView>
-    <Button layoutX="593.0" layoutY="481.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="149.0" text="Back" />
+    <Button layoutX="593.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
 </AnchorPane>

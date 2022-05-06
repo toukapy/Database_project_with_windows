@@ -41,7 +41,8 @@ public class MainPageController implements Controller {
 
     @FXML
     void onClickBack(){
-
+        mainPageWin.setVisibility(false);
+        System.exit(0);
     }
 
 }

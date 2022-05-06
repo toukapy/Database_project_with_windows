@@ -38,6 +38,11 @@ public class MainGUI {
             }
         });
     }
+
+    public void setVisibility(boolean b) {
+        stage.close();
+    }
+
     /**
      * A class that represents a window
      */

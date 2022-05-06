@@ -99,6 +99,12 @@ public class MainGUI {
         maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
         quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
         restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
+        addCustomerWin = load("/uis/addCustomer.fxml");
+        deleteCustomerWin= load("/uis/deleteCustomer.fxml");
+        swapGuidesWin= load("/uis/swapGuides.fxml");
+        updateGuideWin= load("/uis/updateGuide.fxml");
+        makeOrderWin= load("/uis/makeOrder.fxml");
+        salesWin= load("/uis/sales.fxml");
 
         showMain();
     }

@@ -57,6 +57,8 @@ public class updateGuideController implements Controller {
 
     @FXML
     void onClickExecute() {
+        errorLbl.setText("");
+        correctLbl.setText("");
         if ((tgnew.getText().isEmpty() || tgprev.getText().isEmpty() || date1.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {

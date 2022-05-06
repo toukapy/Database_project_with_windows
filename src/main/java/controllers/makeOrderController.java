@@ -59,6 +59,8 @@ public class makeOrderController implements Controller {
 
     @FXML
     void onClickExecute(){
+        errorLbl.setText("");
+        correctLbl.setText("");
         if ((numord.getText().isEmpty() || menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {

@@ -58,6 +58,8 @@ public class deleteCustomerController implements Controller {
 
     @FXML
     void onClickExecute() {
+        errorLbl.setText("");
+        correctLbl.setText("");
         if ((name.getText().isEmpty() || phoneNum.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {

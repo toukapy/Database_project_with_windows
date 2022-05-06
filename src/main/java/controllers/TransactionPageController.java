@@ -26,9 +26,7 @@ public class TransactionPageController implements Controller {
         tranPageWin.showAddCustomer();
     }
     @FXML
-    void onClickDeleteCustomer(){
-        tranPageWin.showDeleteCustomer();
-    }
+    void onClickDeleteCustomer(){tranPageWin.showDeleteCustomer(); }
     @FXML
     void onClickSwapGuides(){
         tranPageWin.showSwapGuides();

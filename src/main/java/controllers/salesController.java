@@ -52,6 +52,8 @@ public class salesController implements Controller {
 
     @FXML
     void onClickExecute() {
+        errorLbl.setText("");
+        correctLbl.setText("");
         if (dish.getText().isEmpty())
             errorLbl.setText("Please, fill all fields");
         else {

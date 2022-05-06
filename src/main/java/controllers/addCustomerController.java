@@ -61,6 +61,8 @@ public class addCustomerController implements Controller {
 
     @FXML
     void onClickExecute(){
+        errorLbl.setText("");
+        correctLbl.setText("");
         if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {

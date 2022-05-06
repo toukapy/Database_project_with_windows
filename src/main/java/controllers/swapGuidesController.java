@@ -65,6 +65,8 @@ public class swapGuidesController implements Controller {
 
     @FXML
     void onClickExecute() {
+        errorLbl.setText("");
+        correctLbl.setText("");
         if ((name1.getText().isEmpty() || phone1.getText().isEmpty() || date1.getText().isEmpty() || name2.getText().isEmpty() || phone2.getText().isEmpty() || trip2.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {

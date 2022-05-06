@@ -140,8 +140,9 @@ public class MainGUI {
     /**
      *
      */
-    public void showRestaurantFoodManager(){
+    public void showRestaurantFoodManager() throws SQLException {
         setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
+        restaurantFoodWin.c.initializeInformation();
     }
 
 

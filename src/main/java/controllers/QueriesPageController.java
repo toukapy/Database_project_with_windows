@@ -46,7 +46,7 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickLikedAllManagers() {
+    void onClickLikedAllManagers() throws SQLException {
         queryPageWin.showRestaurantFoodManager();
     }
 

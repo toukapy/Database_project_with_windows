@@ -19,7 +19,7 @@ public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
-    private Window oneRestaurantCityWin,allCheapestRestWin;
+    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -102,6 +102,7 @@ public class MainGUI {
         restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
         oneRestaurantCityWin = load("/uis/oneRestaurantCity.fxml");
         allCheapestRestWin = load("/uis/customerAllCheapestRest.fxml");
+        allTripYear = load("/uis/guideAllTripYear.fxml");
         addCustomerWin = load("/uis/addCustomer.fxml");
         deleteCustomerWin= load("/uis/deleteCustomer.fxml");
         swapGuidesWin= load("/uis/swapGuides.fxml");
@@ -173,6 +174,13 @@ public class MainGUI {
     public void showAllCheapestRest() throws SQLException {
         setupScene(allCheapestRestWin.ui, "Customers in all cheapest restaurants", 814, 555);
         allCheapestRestWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showGuideAllTripYear() throws SQLException {
+        setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
     }
 
     /**

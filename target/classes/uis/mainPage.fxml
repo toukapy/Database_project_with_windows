@@ -22,6 +22,6 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="backBtn" layoutX="274.0" layoutY="295.0" mnemonicParsing="false" onAction="#onClickBack" text="Back" />
+      <Button fx:id="backBtn" layoutX="274.0" layoutY="295.0" mnemonicParsing="false" onAction="#onClickBack" text="Close" />
    </children>
 </AnchorPane>

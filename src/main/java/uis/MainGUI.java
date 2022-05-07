@@ -19,6 +19,7 @@ public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
+    private Window oneRestaurantCityWin,allCheapestRestWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -99,6 +100,8 @@ public class MainGUI {
         maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
         quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
         restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
+        oneRestaurantCityWin = load("/uis/oneRestaurantCity.fxml");
+        allCheapestRestWin = load("/uis/customerAllCheapestRest.fxml");
         addCustomerWin = load("/uis/addCustomer.fxml");
         deleteCustomerWin= load("/uis/deleteCustomer.fxml");
         swapGuidesWin= load("/uis/swapGuides.fxml");
@@ -155,6 +158,21 @@ public class MainGUI {
     public void showRestaurantFoodManager() throws SQLException {
         setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
         restaurantFoodWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showOneRestaurantCity(){
+        setupScene(oneRestaurantCityWin.ui, "Employees that frequent just one restaurant in a city", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showAllCheapestRest() throws SQLException {
+        setupScene(allCheapestRestWin.ui, "Customers in all cheapest restaurants", 814, 555);
+        allCheapestRestWin.c.initializeInformation();
     }
 
     /**

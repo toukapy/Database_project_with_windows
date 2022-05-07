@@ -3,6 +3,7 @@ package uis;
 import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
-    private Window restaurantFoodWin;
+    private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -37,6 +38,11 @@ public class MainGUI {
             }
         });
     }
+
+    public void setVisibility(boolean b) {
+        stage.close();
+    }
+
     /**
      * A class that represents a window
      */
@@ -88,11 +94,17 @@ public class MainGUI {
 
         mainPageWin = load("/uis/mainPage.fxml");
         queryPageWin = load("/uis/queriesPage.fxml");
-        tranPageWin = load("/uis/transactionPage.fxml");
+        tranPageWin = load("/uis/transactionsPage.fxml");
         allOptExcTripWin = load("/uis/customerAllOptExcTrip.fxml");
         maximumGainedWin = load("/uis/maximumGainsTrip.fxml");
         quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
         restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
+        addCustomerWin = load("/uis/addCustomer.fxml");
+        deleteCustomerWin= load("/uis/deleteCustomer.fxml");
+        swapGuidesWin= load("/uis/swapGuides.fxml");
+        updateGuideWin= load("/uis/updateGuide.fxml");
+        makeOrderWin= load("/uis/makeOrder.fxml");
+        salesWin= load("/uis/sales.fxml");
 
         showMain();
     }
@@ -143,6 +155,48 @@ public class MainGUI {
     public void showRestaurantFoodManager() throws SQLException {
         setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
         restaurantFoodWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showAddCustomer()  {
+        setupScene(addCustomerWin.ui, "Add customer", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showDeleteCustomer() {
+        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showSwapGuides() {
+        setupScene(swapGuidesWin.ui, "Swap guides", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showUpdateGuide() {
+            setupScene(updateGuideWin.ui, "Update guide", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showMakeOrder()  {
+        setupScene(makeOrderWin.ui, "Make order", 814, 555);
+    }
+
+    /**
+     *
+     */
+    public void showSales(){
+        setupScene(salesWin.ui, "Sales", 814, 555);
     }
 
 

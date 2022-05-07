@@ -362,20 +362,22 @@ public class BlFacadeImplementation {
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      */
-    public void getTourguidesAllLanguages(){
+    public Vector<String> getTourguidesAllLanguages(){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet tourguides = dbManager.getTourguidesAllLanguages();
-            if (tourguides==null) System.out.println("No tour-guides matching the requirements were found.");
-            else
-                while(tourguides.next())
-                    System.out.println("Guideid: "+ tourguides.getString("id") + ", Name: "+ tourguides.getString("name") + ", Language amount: "+ tourguides.getString("LangCount"));
-
+                while(tourguides.next()) {
+                    System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+                    answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+                }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
     /**

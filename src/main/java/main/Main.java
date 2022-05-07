@@ -163,11 +163,11 @@ public class Main {
                         case 5: /* Make an order */
                             System.out.println("Insert the number of order, menu type, menu identifier and customer id:");
                             sc.nextLine();
-                            String numord = sc.nextLine();
                             String menu_mtype = sc.nextLine();
                             String menu_id = sc.nextLine();
+                            String pname = sc.nextLine();
                             String customer_id = sc.nextLine();
-                            bl.insertMenuOrder(numord, menu_mtype, menu_id, customer_id);
+                            bl.insertMenuOrder(menu_mtype, menu_id, pname, customer_id);
                             System.out.println("End of execution!");
                             break;
                         case 6: /* Swap guides between two trips */

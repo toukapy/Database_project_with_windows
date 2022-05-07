@@ -147,6 +147,56 @@ public class BlFacadeImplementation {
 
     }
 
+
+    /**
+     *
+     * @param custname
+     * @param custphone
+     * @param hotelname
+     * @param hotelcity
+     * @param TripTo
+     * @param DepartureDate
+     */
+    public void addCustomerToTripUI(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
+        dbManager.open();
+        try {
+
+            ResultSet customer = dbManager.getCustomer(custname, custphone);
+
+            if(!customer.next()){
+                    System.out.println("Creating a new customer with that data");
+                    dbManager.insertCustomer(custname, custphone);
+                    customer = dbManager.getCustomer(custname, custphone);
+                    customer.next();
+            }
+
+            ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
+            if(!trip.next()) {
+                    System.out.println("Creating a new trip with the data");
+                    dbManager.insertTrip(TripTo, DepartureDate);
+            }
+
+            ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
+            if(!hotel.next()){
+                    System.out.println("Creating a new hotel with the data");
+                    dbManager.insertHotel(hotelname, hotelcity);
+                    hotel = dbManager.getHotel(hotelname, hotelcity);
+                    hotel.next();
+            }
+
+            ResultSet hotelTrip = dbManager.getHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
+            if(!hotelTrip.next())
+                dbManager.createHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
+
+            dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
+            dbManager.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      *
      * @param guidename1
@@ -178,7 +228,7 @@ public class BlFacadeImplementation {
                 return;
             }
 
-            System.out.println("Finding the secong tourguide");
+            System.out.println("Finding the second tourguide");
             ResultSet guide2 = dbManager.getGuide(guidename1,guidephone1);
             if(!guide2.next()){
                 System.out.println("System creating a guide");
@@ -229,47 +279,44 @@ public class BlFacadeImplementation {
 
     /**
      * This method adds a menu-order to the database
-     * @param numord
      * @param menu_mtype
      * @param menu_id
      * @param customer_id
      */
-    public void insertMenuOrder(String numord, String menu_mtype, String menu_id, String customer_id) {
+    public void insertMenuOrder(String menu_mtype, String menu_id, String name, String customer_id) {
         Scanner sc = new Scanner(System.in);
         String choice = "";
-        String name, age, gender;
 
         dbManager.open();
         try {
-
-            if(dbManager.orderExists(numord)) {
-                System.out.println("The order already exists");
-                return;
-            }
-
-            if (!dbManager.personExistsId(customer_id)){
-                System.out.println("The customer does not exist");
-                System.out.println("Do you want to create a new customer? (y/n)\n");
+            if (!dbManager.personExists(name, customer_id)){
+                System.out.println("The person does not exist");
+                System.out.println("Do you want to create a new person? (y/n)\n");
                 choice = sc.nextLine();
 
                 if (choice.equals("y")) {
-                    System.out.println("Insert the name, age and gender...");
-                    name = sc.nextLine();
-                    age = sc.nextLine();
-                    gender = sc.nextLine();
-
-                    if (dbManager.personExistsName(name)){
-                        System.out.println("A person with that name already exists!");
-                        return;
-                    }
-
-                    dbManager.insertPerson(name, age, gender, customer_id);
+                    dbManager.insertPerson(name, null, null, customer_id);
                 } else {
                     return;
                 }
             }
 
-            dbManager.addMenuOrder(numord, menu_mtype, menu_id, customer_id);
+            ResultSet menu = dbManager.getMenu(menu_id, customer_id);
+            if(!menu.next()){
+                System.out.println("The customer does not exist");
+                System.out.println("Do you want to create a new customer? (y/n)\n");
+                choice = sc.nextLine();
+
+                if (choice.equals("y")) {
+                    System.out.println("Creating a new menu with the data");
+                    dbManager.insertMenu(menu_id, customer_id);
+                    menu = dbManager.getMenu(menu_id, customer_id);
+                    menu.next();
+                }
+            }
+
+
+            dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
 
             dbManager.close();
 
@@ -278,6 +325,38 @@ public class BlFacadeImplementation {
         }
 
     }
+
+    /**
+     * This method adds a menu-order to the database
+     * @param menu_mtype
+     * @param menu_id
+     * @param customer_id
+     */
+    public void insertMenuOrderUI(String menu_mtype, String menu_id,  String name, String customer_id) {
+        dbManager.open();
+        try {
+            if (!dbManager.personExists(name, customer_id)){
+                dbManager.insertPerson(name, null, null, customer_id);
+            }
+
+            ResultSet menu = dbManager.getMenu(menu_id, customer_id);
+            if(!menu.next()){
+                    System.out.println("Creating a new menu with the data");
+                    dbManager.insertMenu(menu_id, customer_id);
+                    menu = dbManager.getMenu(menu_id, customer_id);
+                    menu.next();
+            }
+
+            dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
+            dbManager.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 
     /**

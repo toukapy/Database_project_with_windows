@@ -670,10 +670,11 @@ public class DataManager {
 
 
 
-    public boolean personExistsName(String nameid) throws SQLException {
+    public boolean personExists(String nameid, String id) throws SQLException {
         try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=?;");
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=? AND id=?;");
             p.setString(1,nameid);
+            p.setString(2,id);
             rs = p.executeQuery();
 
         } catch (SQLException e) {
@@ -682,18 +683,6 @@ public class DataManager {
         return rs.next();
     }
 
-
-    public boolean personExistsId(String id) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE id=?;");
-            p.setString(1,id);
-            rs = p.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rs.next();
-    }
 
 
     public boolean orderExists(String numord) throws SQLException {
@@ -709,10 +698,11 @@ public class DataManager {
     }
 
 
+
     public void insertPerson(String name, String age, String gender, String id) throws SQLException {
         try {
 
-            if(personExistsName(name)){
+            if(personExists(name, id)){
                 System.out.println("Person already registered !!");
             }else{
                 connector.getConnector().setAutoCommit(false);
@@ -733,15 +723,14 @@ public class DataManager {
         }
     }
 
-    public void addMenuOrder(String numord, String menu_mtype, String menu_id, String customer_id) throws SQLException {
+    public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException {
         try {
 
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (?,?,?,?);");
-            p.setString(1, numord);
-            p.setString(2,menu_mtype);
-            p.setString(3,menu_id);
-            p.setString(4,customer_id);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (default,?,?,?);");
+            p.setString(1,menu_mtype);
+            p.setString(2,menu_id);
+            p.setString(3,customer_id);
             p.executeUpdate();
 
             connector.getConnector().commit();
@@ -752,6 +741,45 @@ public class DataManager {
             connector.getConnector().rollback();
             e.printStackTrace();
         }
+    }
+
+    public void insertMenu(String menu_mtype, String menu_id) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO menu VALUES (?,?,default);");
+            p.setString(1, menu_mtype);
+            p.setString(2, menu_id);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Menu registered!!");
+
+        } catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+        public ResultSet getMenu(String menu_mtype, String menu_id) throws SQLException {
+            try {
+
+                connector.getConnector().setAutoCommit(false);
+                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu WHERE mtype=? AND mid=?;");
+                stmt.setString(1,menu_mtype);
+                stmt.setString(2,menu_id);
+                rs = stmt.executeQuery();
+
+                connector.getConnector().commit();
+                System.out.println("Menu registered!!");
+
+            } catch (SQLException e) {
+                System.out.println("Database rolling back");
+                connector.getConnector().rollback();
+                e.printStackTrace();
+            }
+            return rs;
     }
 
 

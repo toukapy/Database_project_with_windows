@@ -36,6 +36,7 @@ public class OneRestaurantCityController implements Controller {
 
     }
 
+    @FXML
     public void onClickEnter() {
         employeeColumn.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());

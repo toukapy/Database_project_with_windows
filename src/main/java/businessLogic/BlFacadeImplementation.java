@@ -345,20 +345,23 @@ public class BlFacadeImplementation {
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      */
-    public void getCustomersAllCheapestTrips(){
+    public Vector<String> getCustomersAllCheapestTrips(){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet customers = dbManager.getCustomersAllCheapestTrips();
-            if (customers==null) System.out.println("No customers matching the requirements were found.");
-            else
-                while (customers.next())
-                    System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+            while (customers.next()) {
+                System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+                answer.add("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+            }
 
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
     /**
@@ -373,13 +376,11 @@ public class BlFacadeImplementation {
             dbManager.open();
 
             ResultSet employees = dbManager.getEmployee1RestCity(city);
-            if (employees==null) System.out.println("No employees matching the requirements were found.");
-            else {
                 while (employees.next()) {
                     System.out.println("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
                     answer.add("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
                 }
-            }
+
             dbManager.close();
 
         }catch (SQLException e) {

@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.OneRestaurantCityController">
    <children>
       <Label layoutX="61.0" layoutY="62.0" text="Type the city:">
@@ -17,12 +16,12 @@
          </font>
       </Label>
       <TextField fx:id="cityField" layoutX="189.0" layoutY="63.0" prefHeight="26.0" prefWidth="350.0" style="-fx-background-color: white;" />
-      <Button fx:id="enterBtn" layoutX="576.0" layoutY="58.0" mnemonicParsing="false" onAction="#onClickEnter" prefHeight="30.0" prefWidth="98.0" style="-fx-background-color: white; -fx-text-fill: black;" text="Enter" />
       <TableView fx:id="tblEmployee" layoutX="62.0" layoutY="141.0" prefHeight="333.0" prefWidth="689.0" style="-fx-text-fill: green;">
         <columns>
           <TableColumn fx:id="employeeColumn" prefWidth="688.0" style="-fx-aligment: center;" text="Employee that frequents just one restaurant in the city" />
         </columns>
       </TableView>
-      <Button layoutX="561.0" layoutY="500.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="30.0" prefWidth="174.0" style="-fx-background-color: white; -fx-text-fill: black;" text="Back" />
+      <Button fx:id="enterBtn" layoutX="576.0" layoutY="61.0" mnemonicParsing="false" onAction="#onClickEnter" prefHeight="30.0" prefWidth="114.0" text="Enter" />
+      <Button fx:id="backBtn" layoutX="562.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="30.0" prefWidth="182.0" text="Back" />
    </children>
 </AnchorPane>

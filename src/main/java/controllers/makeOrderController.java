@@ -23,7 +23,7 @@ public class makeOrderController implements Controller {
 
 
     @FXML
-    private TextField numord;
+    private TextField name;
     @FXML
     private TextField menu_mtype;
     @FXML
@@ -58,14 +58,16 @@ public class makeOrderController implements Controller {
     }
 
     @FXML
-    void onClickExecute(){
+    void onClickMakeOrder(){
         errorLbl.setText("");
         correctLbl.setText("");
-        if ((numord.getText().isEmpty() || menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || customer_id.getText().isEmpty()))
+        if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || name.getText().isEmpty() || customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
-            businessLogic.insertMenuOrder(numord.getText(), menu_mtype.getText(), menu_id.getText(), customer_id.getText());
+            businessLogic.insertMenuOrderUI( menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
             correctLbl.setText("Transaction executed!!");
         }
     }
+
+
 }

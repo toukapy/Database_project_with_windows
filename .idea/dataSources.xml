@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="dbi24@dif-mysql.ehu.es" uuid="d6143da2-5823-42c4-925a-eca466329556">
+    <data-source source="LOCAL" name="@dif-mysql.ehu.es" uuid="0c40ec95-f258-4fcb-844d-0465be3c4786">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://dif-mysql.ehu.es:3306/dbi24</jdbc-url>
+      <jdbc-url>jdbc:mysql://dif-mysql.ehu.es:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

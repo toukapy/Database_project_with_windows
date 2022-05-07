@@ -1,12 +1,9 @@
 package businessLogic;
 
-import com.sun.security.jgss.GSSUtil;
 import dataAccess.DataManager;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -306,20 +303,21 @@ public class BlFacadeImplementation {
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
      */
-    public void getTourguidesAllTripsYear(String year){
+    public Vector<String> getTourguidesAllTripsYear(String year){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet tourguides = dbManager.getTourguidesAllTripsYear(year);
-            if (tourguides==null) System.out.println("No tour-guides matching the requirements were found.");
-            else
-                while (tourguides.next())
-                    System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
-
+            while (tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+            }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return answer;
     }
 
 
@@ -348,42 +346,48 @@ public class BlFacadeImplementation {
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      */
-    public void getCustomersAllCheapestTrips(){
+    public Vector<String> getCustomersAllCheapestTrips(){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet customers = dbManager.getCustomersAllCheapestTrips();
-            if (customers==null) System.out.println("No customers matching the requirements were found.");
-            else
-                while (customers.next())
-                    System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+            while (customers.next()) {
+                System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+                answer.add("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+            }
 
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
     /**
      * This method gets the employees who have attended a single restaurant of a given city
      * @param city provided city
+     * @return
      */
-    public void getEmployee1RestCity(String city){
+    public Vector<String> getEmployee1RestCity(String city){
+        Vector<String> answer = new Vector<>();
         try {
 
             dbManager.open();
 
             ResultSet employees = dbManager.getEmployee1RestCity(city);
-            if (employees==null) System.out.println("No employees matching the requirements were found.");
-            else
-                while (employees.next())
+                while (employees.next()) {
                     System.out.println("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
+                    answer.add("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
+                }
 
             dbManager.close();
 
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return answer;
     }
 
     /**

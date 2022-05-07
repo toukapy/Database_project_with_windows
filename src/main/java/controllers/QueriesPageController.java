@@ -21,8 +21,8 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickAllCheapestRestaurants() {
-
+    void onClickAllCheapestRestaurants() throws SQLException {
+        queryPageWin.showAllCheapestRest();
     }
 
     @FXML
@@ -31,13 +31,13 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickFrequentsOneCity() {
-
+    void onClickFrequentsOneCity(){
+        queryPageWin.showOneRestaurantCity();
     }
 
     @FXML
-    void onClickGuideAllTripYear() {
-
+    void onClickGuideAllTripYear() throws SQLException {
+        queryPageWin.showGuideAllTripYear();
     }
 
     @FXML

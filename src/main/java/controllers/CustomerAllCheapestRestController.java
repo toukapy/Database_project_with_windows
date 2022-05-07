@@ -42,4 +42,9 @@ public class CustomerAllCheapestRestController implements Controller {
             tblCustomer.getItems().add("There is no such customer");
         }
     }
+
+    @FXML
+    void onClickBack(){
+        allCheapestRestWin.showQuery();
+    }
 }

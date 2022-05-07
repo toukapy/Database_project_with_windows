@@ -303,20 +303,21 @@ public class BlFacadeImplementation {
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
      */
-    public void getTourguidesAllTripsYear(String year){
+    public Vector<String> getTourguidesAllTripsYear(String year){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet tourguides = dbManager.getTourguidesAllTripsYear(year);
-            if (tourguides==null) System.out.println("No tour-guides matching the requirements were found.");
-            else
-                while (tourguides.next())
-                    System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
-
+            while (tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+            }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return answer;
     }
 
 

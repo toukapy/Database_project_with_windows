@@ -31,13 +31,13 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickFrequentsOneCity() throws SQLException {
+    void onClickFrequentsOneCity(){
         queryPageWin.showOneRestaurantCity();
     }
 
     @FXML
-    void onClickGuideAllTripYear() {
-
+    void onClickGuideAllTripYear() throws SQLException {
+        queryPageWin.showGuideAllTripYear();
     }
 
     @FXML

@@ -70,6 +70,21 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
+        Vector<String> answer = new Vector<>();
+        dbManager.open();
+        ResultSet rs = dbManager.getCustomerTripHotel(custname,custphone,hotelname,hotelcity,TripTo,DepartureDate);
+        if(rs == null){
+            return null;
+        }
+        while(rs.next()){
+            answer.add("Customer: "+rs.getString("CustomerId")+", HotelId: "+rs.getString("HotelId")+", Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+        }
+        dbManager.close();
+
+        return answer;
+    }
+
     /**
      *
      * @param custname
@@ -139,56 +154,6 @@ public class BlFacadeImplementation {
 
             dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
 
-            dbManager.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
-     *
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param TripTo
-     * @param DepartureDate
-     */
-    public void addCustomerToTripUI(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
-        dbManager.open();
-        try {
-
-            ResultSet customer = dbManager.getCustomer(custname, custphone);
-
-            if(!customer.next()){
-                    System.out.println("Creating a new customer with that data");
-                    dbManager.insertCustomer(custname, custphone);
-                    customer = dbManager.getCustomer(custname, custphone);
-                    customer.next();
-            }
-
-            ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
-            if(!trip.next()) {
-                    System.out.println("Creating a new trip with the data");
-                    dbManager.insertTrip(TripTo, DepartureDate);
-            }
-
-            ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
-            if(!hotel.next()){
-                    System.out.println("Creating a new hotel with the data");
-                    dbManager.insertHotel(hotelname, hotelcity);
-                    hotel = dbManager.getHotel(hotelname, hotelcity);
-                    hotel.next();
-            }
-
-            ResultSet hotelTrip = dbManager.getHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-            if(!hotelTrip.next())
-                dbManager.createHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-
-            dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
             dbManager.close();
 
         } catch (SQLException e) {

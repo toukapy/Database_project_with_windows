@@ -50,6 +50,7 @@ public class OneRestaurantCityController implements Controller {
         }else if(!check(cityField.getText())){
             errorLbl.setText("Please, enter a city, not a number");
         }else{
+
             Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
             tblEmployee.getItems().clear();
 

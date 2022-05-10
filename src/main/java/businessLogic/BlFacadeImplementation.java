@@ -11,6 +11,7 @@ public class BlFacadeImplementation {
 
     private DataManager dbManager = new DataManager();
 
+
     /**
      * Trasaction 1 -> Delete a customer by phone and name from a trip
      * @param name
@@ -86,7 +87,7 @@ public class BlFacadeImplementation {
     }
 
     /**
-     *
+     *  @param choice
      * @param custname
      * @param custphone
      * @param hotelname
@@ -94,9 +95,8 @@ public class BlFacadeImplementation {
      * @param TripTo
      * @param DepartureDate
      */
-    public void addCustomerToTrip(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
         Scanner sc = new Scanner(System.in);
-        String choice = "";
 
         dbManager.open();
         try {
@@ -105,9 +105,6 @@ public class BlFacadeImplementation {
 
             if(!customer.next()){
                 System.out.println("The customer does not exist");
-                System.out.println("Do you want to create a new customer? (y/n)\n");
-                choice = sc.nextLine();
-
                 if(choice.equals("y")){
                     System.out.println("Creating a new customer with that data");
                     dbManager.insertCustomer(custname, custphone);
@@ -121,9 +118,6 @@ public class BlFacadeImplementation {
             ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
             if(!trip.next()) {
                 System.out.println("the trip does not exist");
-                System.out.println("Do you want to create a new trip? (y/n)\n");
-                choice = sc.nextLine();
-
                 if(choice.equals("y")){
                     System.out.println("Creating a new trip with the data");
                     dbManager.insertTrip(TripTo, DepartureDate);
@@ -135,8 +129,6 @@ public class BlFacadeImplementation {
             ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
             if(!hotel.next()){
                 System.out.println("The hotel does not exist");
-                System.out.println("Do you want to create a new hotel? (y/n)\n");
-                choice = sc.nextLine();
 
                 if(choice.equals("y")){
                     System.out.println("Creating a new hotel with the data");
@@ -466,11 +458,5 @@ public class BlFacadeImplementation {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void close() throws SQLException {
-        dbManager.close();
-
     }
 }

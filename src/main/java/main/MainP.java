@@ -80,7 +80,7 @@ public class MainP {
                     String tripTo = sc.nextLine();
                     String departureDate = sc.nextLine();
 
-                    bl.addCustomerToTrip(nameCust, phoneCust, hotelname, hotelcity, tripTo, departureDate);
+                    bl.addCustomerToTrip("y", nameCust, phoneCust,hotelname,hotelcity, tripTo, departureDate);
                     System.out.println("End of Execution!!");
                     break;
                 case 4:

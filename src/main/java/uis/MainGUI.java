@@ -3,7 +3,6 @@ package uis;
 import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,8 +11,6 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class MainGUI {
 

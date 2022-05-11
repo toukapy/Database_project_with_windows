@@ -193,7 +193,7 @@ public class MainGUI {
      *
      */
     public void showAddCustomer() throws SQLException {
-        setupScene(addCustomerWin.ui, "Add customer", 814, 555);
+        setupScene(addCustomerWin.ui, "Add customer", 814, 615);
         addCustomerWin.c.initializeInformation();
     }
 

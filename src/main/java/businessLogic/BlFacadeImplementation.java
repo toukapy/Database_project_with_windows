@@ -4,6 +4,7 @@ import dataAccess.DataManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -17,7 +18,7 @@ public class BlFacadeImplementation {
      * @param name
      * @param phoneNum
      */
-    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException {
+    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException {
         dbManager.open();
 
         ResultSet customer = dbManager.getCustomer(name,phoneNum);

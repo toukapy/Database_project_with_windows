@@ -93,10 +93,13 @@ public class addCustomerController implements Controller {
 
     @FXML
     void onClickAnswer(){
+        errorLbl.setText("");
         if(answerField.getText().isEmpty()){
             errorLbl.setText("Enter a valid answer (y/n)");
         }else if(answerField.getText().equals("y") || answerField.getText().equals("n")){
             choice = answerField.getText();
+        }else{
+            errorLbl.setText("Enter a valid answer (y/n)");
         }
     }
 }

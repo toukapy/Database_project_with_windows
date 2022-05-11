@@ -293,7 +293,7 @@ public class DataManager {
      * @param DepartureDate String - The departure date of the trip
      * @throws SQLException
      */
-    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException {
+    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             connector.getConnector().setAutoCommit(false);
@@ -312,8 +312,6 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
     }

@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -38,11 +39,11 @@ public class salesController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
+
         guideColumn.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
-*/
+
     }
 
     @FXML

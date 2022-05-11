@@ -3,6 +3,7 @@ package main;
 import businessLogic.BlFacadeImplementation;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -123,7 +124,11 @@ public class Main {
 
                             System.out.println(name);
 
-                            bl.deleteCustomerFromTrip(name, phone, trip, date);
+                            try {
+                                bl.deleteCustomerFromTrip(name, phone, trip, date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
 
                             System.out.println("Transaction done correctly!");
                             break;
@@ -138,7 +143,7 @@ public class Main {
                             String tripTo = sc.nextLine();
                             String departureDate = sc.nextLine();
 
-                            bl.addCustomerToTrip(nameCust, phoneCust, hotelname, hotelcity, tripTo, departureDate);
+                            bl.addCustomerToTrip("y", nameCust, phoneCust, hotelname, hotelcity, tripTo, departureDate);
                             System.out.println("Transaction done correctly!!");
                             break;
 

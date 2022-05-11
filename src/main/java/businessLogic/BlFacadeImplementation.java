@@ -4,6 +4,7 @@ import dataAccess.DataManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -11,12 +12,13 @@ public class BlFacadeImplementation {
 
     private DataManager dbManager = new DataManager();
 
+
     /**
      * Trasaction 1 -> Delete a customer by phone and name from a trip
      * @param name
      * @param phoneNum
      */
-    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException {
+    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException {
         dbManager.open();
 
         ResultSet customer = dbManager.getCustomer(name,phoneNum);
@@ -70,8 +72,23 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
+        Vector<String> answer = new Vector<>();
+        dbManager.open();
+        ResultSet rs = dbManager.getCustomerTripHotel(custname,custphone,hotelname,hotelcity,TripTo,DepartureDate);
+        if(rs == null){
+            return null;
+        }
+        while(rs.next()){
+            answer.add("Customer: "+rs.getString("CustomerId")+", HotelId: "+rs.getString("HotelId")+", Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+        }
+        dbManager.close();
+
+        return answer;
+    }
+
     /**
-     *
+     *  @param choice
      * @param custname
      * @param custphone
      * @param hotelname
@@ -79,9 +96,8 @@ public class BlFacadeImplementation {
      * @param TripTo
      * @param DepartureDate
      */
-    public void addCustomerToTrip(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
         Scanner sc = new Scanner(System.in);
-        String choice = "";
 
         dbManager.open();
         try {
@@ -90,9 +106,6 @@ public class BlFacadeImplementation {
 
             if(!customer.next()){
                 System.out.println("The customer does not exist");
-                System.out.println("Do you want to create a new customer? (y/n)\n");
-                choice = sc.nextLine();
-
                 if(choice.equals("y")){
                     System.out.println("Creating a new customer with that data");
                     dbManager.insertCustomer(custname, custphone);
@@ -106,9 +119,6 @@ public class BlFacadeImplementation {
             ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
             if(!trip.next()) {
                 System.out.println("the trip does not exist");
-                System.out.println("Do you want to create a new trip? (y/n)\n");
-                choice = sc.nextLine();
-
                 if(choice.equals("y")){
                     System.out.println("Creating a new trip with the data");
                     dbManager.insertTrip(TripTo, DepartureDate);
@@ -120,8 +130,6 @@ public class BlFacadeImplementation {
             ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
             if(!hotel.next()){
                 System.out.println("The hotel does not exist");
-                System.out.println("Do you want to create a new hotel? (y/n)\n");
-                choice = sc.nextLine();
 
                 if(choice.equals("y")){
                     System.out.println("Creating a new hotel with the data");
@@ -139,56 +147,6 @@ public class BlFacadeImplementation {
 
             dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
 
-            dbManager.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
-     *
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param TripTo
-     * @param DepartureDate
-     */
-    public void addCustomerToTripUI(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
-        dbManager.open();
-        try {
-
-            ResultSet customer = dbManager.getCustomer(custname, custphone);
-
-            if(!customer.next()){
-                    System.out.println("Creating a new customer with that data");
-                    dbManager.insertCustomer(custname, custphone);
-                    customer = dbManager.getCustomer(custname, custphone);
-                    customer.next();
-            }
-
-            ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
-            if(!trip.next()) {
-                    System.out.println("Creating a new trip with the data");
-                    dbManager.insertTrip(TripTo, DepartureDate);
-            }
-
-            ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
-            if(!hotel.next()){
-                    System.out.println("Creating a new hotel with the data");
-                    dbManager.insertHotel(hotelname, hotelcity);
-                    hotel = dbManager.getHotel(hotelname, hotelcity);
-                    hotel.next();
-            }
-
-            ResultSet hotelTrip = dbManager.getHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-            if(!hotelTrip.next())
-                dbManager.createHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-
-            dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
             dbManager.close();
 
         } catch (SQLException e) {
@@ -362,20 +320,22 @@ public class BlFacadeImplementation {
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      */
-    public void getTourguidesAllLanguages(){
+    public Vector<String> getTourguidesAllLanguages(){
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
 
             ResultSet tourguides = dbManager.getTourguidesAllLanguages();
-            if (tourguides==null) System.out.println("No tour-guides matching the requirements were found.");
-            else
-                while(tourguides.next())
-                    System.out.println("Guideid: "+ tourguides.getString("id") + ", Name: "+ tourguides.getString("name") + ", Language amount: "+ tourguides.getString("LangCount"));
-
+                while(tourguides.next()) {
+                    System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+                    answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+                }
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return answer;
     }
 
     /**
@@ -499,11 +459,5 @@ public class BlFacadeImplementation {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void close() throws SQLException {
-        dbManager.close();
-
     }
 }

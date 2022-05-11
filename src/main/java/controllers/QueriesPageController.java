@@ -56,8 +56,8 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickSpeakAllLanguages() {
-
+    void onClickSpeakAllLanguages() throws SQLException {
+        queryPageWin.showGuideAllLanguages();
     }
 
     @FXML

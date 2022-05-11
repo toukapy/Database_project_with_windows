@@ -4,6 +4,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 public class DataManager {
 
@@ -292,7 +293,7 @@ public class DataManager {
      * @param DepartureDate String - The departure date of the trip
      * @throws SQLException
      */
-    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException {
+    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             connector.getConnector().setAutoCommit(false);
@@ -311,8 +312,6 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
     }
@@ -783,5 +782,32 @@ public class DataManager {
     }
 
 
+    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException {
+        try {
 
+            ResultSet customer = getCustomer(custname, custphone);
+            ResultSet hotel = getHotel(hotelname,hotelcity);
+
+            if(customer.next() && hotel.next()){
+                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? AND HotelId=? AND TripTo=? AND DepartureDate=?;");
+                stmt.setString(1,customer.getString("CustomerId"));
+                stmt.setString(2,hotel.getString("HotelId"));
+                stmt.setString(3,tripTo);
+                stmt.setString(4,departureDate);
+                rs = stmt.executeQuery();
+                return rs;
+            }
+
+
+
+
+        } catch (SQLException e) {
+            System.out.println("System rolling back");
+            connector.getConnector().commit();
+            e.printStackTrace();
+        }
+        return null;
+
+
+    }
 }

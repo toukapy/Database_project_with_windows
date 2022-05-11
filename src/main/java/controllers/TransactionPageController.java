@@ -22,7 +22,7 @@ public class TransactionPageController implements Controller {
 
 
     @FXML
-    void onClickAddCustomer(){
+    void onClickAddCustomer() throws SQLException {
         tranPageWin.showAddCustomer();
     }
     @FXML

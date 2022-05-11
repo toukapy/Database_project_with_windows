@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,16 +11,19 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class addCustomerController implements Controller {
 
+    public Label questionLbl;
+    public TextField answerField;
     private MainGUI mainWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> customerTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String,String> col;
 
 
     @FXML
@@ -38,6 +42,7 @@ public class addCustomerController implements Controller {
     private Label errorLbl;
     @FXML
     private Label correctLbl;
+    private String choice ="";
 
 
     @Override
@@ -47,11 +52,11 @@ public class addCustomerController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
-        guideColumn.setCellValueFactory(data -> {
+
+        col.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
-*/
+
     }
 
     @FXML
@@ -60,14 +65,41 @@ public class addCustomerController implements Controller {
     }
 
     @FXML
-    void onClickExecute(){
+    void onClickExecute() throws SQLException {
         errorLbl.setText("");
         correctLbl.setText("");
         if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
+        else if(businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText())!= null){errorLbl.setText("The customer is already in the trip");}
+        else if(choice.equals("")){errorLbl.setText("Answer the question first");}
         else {
-            businessLogic.addCustomerToTrip(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
+            businessLogic.addCustomerToTrip(choice,custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
             correctLbl.setText("Transaction executed!!");
+            Vector<String> answer = businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
+            customerTable.getItems().clear();
+
+            if(!answer.isEmpty()){
+                for(String s: answer){
+                    System.out.println(s+"\n");
+                    customerTable.getItems().add(s);
+                }
+
+            }else{
+                customerTable.getItems().add("There is no such customer");
+            }
+
+        }
+    }
+
+    @FXML
+    void onClickAnswer(){
+        errorLbl.setText("");
+        if(answerField.getText().isEmpty()){
+            errorLbl.setText("Enter a valid answer (y/n)");
+        }else if(answerField.getText().equals("y") || answerField.getText().equals("n")){
+            choice = answerField.getText();
+        }else{
+            errorLbl.setText("Enter a valid answer (y/n)");
         }
     }
 }

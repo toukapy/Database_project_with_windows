@@ -10,6 +10,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 public class deleteCustomerController implements Controller {
 
@@ -34,6 +35,9 @@ public class deleteCustomerController implements Controller {
     private Label errorLbl;
     @FXML
     private Label correctLbl;
+
+    private String trip = "";
+    private String departure = "";
 
 
 
@@ -62,13 +66,40 @@ public class deleteCustomerController implements Controller {
         correctLbl.setText("");
         if ((name.getText().isEmpty() || phoneNum.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
+        else if(trip.equals("") || departure.equals("")){
+            errorLbl.setText("Please, first enter the destination and date");
+        }
         else {
             try {
-                businessLogic.deleteCustomerFromTrip(name.getText(), phoneNum.getText(), TripTo.getText(), DepartureDate.getText());
+                businessLogic.deleteCustomerFromTrip(name.getText(), phoneNum.getText(), trip, departure);
                 correctLbl.setText("Transaction executed!!");
             }catch (SQLException e){
                 e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    @FXML
+    void onClickEnterTrip(){
+        if(TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()){
+            errorLbl.setText("PLEASE, fill all fields");
+        }else if(!check(TripTo.getText())){
+            errorLbl.setText(("PLEASE, enter a valid destination"));
+        }else{
+            trip = TripTo.getText();
+            departure = DepartureDate.getText();
+        }
+    }
+
+    private boolean check(String text) {
+        for(int i = 0; i<text.length();i++){
+            if(text.charAt(i) >= '0' && text.charAt(i)<='9'){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

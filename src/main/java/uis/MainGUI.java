@@ -3,7 +3,6 @@ package uis;
 import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,14 +11,12 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
-    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear;
+    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear,guideAllLang;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -103,6 +100,7 @@ public class MainGUI {
         oneRestaurantCityWin = load("/uis/oneRestaurantCity.fxml");
         allCheapestRestWin = load("/uis/customerAllCheapestRest.fxml");
         allTripYear = load("/uis/guideAllTripYear.fxml");
+        guideAllLang = load("/uis/guideAllLanguages.fxml");
         addCustomerWin = load("/uis/addCustomer.fxml");
         deleteCustomerWin= load("/uis/deleteCustomer.fxml");
         swapGuidesWin= load("/uis/swapGuides.fxml");
@@ -179,15 +177,24 @@ public class MainGUI {
     /**
      *
      */
-    public void showGuideAllTripYear() throws SQLException {
+    public void showGuideAllTripYear(){
         setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
     }
 
     /**
      *
      */
-    public void showAddCustomer()  {
-        setupScene(addCustomerWin.ui, "Add customer", 814, 555);
+    public void showGuideAllLanguages() throws SQLException {
+        setupScene(guideAllLang.ui, "Guides speaks all languages", 814, 555);
+        guideAllLang.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showAddCustomer() throws SQLException {
+        setupScene(addCustomerWin.ui, "Add customer", 814, 615);
+        addCustomerWin.c.initializeInformation();
     }
 
     /**

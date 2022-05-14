@@ -98,7 +98,17 @@ public class deleteCustomerController implements Controller {
             customerTable.getItems().clear();
             try {
                 Vector<String> customers = businessLogic.getCustomerTrip(trip,departure);
-                customerTable.getItems().addAll(customers);
+                if(customers.isEmpty()){
+                    customerTable.getItems().clear();
+                    customerTable.getItems().add("There is no customer in this trip");
+                    name.setDisable(true);
+                    phoneNum.setDisable(true);
+                }else{
+                    customerTable.getItems().clear();
+                    customerTable.getItems().addAll(customers);
+                    name.setDisable(false);
+                    phoneNum.setDisable(false);
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -11,6 +12,7 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Vector;
 
 public class deleteCustomerController implements Controller {
 
@@ -18,9 +20,9 @@ public class deleteCustomerController implements Controller {
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> customerTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String, String> col;
 
     @FXML
     private TextField name;
@@ -48,11 +50,11 @@ public class deleteCustomerController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
-        guideColumn.setCellValueFactory(data -> {
+
+        col.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
-*/
+
     }
 
     @FXML
@@ -73,6 +75,9 @@ public class deleteCustomerController implements Controller {
             try {
                 businessLogic.deleteCustomerFromTrip(name.getText(), phoneNum.getText(), trip, departure);
                 correctLbl.setText("Transaction executed!!");
+                Vector<String> customers = businessLogic.getCustomerTrip(trip,departure);
+                customerTable.getItems().clear();
+                customerTable.getItems().addAll(customers);
             }catch (SQLException e){
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -82,7 +87,7 @@ public class deleteCustomerController implements Controller {
     }
 
     @FXML
-    void onClickEnterTrip(){
+    void onClickEnterTrip() throws SQLException {
         if(TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()){
             errorLbl.setText("PLEASE, fill all fields");
         }else if(!check(TripTo.getText())){
@@ -90,6 +95,13 @@ public class deleteCustomerController implements Controller {
         }else{
             trip = TripTo.getText();
             departure = DepartureDate.getText();
+            customerTable.getItems().clear();
+            try {
+                Vector<String> customers = businessLogic.getCustomerTrip(trip,departure);
+                customerTable.getItems().addAll(customers);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 

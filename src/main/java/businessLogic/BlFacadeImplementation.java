@@ -460,4 +460,18 @@ public class BlFacadeImplementation {
             e.printStackTrace();
         }
     }
+
+    public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
+        Vector<String> answer = new Vector<>();
+        dbManager.open();
+        ResultSet rs = dbManager.getCustomerTrip(trip,departure);
+
+        while(rs.next()){
+            answer.add("Customer: "+rs.getString("CustomerId")+", TripTo: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+        }
+
+        dbManager.close();
+
+        return answer;
+    }
 }

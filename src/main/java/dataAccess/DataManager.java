@@ -810,4 +810,20 @@ public class DataManager {
 
 
     }
+
+    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        PreparedStatement stmt = null;
+        try {
+            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE TripTo=? AND DepartureDate=?;");
+            stmt.setString(1,trip);
+            stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
+            rs = stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
+    }
 }

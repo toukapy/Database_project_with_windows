@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,6 +11,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class makeOrderController implements Controller {
 
@@ -17,9 +19,9 @@ public class makeOrderController implements Controller {
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> orderTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String, String> col;
 
 
     @FXML
@@ -30,6 +32,8 @@ public class makeOrderController implements Controller {
     private TextField menu_id;
     @FXML
     private TextField customer_id;
+    @FXML
+    private TextField answerField;
 
 
     @FXML
@@ -37,7 +41,7 @@ public class makeOrderController implements Controller {
     @FXML
     private Label correctLbl;
 
-
+private String choice="";
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
@@ -45,11 +49,9 @@ public class makeOrderController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
-        guideColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
-*/
+        fillTable();
+        errorLbl.setText("");
+        correctLbl.setText("");
     }
 
     @FXML
@@ -61,11 +63,45 @@ public class makeOrderController implements Controller {
     void onClickMakeOrder(){
         errorLbl.setText("");
         correctLbl.setText("");
-        if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || name.getText().isEmpty() || customer_id.getText().isEmpty()))
+        if(choice.equals(""))
+            errorLbl.setText("Please, enter your choice");
+        else if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || name.getText().isEmpty() || customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
-            businessLogic.insertMenuOrderUI( menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
+            businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
+            fillTable();
             correctLbl.setText("Transaction executed!!");
+        }
+    }
+
+
+    @FXML
+    void onClickAnswer(){
+        errorLbl.setText("");
+        if(answerField.getText().isEmpty()){
+            errorLbl.setText("Enter a valid answer (y/n)");
+        }else if(answerField.getText().equals("y") || answerField.getText().equals("n")){
+            choice = answerField.getText();
+        }else{
+            errorLbl.setText("Enter a valid answer (y/n)");
+        }
+    }
+
+    @FXML
+    private void fillTable(){
+        col.setCellValueFactory(data ->{
+            return new SimpleStringProperty(data.getValue());
+        });
+        // clear table
+        orderTable.getItems().clear();
+
+
+        // fill table with current orders in the database
+        Vector<String> rs = businessLogic.getAllPeople();
+        if(!rs.isEmpty()){
+            orderTable.getItems().addAll(rs);
+        }else{
+            orderTable.getItems().add("No orders in the database");
         }
     }
 

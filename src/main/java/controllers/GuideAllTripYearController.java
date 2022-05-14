@@ -10,6 +10,9 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 public class GuideAllTripYearController implements Controller {
@@ -41,15 +44,21 @@ public class GuideAllTripYearController implements Controller {
         });
 
         if(!dateField.getText().isEmpty()){
-            Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
 
-            tblTrip.getItems().clear();
-
-            if(!rs.isEmpty()){
-                tblTrip.getItems().addAll(rs);
+            if(!checkDate(dateField.getText())){
+                System.out.println("The date has to be yyyy-MM-dd format");
             }else{
-                tblTrip.getItems().add("There is no such guide");
+                Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
+
+                tblTrip.getItems().clear();
+
+                if(!rs.isEmpty()){
+                    tblTrip.getItems().addAll(rs);
+                }else{
+                    tblTrip.getItems().add("There is no such guide");
+                }
             }
+
         }
 
 
@@ -58,5 +67,15 @@ public class GuideAllTripYearController implements Controller {
     @FXML
     void onClickBack(){
         guideAllTripWin.showQuery();
+    }
+
+    public boolean checkDate(String date){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            format.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }

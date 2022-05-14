@@ -678,7 +678,7 @@ public class DataManager {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
-                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid WHERE p.namid=? and p.id=?;");
+                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid WHERE p.nameid=? and p.id=?;");
             stmt.setString(1, name);
             stmt.setString(2, id);
             rs = stmt.executeQuery();
@@ -995,6 +995,21 @@ public class DataManager {
             connector.getConnector().rollback();
             e.printStackTrace();
         }
+    }
+    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        PreparedStatement stmt = null;
+        try {
+            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE TripTo=? AND DepartureDate=?;");
+            stmt.setString(1,trip);
+            stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
+            rs = stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
     }
 
 

@@ -11,7 +11,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class CustomerAllCheapestRestController implements Controller {
+public class CustomerAllCheapestTripsController implements Controller {
 
     private MainGUI allCheapestRestWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();

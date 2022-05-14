@@ -16,7 +16,7 @@ public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
-    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
+    private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -98,7 +98,7 @@ public class MainGUI {
         quantityCustomerWin = load("/uis/quantityCustomerGuide.fxml");
         restaurantFoodWin = load("/uis/restaurantFoodManager.fxml");
         oneRestaurantCityWin = load("/uis/oneRestaurantCity.fxml");
-        allCheapestRestWin = load("/uis/customerAllCheapestRest.fxml");
+        allCheapestTripsWin = load("/uis/customerAllCheapestTrips.fxml");
         allTripYear = load("/uis/guideAllTripYear.fxml");
         guideAllLang = load("/uis/guideAllLanguages.fxml");
         addCustomerWin = load("/uis/addCustomer.fxml");
@@ -168,11 +168,11 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the customers in all cheapest restaurants
+     * Method to show the window that displays the customers in all cheapest trips
      */
-    public void showAllCheapestRest() throws SQLException {
-        setupScene(allCheapestRestWin.ui, "Customers in all cheapest restaurants", 814, 555);
-        allCheapestRestWin.c.initializeInformation();
+    public void showAllCheapestTrips() throws SQLException {
+        setupScene(allCheapestTripsWin.ui, "Customers in all cheapest trips", 814, 555);
+        allCheapestTripsWin.c.initializeInformation();
     }
 
     /**

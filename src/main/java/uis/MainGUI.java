@@ -153,7 +153,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that displays the restaurants that has the food liked by a manager
      */
     public void showRestaurantFoodManager() throws SQLException {
         setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
@@ -161,14 +161,14 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that displays the employees that frequent just one restaurant in a city given
      */
     public void showOneRestaurantCity(){
         setupScene(oneRestaurantCityWin.ui, "Employees that frequent just one restaurant in a city", 814, 555);
     }
 
     /**
-     *
+     * Method to show the window that displays the customers in all cheapest restaurants
      */
     public void showAllCheapestRest() throws SQLException {
         setupScene(allCheapestRestWin.ui, "Customers in all cheapest restaurants", 814, 555);
@@ -176,14 +176,14 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that displays the guides in all trips of one given year
      */
     public void showGuideAllTripYear(){
         setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
     }
 
     /**
-     *
+     * Method to show the window that displays the guides that speak all languages
      */
     public void showGuideAllLanguages() throws SQLException {
         setupScene(guideAllLang.ui, "Guides speaks all languages", 814, 555);
@@ -191,7 +191,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to add a customer to a trip with a hotel
      */
     public void showAddCustomer() throws SQLException {
         setupScene(addCustomerWin.ui, "Add customer", 814, 615);
@@ -199,7 +199,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to delete a customer from a trip
      */
     public void showDeleteCustomer() throws SQLException {
         setupScene(deleteCustomerWin.ui, "Delete customer", 814, 555);
@@ -207,21 +207,21 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to swap two guides between trips
      */
     public void showSwapGuides() {
         setupScene(swapGuidesWin.ui, "Swap guides", 814, 555);
     }
 
     /**
-     *
+     * Method to show the window that allows us to update the trip of a guide
      */
     public void showUpdateGuide() {
             setupScene(updateGuideWin.ui, "Update guide", 814, 555);
     }
 
     /**
-     *
+     * Method to show the window that allows us to add a person to a restaurant
      */
     public void showAddPerson() throws SQLException {
         setupScene(addPersonWin.ui, "Add Person", 814, 555);
@@ -229,7 +229,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to delete a person from a restaurant
      */
     public void showDeletePerson() throws SQLException {
         setupScene(deletePersonWin.ui, "Delete Person", 814, 555);
@@ -237,7 +237,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to make an order
      */
     public void showMakeOrder() throws SQLException {
         setupScene(makeOrderWin.ui, "Make order", 814, 555);
@@ -245,7 +245,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that allows us to update a dish's price to the half
      */
     public void showSales(){
         setupScene(salesWin.ui, "Sales", 814, 555);

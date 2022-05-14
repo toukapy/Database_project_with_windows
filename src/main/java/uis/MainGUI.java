@@ -112,24 +112,24 @@ public class MainGUI {
         showMain();
     }
     /**
-     * Method to show the log in window
+     * Method to show the main window
      */
     public void showMain() {
         setupScene(mainPageWin.ui, "Main", 814,555);
     }
 
     /**
-     *
+     * Method to show the query selection window
      */
     public void showQuery(){ setupScene(queryPageWin.ui, "Queries",814,555);}
 
     /**
-     *
+     * Method to show the transaction selection window
      */
     public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",814,555);}
 
     /**
-     *
+     * Method to show the window that displays the customers that have been in all optional excursions
      */
     public void showCustomerAllOptExc() throws SQLException {
         setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);
@@ -137,7 +137,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that displays the trip that gained the maximum amount of money
      */
     public void showMaximumGainedTrip() throws SQLException {
         setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
@@ -145,7 +145,7 @@ public class MainGUI {
     }
 
     /**
-     *
+     * Method to show the window that displays the quantity of customers each guide has
      */
     public void showQuantityCustomer() throws SQLException {
         setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 555);

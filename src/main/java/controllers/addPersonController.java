@@ -107,7 +107,7 @@ public class addPersonController implements Controller {
 
         // fill table with current people in the database
         Vector<String> rs = businessLogic.getAllPeople();
-        if(!rs.isEmpty()){
+        if(rs!=null){
             personTable.getItems().addAll(rs);
         }else{
             personTable.getItems().add("No people in the database");

@@ -339,11 +339,10 @@ public class BlFacadeImplementation {
             dbManager.open();
             ResultSet people = dbManager.getAllPeople();
             if (people==null) System.out.println("No person matching the requirements was found.");
-            else
-
-                System.out.println("Name: " + people.getString("nameid") + ", id: " + people.getString("id") + ", eats:" + people.getString("dish") + ", frequented restaurant:" + people.getString("restaurname"));
-            answer.add("Name: " + people.getString("nameid") + ", people: " + people.getString("id") + ", eats:" + people.getString("dish") + ", frequented restaurant:" + people.getString("restaurname"));
-
+            else {
+                System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
+                answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
+            }
             dbManager.close();
             return answer;
         }catch (SQLException e) {
@@ -351,7 +350,28 @@ public class BlFacadeImplementation {
         }
         return null;
     }
-    
+
+    /**
+     *
+     */
+    public Vector<String> getAllMenuOrders(){
+
+        Vector<String> allorders = null;
+        try {
+            dbManager.open();
+            ResultSet orders = dbManager.getAllMenuOrders();
+            if (orders==null) System.out.println("No menu order was found.");
+            else {
+                System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+                allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+            }
+            dbManager.close();
+            return allorders;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 

@@ -97,8 +97,8 @@ private String choice="";
 
 
         // fill table with current orders in the database
-        Vector<String> rs = businessLogic.getAllPeople();
-        if(!rs.isEmpty()){
+        Vector<String> rs = businessLogic.getAllMenuOrders();
+        if(rs==null){
             orderTable.getItems().addAll(rs);
         }else{
             orderTable.getItems().add("No orders in the database");

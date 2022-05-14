@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,6 +11,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class addPersonController implements Controller {
 
@@ -17,9 +19,9 @@ public class addPersonController implements Controller {
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> personTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String, String> col;
 
 
     @FXML
@@ -27,9 +29,13 @@ public class addPersonController implements Controller {
     @FXML
     private TextField age;
     @FXML
-    private TextField gender;
-    @FXML
     private TextField id;
+    @FXML
+    private TextField food;
+    @FXML
+    private TextField restaurant;
+    @FXML
+    private TextField answerField;
 
 
     @FXML
@@ -38,6 +44,8 @@ public class addPersonController implements Controller {
     private Label correctLbl;
 
 
+    private String choice="";
+
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
@@ -45,33 +53,65 @@ public class addPersonController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
-        guideColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
-*/
+        fillTable();
+        errorLbl.setText("");
+        correctLbl.setText("");
     }
 
     @FXML
     void onClickBack(){
         mainWin.showTransaction();
     }
-    @FXML
-    void onClickMakeOrder(){
-        mainWin.showMakeOrder();
-    }
+
 
     @FXML
     void onClickAddPerson(){
         errorLbl.setText("");
         correctLbl.setText("");
-        if ((name.getText().isEmpty() || age.getText().isEmpty() || gender.getText().isEmpty() || id.getText().isEmpty()))
+        if(choice.equals(""))
+            errorLbl.setText("Please, enter your choice");
+        if ((name.getText().isEmpty() || age.getText().isEmpty()|| id.getText().isEmpty() || food.getText().isEmpty()|| restaurant.getText().isEmpty() ))
             errorLbl.setText("Please, fill all fields");
         else {
-         //   businessLogic.insertPersonUI( name.getText(), age.getText(), gender.getText(),  id.getText());
-            correctLbl.setText("Transaction executed!!");
+            try {
+                businessLogic.insertPersonUI(choice, name.getText(), age.getText(), id.getText(), food.getText(), restaurant.getText());
+                fillTable();
+                correctLbl.setText("Transaction executed!!");
+            } catch (SQLException e) {
+                errorLbl.setText("Transaction could not be executed. Please, change the data and try again.");
+            }
+        }
+
+
+    }
+
+    @FXML
+    void onClickAnswer(){
+        errorLbl.setText("");
+        if(answerField.getText().isEmpty()){
+            errorLbl.setText("Enter a valid answer (y/n)");
+        }else if(answerField.getText().equals("y") || answerField.getText().equals("n")){
+            choice = answerField.getText();
+        }else{
+            errorLbl.setText("Enter a valid answer (y/n)");
         }
     }
 
+    private void fillTable(){
+        col.setCellValueFactory(data ->{
+            return new SimpleStringProperty(data.getValue());
+        });
+        // clear table
+        personTable.getItems().clear();
+
+
+        // fill table with current people in the database
+        Vector<String> rs = businessLogic.getAllPeople();
+        if(!rs.isEmpty()){
+            personTable.getItems().addAll(rs);
+        }else{
+            personTable.getItems().add("No people in the database");
+        }
+    }
 
 }

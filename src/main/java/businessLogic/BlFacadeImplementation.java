@@ -328,32 +328,35 @@ public class BlFacadeImplementation {
     public void insertPersonUI(String choice, String name, String age, String id, String food, String restaurant) throws SQLException {
 
         dbManager.open();
+        //check person exists -> create if must
+        if (dbManager.personExists(name, id)){
+            System.out.println("The person already exists!");
+            return;
+        }
+        dbManager.insertPerson(name, age, id);
 
-            if (dbManager.personExists(name, id)){
-                System.out.println("The person already exists!");
-                return;
-            }
-            dbManager.insertPerson(name, age, id);
-
+        // Check food exists -> create if must
         if(!dbManager.foodExists(food)){
             System.out.println("The dish does not exist");
 
             if (choice.equals("y")) {
                 System.out.println("Creating a new dish...");
                 dbManager.insertDish(food);
-            } else return;
-        }
+                dbManager.insertEats(name,food);
+            }
+        }else dbManager.insertEats(name,food);
 
-            dbManager.insertEats(name,food);
-
+        // Check restaurant exists -> create if must (
         if(!dbManager.restaurantExists(restaurant)){
             System.out.println("The restaurant does not exist");
 
             if (choice.equals("y")) {
                 System.out.println("Creating a new restaurant...");
-                dbManager.insertDish(food);
-            } else return;
-        }
+                dbManager.insertRestaurant(restaurant);
+                dbManager.addFrequents(name, restaurant);
+            }
+        } else dbManager.addFrequents(name, restaurant);
+
             dbManager.close();
     }
 

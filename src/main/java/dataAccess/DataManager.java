@@ -887,6 +887,24 @@ public class DataManager {
     }
 
 
+    public void insertRestaurant(String restaurant) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO restaurant VALUES (?,default, default, default, default);");
+            p.setString(1,restaurant);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Restaurant registered successfully!!");
+
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
     public ResultSet getRestaurantLikedManagers() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -926,7 +944,7 @@ public class DataManager {
 
 
 
-    /* EATS RELATED */
+    /* PREFERENCES RELATED */
 
     public void insertEats(String name, String food) throws SQLException {
         try {
@@ -945,6 +963,25 @@ public class DataManager {
             e.printStackTrace();
         }
     }
+
+    public void addFrequents(String name, String restaurant) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO frequents VALUES (?,?);");
+            p.setString(1,name);
+            p.setString(2,restaurant);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Transaction executed successfully!!");
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
 
 
 

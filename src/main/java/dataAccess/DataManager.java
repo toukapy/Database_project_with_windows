@@ -78,6 +78,24 @@ public class DataManager {
 
     }
 
+
+    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        PreparedStatement stmt = null;
+        try {
+            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE TripTo=? AND DepartureDate=?;");
+            stmt.setString(1,trip);
+            stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
+            rs = stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
+    }
+
+    /* HOTEL-RELATED */
     /**
      *
      * @param hotelname
@@ -133,6 +151,9 @@ public class DataManager {
             e.printStackTrace();
         }
     }
+
+
+    /* TRIP-RELATED */
 
     /**
      *
@@ -230,6 +251,9 @@ public class DataManager {
 
         return rs;
     }
+
+
+    /* TOUR-GUIDE RELATED */
 
     /**
      *
@@ -778,6 +802,12 @@ public class DataManager {
         }
     }
 
+    /**
+     *
+     * @param menu_mtype
+     * @param menu_id
+     * @throws SQLException
+     */
     public void insertMenu(String menu_mtype, String menu_id) throws SQLException {
         try {
 
@@ -797,6 +827,13 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method provides a menu
+     * @param menu_mtype String that represents the type of menu
+     * @param menu_id String that represents the identifier of the menu
+     * @return the menu to be provided
+     * @throws SQLException if rollback fails
+     */
         public ResultSet getMenu(String menu_mtype, String menu_id) throws SQLException {
             try {
 
@@ -817,7 +854,11 @@ public class DataManager {
             return rs;
     }
 
-
+    /**
+     * This method provides all menu-orders
+     * @return all menu-orders
+     * @throws SQLException if rollback fails
+     */
     public ResultSet getAllMenuOrders() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -836,6 +877,11 @@ public class DataManager {
 
     /* DISH RELATED */
 
+    /**
+     * This method adds  a dish to the database
+     * @param food String that represents a certain dish
+     * @throws SQLException if rollback fails
+     */
     public void insertDish(String food) throws SQLException {
         try {
 
@@ -853,7 +899,12 @@ public class DataManager {
         }
     }
 
-
+    /**
+     * This method provides whether a certain dish exists.
+     * @param food String that represents a certain dish
+     * @return whether a certain dish exists.
+     * @throws SQLException if rollback fails
+     */
     public boolean foodExists(String food) throws SQLException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM dishes as d WHERE d.dish=?;");
@@ -866,7 +917,11 @@ public class DataManager {
         return rs.next();
     }
 
-
+    /**
+     * This method updates a given dishes' price to its half
+     * @param dish provided dish
+     * @throws SQLException if rollback fails
+     */
     public void updateDishPrice(String dish) throws SQLException {
         try{
             connector.getConnector().setAutoCommit(false);
@@ -920,6 +975,7 @@ public class DataManager {
         }
     }
 
+
     public ResultSet getRestaurantLikedManagers() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -935,6 +991,7 @@ public class DataManager {
     }
 
 
+    /* EMPLOYEE-RELATED */
 
 
     public ResultSet getEmployee1RestCity(String city) throws SQLException {
@@ -996,21 +1053,7 @@ public class DataManager {
             e.printStackTrace();
         }
     }
-    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        PreparedStatement stmt = null;
-        try {
-            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE TripTo=? AND DepartureDate=?;");
-            stmt.setString(1,trip);
-            stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
-            rs = stmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        return rs;
-
-    }
 
 
 

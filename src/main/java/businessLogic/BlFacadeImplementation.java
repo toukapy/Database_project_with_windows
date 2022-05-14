@@ -5,14 +5,19 @@ import dataAccess.DataManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Scanner;
 import java.util.Vector;
 
+/**
+ * This class represents the implementation of the business logic interface
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class BlFacadeImplementation {
 
     private DataManager dbManager = new DataManager();
 
-
+/* CUSTOMERS-RELATED */
     /**
      * Trasaction 1 -> Delete a customer by phone and name from a trip
      * @param name
@@ -73,9 +78,55 @@ public class BlFacadeImplementation {
         dbManager.close();
         return answer;
     }
+    /**
+     * This method gets the customers who have attended at least all cheapest trips attended by customers
+     * @return the customers who have attended at least all cheapest trips attended by customers
+     */
+    public Vector<String> getCustomersAllCheapestTrips(){
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+
+            ResultSet customers = dbManager.getCustomersAllCheapestTrips();
+            while (customers.next()) {
+                System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+                answer.add("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
+            }
+
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+
 
     /**
-     * Method that gets a customer that satifies all the restrictions given
+     * Method that gets all customers from a trip, given the destination and the departure date
+     *
+     * @param trip String - The destination
+     * @param departure String - The departure date
+     * @return Vector<String> - The customers information
+     * @throws SQLException
+     * @throws ParseException
+     */
+    public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
+        Vector<String> answer = new Vector<>();
+        dbManager.open();
+        ResultSet rs = dbManager.getCustomerTrip(trip,departure);
+
+        while(rs.next()){
+            answer.add("Customer: "+rs.getString("CustomerId")+", TripTo: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+        }
+
+        dbManager.close();
+
+        return answer;
+    }
+
+    /**
+     * Method that gets a customer that satisfies all the restrictions given
      *
      * @param custname String - Name of the customer
      * @param custphone String - Phone number of the customer
@@ -113,8 +164,6 @@ public class BlFacadeImplementation {
      * @param DepartureDate String - Departure date of the trip
      */
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
-        Scanner sc = new Scanner(System.in);
-
         dbManager.open();
         try {
 
@@ -169,6 +218,71 @@ public class BlFacadeImplementation {
             e.printStackTrace();
         }
 
+    }
+
+
+
+    /* TOUR-GUIDES RELATED */
+
+    /**
+     * This method provides the tour-guides who speak all languages registered in the database
+     * @return the tour-guides who speak all languages registered in the database
+     */
+    public Vector<String> getTourguidesAllLanguages(){
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+
+            ResultSet tourguides = dbManager.getTourguidesAllLanguages();
+            while(tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
+            }
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+
+    /**
+     * This method provides the tour-guides who have attended all trips of a given year.
+     * @param year provided year
+     */
+    public Vector<String> getTourguidesAllTripsYear(String year){
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+
+            ResultSet tourguides = dbManager.getTourguidesAllTripsYear(year);
+            while (tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
+            }
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
+    /**
+     * This method updates the tour-guide of the trips between two given dates.
+     * @param tgprev previous tourguide
+     * @param tgnew new tourguide to be set
+     * @param date1 first date of the interval
+     * @param date2 second date of the interval
+     */
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) {
+
+        try{
+            dbManager.open();
+            dbManager.updateTourguide(tgprev, tgnew, date1, date2);
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -252,17 +366,43 @@ public class BlFacadeImplementation {
     }
 
 
+/* MENU AND MENU-ORDERS RELATED */
 
+    /**
+     * This method aims to provide all menu orders
+     * @return all menu orders
+     */
+    public Vector<String> getAllMenuOrders(){
+
+    Vector<String> allorders = null;
+    try {
+        dbManager.open();
+        ResultSet orders = dbManager.getAllMenuOrders();
+        if (orders==null) System.out.println("No menu order was found.");
+        else {
+            System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+            allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+        }
+        dbManager.close();
+        return allorders;
+    }catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
 
     /**
      * This method adds a menu-order to the database
-     * @param menu_mtype
-     * @param menu_id
-     * @param customer_id
+     * @param choice String that represents whether additional objects should be created (y) or not (!=y)
+     * @param menu_mtype String that represents the type of menu
+     * @param menu_id String that represents the menu identifier
+     * @param name String that represents the name of the customer
+     * @param customer_id String that represents the id of the customer
      */
     public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) {
         dbManager.open();
         try {
+            //Check if person exists -> create if must
             if (!dbManager.personExists(name, customer_id)){
                 System.out.println("The person does not exist");
 
@@ -273,6 +413,7 @@ public class BlFacadeImplementation {
 
             }
 
+            //Check if menu exists -> create if must
             ResultSet menu = dbManager.getMenu(menu_id, customer_id);
             if(!menu.next()){
                 System.out.println("The menu does not exist");
@@ -285,8 +426,8 @@ public class BlFacadeImplementation {
                 } else return;
             }
 
+            //Add menu-order
             dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
-
             dbManager.close();
 
         } catch (SQLException e) {
@@ -294,6 +435,8 @@ public class BlFacadeImplementation {
         }
     }
 
+
+    /* PEOPLE RELATED (restaurant db) */
 
     /**
      *
@@ -322,17 +465,21 @@ public class BlFacadeImplementation {
             if (choice.equals("y")) {
                 System.out.println("Creating a new dish...");
                 dbManager.insertDish(food);
+
+                // register food as eaten by the person
                 dbManager.insertEats(name,food);
             }
         }else dbManager.insertEats(name,food);
 
-        // Check restaurant exists -> create if must (
+        // Check restaurant exists -> create if must
         if(!dbManager.restaurantExists(restaurant)){
             System.out.println("The restaurant does not exist");
 
             if (choice.equals("y")) {
                 System.out.println("Creating a new restaurant...");
                 dbManager.insertRestaurant(restaurant);
+
+                //  make person frequent the restaurant
                 dbManager.addFrequents(name, restaurant);
             }
         } else dbManager.addFrequents(name, restaurant);
@@ -342,10 +489,10 @@ public class BlFacadeImplementation {
 
 
     /**
-     *
-     * @param name
-     * @param id
-     * @throws SQLException
+     * This method deletes a person from the restaurants database
+     * @param name String that represents the name of the person
+     * @param id String that represents the id of the person
+     * @throws SQLException if rollback could not be done
      */
     public void deletePerson(String name, String id) throws SQLException {
         dbManager.open();
@@ -361,7 +508,8 @@ public class BlFacadeImplementation {
     }
 
     /**
-     *
+     * This method provides all the people that belong to the restaurants database
+     * @return all the people that belong to the restaurants database
      */
     public Vector<String> getAllPeople(){
 
@@ -382,30 +530,9 @@ public class BlFacadeImplementation {
         return null;
     }
 
+
     /**
      *
-     */
-    public Vector<String> getAllMenuOrders(){
-
-        Vector<String> allorders = null;
-        try {
-            dbManager.open();
-            ResultSet orders = dbManager.getAllMenuOrders();
-            if (orders==null) System.out.println("No menu order was found.");
-            else {
-                System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
-                allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
-            }
-            dbManager.close();
-            return allorders;
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 
      */
     public String getPerson(String name, String id){
         try {
@@ -415,8 +542,8 @@ public class BlFacadeImplementation {
             if (person==null) System.out.println("No person matching the requirements was found.");
             else
 
-                    System.out.println("Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname"));
-                    answer="Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname");
+                System.out.println("Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname"));
+            answer="Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname");
 
             dbManager.close();
             return answer;
@@ -427,47 +554,29 @@ public class BlFacadeImplementation {
     }
 
 
-    /**
-     * This method provides the tour-guides who speak all languages registered in the database
-     */
-    public Vector<String> getTourguidesAllLanguages(){
-        Vector<String> answer = new Vector<>();
-        try {
-            dbManager.open();
+    /* DISHES RELATED */
 
-            ResultSet tourguides = dbManager.getTourguidesAllLanguages();
-                while(tourguides.next()) {
-                    System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
-                    answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
-                }
+    /**
+     * This method updates a given dishes' price to its half
+     * @param dish provided dish
+     */
+    public void updateDishPrice(String dish)  {
+        try{
+            dbManager.open();
+            dbManager.updateDishPrice(dish);
             dbManager.close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return answer;
     }
 
-    /**
-     * This method provides the tour-guides who have attended all trips of a given year.
-     * @param year provided year
-     */
-    public Vector<String> getTourguidesAllTripsYear(String year){
-        Vector<String> answer = new Vector<>();
-        try {
-            dbManager.open();
 
-            ResultSet tourguides = dbManager.getTourguidesAllTripsYear(year);
-            while (tourguides.next()) {
-                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
-                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
-            }
-            dbManager.close();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return answer;
-    }
+
+
+
+
+
+    /* EMPLOYEES-RELATED*/
 
 
     /**
@@ -492,27 +601,7 @@ public class BlFacadeImplementation {
         return answer;
     }
 
-    /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     */
-    public Vector<String> getCustomersAllCheapestTrips(){
-        Vector<String> answer = new Vector<>();
-        try {
-            dbManager.open();
 
-            ResultSet customers = dbManager.getCustomersAllCheapestTrips();
-            while (customers.next()) {
-                System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
-                answer.add("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
-            }
-
-            dbManager.close();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return answer;
-    }
 
     /**
      * This method gets the employees who have attended a single restaurant of a given city
@@ -539,58 +628,8 @@ public class BlFacadeImplementation {
         return answer;
     }
 
-    /**
-     * This method updates a given dishes' price to its half
-     * @param dish provided dish
-     */
-    public void updateDishPrice(String dish)  {
-        try{
-            dbManager.open();
-            dbManager.updateDishPrice(dish);
-            dbManager.close();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    /**
-     * This method updates the tour-guide of the trips between two given dates.
-     * @param tgprev previous tourguide
-     * @param tgnew new tourguide to be set
-     * @param date1 first date of the interval
-     * @param date2 second date of the interval
-     */
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) {
 
-        try{
-            dbManager.open();
-            dbManager.updateTourguide(tgprev, tgnew, date1, date2);
-            dbManager.close();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    /**
-     * Method that gets all customers from a trip, given the destination and the departure date
-     *
-     * @param trip String - The destination
-     * @param departure String - The departure date
-     * @return Vector<String> - The customers information
-     * @throws SQLException
-     * @throws ParseException
-     */
-    public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
-        Vector<String> answer = new Vector<>();
-        dbManager.open();
-        ResultSet rs = dbManager.getCustomerTrip(trip,departure);
 
-        while(rs.next()){
-            answer.add("Customer: "+rs.getString("CustomerId")+", TripTo: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
-        }
-
-        dbManager.close();
-
-        return answer;
-    }
 }

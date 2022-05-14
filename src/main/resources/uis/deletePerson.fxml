@@ -8,11 +8,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.deletePersonController">
-    <TableView fx:id="personTable2" layoutX="424.0" layoutY="136.0" prefHeight="295.0" prefWidth="318.0">
-      <columns>
-          <TableColumn fx:id="col2" prefWidth="669.0" text="People after the deletion" />
-      </columns>
-    </TableView>
     <Button fx:id="backBtn" layoutX="592.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
    <Label fx:id="nameLbl" layoutX="81.0" layoutY="43.0" text="Name:" />
    <TextField fx:id="name" layoutX="198.0" layoutY="43.0" prefHeight="26.0" prefWidth="538.0" />
@@ -21,9 +16,9 @@
    <Label fx:id="idLbl" layoutX="81.0" layoutY="94.0" text="Id:" />
    <TextField fx:id="id" layoutX="198.0" layoutY="90.0" prefHeight="26.0" prefWidth="538.0" />
    <Button fx:id="deletePersonBtn" layoutX="72.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickDeletePerson" prefHeight="35.0" prefWidth="149.0" text="Delete Person" />
-   <TableView fx:id="personTable1" layoutX="72.0" layoutY="136.0" prefHeight="295.0" prefWidth="334.0">
+   <TableView fx:id="personTable1" layoutX="72.0" layoutY="136.0" prefHeight="295.0" prefWidth="674.0">
       <columns>
-         <TableColumn fx:id="col1" prefWidth="669.0" text="People before the deletion" />
+         <TableColumn fx:id="col1" prefWidth="669.0" text="People in the database" />
       </columns>
    </TableView>
 </AnchorPane>

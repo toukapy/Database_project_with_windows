@@ -20,12 +20,10 @@ public class deletePersonController implements Controller {
 
     @FXML
     private TableView<String> personTable1;
-    @FXML
-    private TableView<String> personTable2;
+
     @FXML
     private TableColumn<String, String> col1;
-    @FXML
-    private TableColumn<String, String> col2;
+
 
 
     @FXML
@@ -41,9 +39,6 @@ public class deletePersonController implements Controller {
     @FXML
     private Label correctLbl;
 
-
-    private String choice="";
-
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
@@ -51,8 +46,7 @@ public class deletePersonController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-      fillFirstTable();
-      personTable2.getItems().clear();
+      fillTable();
       errorLbl.setText("");
       correctLbl.setText("");
     }
@@ -66,17 +60,14 @@ public class deletePersonController implements Controller {
     void onClickDeletePerson(){
         errorLbl.setText("");
         correctLbl.setText("");
-        if(choice.equals(""))
-            errorLbl.setText("Please, enter your choice");
-        else if ((name.getText().isEmpty() || id.getText().isEmpty()))
+        if ((name.getText().isEmpty() || id.getText().isEmpty()))
             errorLbl.setText("Please, fill name and id fields");
         else {
             try {
 
-                // execute query and fill the tables
-                fillFirstTable();
+                // execute query and fill the table
                 businessLogic.deletePerson(name.getText(), id.getText());
-                fillSecondTable();
+                fillTable();
 
                 correctLbl.setText("Transaction executed!!");
             } catch(SQLException e){
@@ -85,7 +76,7 @@ public class deletePersonController implements Controller {
         }
     }
 
-    private void fillFirstTable(){
+    private void fillTable(){
         col1.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());
         });
@@ -102,22 +93,6 @@ public class deletePersonController implements Controller {
         }
     }
 
-    private void fillSecondTable(){
-        col2.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
-
-        // clear second table
-        personTable2.getItems().clear();
-
-        Vector<String> rs = businessLogic.getAllPeople();
-
-        if(!rs.isEmpty()){
-            personTable2.getItems().addAll(rs);
-        }else{
-            personTable2.getItems().add("No people in the database");
-        }
-    }
 
 
 }

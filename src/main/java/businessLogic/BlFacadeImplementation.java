@@ -235,54 +235,7 @@ public class BlFacadeImplementation {
     }
 
 
-    /**
-     * This method adds a menu-order to the database
-     * @param menu_mtype
-     * @param menu_id
-     * @param customer_id
-     */
-    public void insertMenuOrder(String menu_mtype, String menu_id, String name, String customer_id) {
-        Scanner sc = new Scanner(System.in);
-        String choice = "";
 
-        dbManager.open();
-        try {
-            if (!dbManager.personExists(name, customer_id)){
-                System.out.println("The person does not exist");
-                System.out.println("Do you want to create a new person? (y/n)\n");
-                choice = sc.nextLine();
-
-                if (choice.equals("y")) {
-                    dbManager.insertPerson(name, null, customer_id);
-                } else {
-                    return;
-                }
-            }
-
-            ResultSet menu = dbManager.getMenu(menu_id, customer_id);
-            if(!menu.next()){
-                System.out.println("The menu does not exist");
-                System.out.println("Do you want to create a new menu? (y/n)\n");
-                choice = sc.nextLine();
-
-                if (choice.equals("y")) {
-                    System.out.println("Creating a new menu with the data");
-                    dbManager.insertMenu(menu_id, customer_id);
-                    menu = dbManager.getMenu(menu_id, customer_id);
-                    menu.next();
-                }
-            }
-
-
-            dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
-
-            dbManager.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     /**
      * This method adds a menu-order to the database
@@ -290,7 +243,7 @@ public class BlFacadeImplementation {
      * @param menu_id
      * @param customer_id
      */
-    public void insertMenuOrderUI(String choice, String menu_mtype, String menu_id,  String name, String customer_id) {
+    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) {
         dbManager.open();
         try {
             if (!dbManager.personExists(name, customer_id)){

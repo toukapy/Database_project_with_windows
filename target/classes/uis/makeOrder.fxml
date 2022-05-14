@@ -8,21 +8,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.makeOrderController">
-    <TableView fx:id="orderTable" layoutX="72.0" layoutY="230.0" prefHeight="199.0" prefWidth="670.0">
+    <TableView fx:id="orderTable" layoutX="72.0" layoutY="209.0" prefHeight="184.0" prefWidth="670.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="669.0" text="Make an order" />
+          <TableColumn fx:id="col" prefWidth="669.0" text="Orders" />
       </columns>
     </TableView>
-    <Button fx:id="backBtn" layoutX="593.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
-   <Button fx:id="makeOrderBtn" layoutX="72.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickMakeOrder" prefHeight="35.0" prefWidth="149.0" text="Make Order" />
+    <Button fx:id="backBtn" layoutX="593.0" layoutY="493.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Button fx:id="makeOrderBtn" layoutX="72.0" layoutY="493.0" mnemonicParsing="false" onAction="#onClickMakeOrder" prefHeight="35.0" prefWidth="149.0" text="Make Order" />
    <Label fx:id="menu_mtypeLbl" layoutX="70.0" layoutY="47.0" text="Menu type:" />
    <TextField fx:id="menu_mtype" layoutX="312.0" layoutY="43.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="100.0" layoutY="460.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
-   <Label fx:id="errorLbl" alignment="CENTER" layoutX="104.0" layoutY="441.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="77.0" layoutY="468.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="77.0" layoutY="449.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
    <Label fx:id="menu_idLbl" layoutX="70.0" layoutY="89.0" text="Menu id:" />
    <TextField fx:id="menu_id" layoutX="312.0" layoutY="85.0" prefHeight="26.0" prefWidth="424.0" />
    <TextField fx:id="customer_id" layoutX="312.0" layoutY="173.0" prefHeight="26.0" prefWidth="424.0" />
    <Label fx:id="customer_idLbl" layoutX="70.0" layoutY="177.0" text="Customer id:" />
    <Label fx:id="customer_idLbl1" layoutX="72.0" layoutY="133.0" text="Customer name:" />
    <TextField fx:id="name" layoutX="312.0" layoutY="128.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="questionLbl" layoutX="71.0" layoutY="412.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
+   <TextField fx:id="answerField" layoutX="516.0" layoutY="408.0" prefHeight="35.0" prefWidth="79.0" />
+   <Button layoutX="628.0" layoutY="408.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
 </AnchorPane>

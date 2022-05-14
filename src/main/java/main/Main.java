@@ -172,7 +172,10 @@ public class Main {
                             String menu_id = sc.nextLine();
                             String pname = sc.nextLine();
                             String customer_id = sc.nextLine();
-                            bl.insertMenuOrder(menu_mtype, menu_id, pname, customer_id);
+                            System.out.println("Would you like to create objects if they don't exist? (y/n)");
+                            sc.nextLine();
+                            String  choiceorder = sc.nextLine();
+                            bl.insertMenuOrder(choiceorder, menu_mtype, menu_id, pname, customer_id);
                             System.out.println("End of execution!");
                             break;
                         case 6: /* Swap guides between two trips */

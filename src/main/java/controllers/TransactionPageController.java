@@ -36,8 +36,17 @@ public class TransactionPageController implements Controller {
         tranPageWin.showUpdateGuide();
     }
     @FXML
-    void onClickMakeOrder(){
+    void onClickMakeOrder() throws SQLException {
         tranPageWin.showMakeOrder();
+    }
+
+    @FXML
+    void onClickDeletePerson() throws SQLException {
+        tranPageWin.showDeletePerson();
+    }
+    @FXML
+    void onClickAddPerson() throws SQLException {
+        tranPageWin.showAddPerson();
     }
 
     @FXML

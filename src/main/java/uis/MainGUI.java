@@ -16,7 +16,7 @@ public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
-    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear,guideAllLang;
+    private Window oneRestaurantCityWin,allCheapestRestWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
 
     private BlFacadeImplementation businessLogic;
     private Stage stage;
@@ -107,7 +107,8 @@ public class MainGUI {
         updateGuideWin= load("/uis/updateGuide.fxml");
         makeOrderWin= load("/uis/makeOrder.fxml");
         salesWin= load("/uis/sales.fxml");
-
+        addPersonWin = load("/uis/addPerson.fxml");
+        deletePersonWin = load("/uis/deletePerson.fxml");
         showMain();
     }
     /**
@@ -221,8 +222,25 @@ public class MainGUI {
     /**
      *
      */
-    public void showMakeOrder()  {
+    public void showAddPerson() throws SQLException {
+        setupScene(addPersonWin.ui, "Add Person", 814, 555);
+        addPersonWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showDeletePerson() throws SQLException {
+        setupScene(deletePersonWin.ui, "Delete Person", 814, 555);
+        deletePersonWin.c.initializeInformation();
+    }
+
+    /**
+     *
+     */
+    public void showMakeOrder() throws SQLException {
         setupScene(makeOrderWin.ui, "Make order", 814, 555);
+        makeOrderWin.c.initializeInformation();
     }
 
     /**

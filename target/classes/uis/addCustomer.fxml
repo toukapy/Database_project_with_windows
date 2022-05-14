@@ -10,7 +10,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.addCustomerController">
     <TableView fx:id="customerTable" layoutX="72.0" layoutY="300.0" prefHeight="146.0" prefWidth="670.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="669.0" text="Add customer" />
+          <TableColumn fx:id="col" prefWidth="669.0" text="Customers" />
       </columns>
     </TableView>
     <Button layoutX="593.0" layoutY="537.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />

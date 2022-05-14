@@ -517,42 +517,6 @@ public class DataManager {
     }
 
 
-    public ResultSet getRestaurantLikedManagers() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
-        return rs;
-    }
-
-
-
-
-    public ResultSet getEmployee1RestCity(String city) throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT f.nameid  as name, p.id as id " +
-                    "from frequents as f inner join (person as p inner join employee as e on e.ssn=p.id) on f.nameid=p.nameid " +
-                    "inner join restaurant as r on r.restaurname=f.restaurname " +
-                    " where  r.city=? " +
-                    " group by f.nameid " +
-                    " having count(distinct f.restaurname)=1; ");
-            stmt.setString(1,city);
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
-        return rs;
-    }
 
 
 
@@ -622,24 +586,7 @@ public class DataManager {
     }
 
 
-    public void updateDishPrice(String dish) throws SQLException {
-        try{
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
 
-            updateStmt.setString(1,dish);
-            updateStmt.executeUpdate();
-
-            connector.getConnector().commit();
-
-            System.out.println("Transaction committed successfully!!");
-            System.out.println("Prices were updated successfully!!");
-
-        }catch(SQLException e){
-            System.out.println("Transaction is being rolled back!");
-            connector.getConnector().rollback();
-        }
-    }
 
     public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -667,7 +614,51 @@ public class DataManager {
 
     }
 
+    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException {
+        try {
 
+            ResultSet customer = getCustomer(custname, custphone);
+            ResultSet hotel = getHotel(hotelname,hotelcity);
+
+            if(customer.next() && hotel.next()){
+                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? AND HotelId=? AND TripTo=? AND DepartureDate=?;");
+                stmt.setString(1,customer.getString("CustomerId"));
+                stmt.setString(2,hotel.getString("HotelId"));
+                stmt.setString(3,tripTo);
+                stmt.setString(4,departureDate);
+                rs = stmt.executeQuery();
+                return rs;
+            }
+
+
+
+
+        } catch (SQLException e) {
+            System.out.println("System rolling back");
+            connector.getConnector().commit();
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+/*
+    public boolean orderExists(String numord) throws SQLException {
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM menu_order WHERE numord=?;");
+            p.setString(1,numord);
+            rs = p.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs.next();
+    }
+
+ */
+
+/*   PERSON RELATED */
 
     public boolean personExists(String nameid, String id) throws SQLException {
         try {
@@ -683,33 +674,53 @@ public class DataManager {
     }
 
 
-
-    public boolean orderExists(String numord) throws SQLException {
+    public ResultSet getPerson(String name, String id) throws SQLException {
         try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM menu_order WHERE numord=?;");
-            p.setString(1,numord);
-            rs = p.executeQuery();
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
+                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid WHERE p.namid=? and p.id=?;");
+            stmt.setString(1, name);
+            stmt.setString(2, id);
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
         }
-        return rs.next();
+        return rs;
+
     }
 
+    public ResultSet getAllPeople() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
+                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid;");
 
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+            if(rs==null)  System.out.println("No matchings");
 
-    public void insertPerson(String name, String age, String gender, String id) throws SQLException {
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+
+    }
+
+    public void insertPerson(String name, String age, String id) throws SQLException {
         try {
 
             if(personExists(name, id)){
                 System.out.println("Person already registered !!");
             }else{
                 connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,?,?);");
+                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,NULL,?);");
                 p.setString(1,name);
                 p.setString(2,age);
-                p.setString(3,gender);
-                p.setString(4,id);
+                p.setString(3,id);
                 p.executeUpdate();
 
                 connector.getConnector().commit();
@@ -721,6 +732,31 @@ public class DataManager {
             e.printStackTrace();
         }
     }
+
+    public void deletePerson(String name, String id) throws SQLException {
+        try{
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
+            deleteStmt.setString(1, name);
+            deleteStmt.setString(2, id);
+            deleteStmt.executeUpdate();
+
+            connector.getConnector().commit();
+
+            System.out.println("Transaction commited succesfully!!");
+            System.out.println("Person was deleted succesfully!!");
+
+        }catch(SQLException e){
+            System.out.println("Transaction is being rolled back!");
+            connector.getConnector().rollback();
+        }
+
+    }
+
+
+    /* MENU AND MENU-ORDERS RELATED */
+
+
 
     public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException {
         try {
@@ -782,32 +818,187 @@ public class DataManager {
     }
 
 
-    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException {
+    public ResultSet getAllMenuOrders() throws SQLException {
         try {
-
-            ResultSet customer = getCustomer(custname, custphone);
-            ResultSet hotel = getHotel(hotelname,hotelcity);
-
-            if(customer.next() && hotel.next()){
-                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? AND HotelId=? AND TripTo=? AND DepartureDate=?;");
-                stmt.setString(1,customer.getString("CustomerId"));
-                stmt.setString(2,hotel.getString("HotelId"));
-                stmt.setString(3,tripTo);
-                stmt.setString(4,departureDate);
-                rs = stmt.executeQuery();
-                return rs;
-            }
-
-
-
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * from menu_order;");
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+            if(rs==null)  System.out.println("No matchings");
 
         } catch (SQLException e) {
-            System.out.println("System rolling back");
-            connector.getConnector().commit();
-            e.printStackTrace();
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
         }
-        return null;
-
+        return rs;
 
     }
+
+    /* DISH RELATED */
+
+    public void insertDish(String food) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO dishes VALUES (?, default, default, default);");
+            p.setString(1,food);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Person registered successfully!!");
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+
+    public boolean foodExists(String food) throws SQLException {
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM dishes as d WHERE d.dish=?;");
+            p.setString(1,food);
+            rs = p.executeQuery();
+
+        } catch (SQLException e) {
+            System.out.println("Error executing query");
+        }
+        return rs.next();
+    }
+
+
+    public void updateDishPrice(String dish) throws SQLException {
+        try{
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
+
+            updateStmt.setString(1,dish);
+            updateStmt.executeUpdate();
+
+            connector.getConnector().commit();
+
+            System.out.println("Transaction committed successfully!!");
+            System.out.println("Prices were updated successfully!!");
+
+        }catch(SQLException e){
+            System.out.println("Transaction is being rolled back!");
+            connector.getConnector().rollback();
+        }
+    }
+
+
+/* RESTAURANT RELATED */
+
+    public boolean restaurantExists(String restaurant) throws SQLException {
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM restaurant as r WHERE r.restaurname=?;");
+            p.setString(1,restaurant);
+            rs = p.executeQuery();
+
+        } catch (SQLException e) {
+            System.out.println("Error executing query");
+        }
+        return rs.next();
+    }
+
+
+    public void insertRestaurant(String restaurant) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO restaurant VALUES (?,default, default, default, default);");
+            p.setString(1,restaurant);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Restaurant registered successfully!!");
+
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet getRestaurantLikedManagers() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+    }
+
+
+
+
+    public ResultSet getEmployee1RestCity(String city) throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT f.nameid  as name, p.id as id " +
+                    "FROM frequents as f inner join (person as p inner join employee as e on e.ssn=p.id) ON f.nameid=p.nameid " +
+                    "inner join restaurant as r on r.restaurname=f.restaurname " +
+                    " WHERE  r.city=? " +
+                    " GROUP BY f.nameid " +
+                    " HAVING count(distinct f.restaurname)=1; ");
+            stmt.setString(1,city);
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+    }
+
+
+
+    /* PREFERENCES RELATED */
+
+    public void insertEats(String name, String food) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO eats VALUES (?,?);");
+            p.setString(1,name);
+            p.setString(2,food);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Person registered successfully!!");
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public void addFrequents(String name, String restaurant) throws SQLException {
+        try {
+
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO frequents VALUES (?,?);");
+            p.setString(1,name);
+            p.setString(2,restaurant);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Transaction executed successfully!!");
+        }  catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
 }

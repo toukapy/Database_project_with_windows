@@ -39,7 +39,8 @@ public class BlFacadeImplementation {
     }
 
     /**
-     * Transaction 2 -> Retrieves the trip that has obtained the highest amount of gains
+     * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
+     *
      * @throws SQLException
      */
     public Vector<String> getMaximumGainedTrip() throws SQLException {
@@ -57,6 +58,7 @@ public class BlFacadeImplementation {
     }
 
     /**
+     * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      *
      * @throws SQLException
      */
@@ -72,6 +74,18 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+    /**
+     * Method that gets a customer that satifies all the restrictions given
+     *
+     * @param custname String - Name of the customer
+     * @param custphone String - Phone number of the customer
+     * @param hotelname String - Name of the hotel
+     * @param hotelcity String - City where the hotel is
+     * @param TripTo String - Destination of the trip
+     * @param DepartureDate String - Departure date of the trip
+     * @return Vector<String> Vector containing the customer (if it exists)
+     * @throws SQLException
+     */
     public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
@@ -88,13 +102,15 @@ public class BlFacadeImplementation {
     }
 
     /**
-     *  @param choice
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param TripTo
-     * @param DepartureDate
+     * Transaction 2 -> Method that adds a customer to a trip
+     *
+     *  @param choice String - The choice of creating or not creating a hotel, customer or trip if it does not exist
+     * @param custname String - Name of the customer
+     * @param custphone String - Phone number of the customer
+     * @param hotelname String - Name of the hotel
+     * @param hotelcity String - City where the hotel is
+     * @param TripTo String - Destination of the trip
+     * @param DepartureDate String - Departure date of the trip
      */
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
         Scanner sc = new Scanner(System.in);
@@ -156,15 +172,16 @@ public class BlFacadeImplementation {
     }
 
     /**
+     * Transition 3 -> Method that changes the guides between two trips
      *
-     * @param guidename1
-     * @param guidephone1
-     * @param TripTo1
-     * @param DepartureDate1
-     * @param guidename2
-     * @param guidephone2
-     * @param TripTo2
-     * @param DepartureDate2
+     * @param guidename1 String - Name of first guide
+     * @param guidephone1 String - Phone number of the first guide
+     * @param TripTo1 String - Destination of the first trip
+     * @param DepartureDate1 String - Departure date of the first trip
+     * @param guidename2 String - Name of the second guide
+     * @param guidephone2 String - Phone number of the second guide
+     * @param TripTo2 String - Destination of the second trip
+     * @param DepartureDate2 String - Departure date of the second trip
      */
     public void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) {
         try {
@@ -187,14 +204,14 @@ public class BlFacadeImplementation {
             }
 
             System.out.println("Finding the second tourguide");
-            ResultSet guide2 = dbManager.getGuide(guidename1,guidephone1);
+            ResultSet guide2 = dbManager.getGuide(guidename2,guidephone2);
             if(!guide2.next()){
                 System.out.println("System creating a guide");
-                dbManager.createGuide(guidename1, guidephone1);
+                dbManager.createGuide(guidename2, guidephone2);
             }
 
             System.out.println("Finding the second trip");
-            ResultSet trip2 = dbManager.getTrip(TripTo1,DepartureDate1);
+            ResultSet trip2 = dbManager.getTrip(TripTo2,DepartureDate2);
             if(!trip2.next()){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
@@ -212,7 +229,7 @@ public class BlFacadeImplementation {
     }
 
     /**
-     *
+     * Retrieve the number of customer each guide is responsible of
      */
     public Vector<String> retrieveNumCustomerGuideResponsible(){
 
@@ -278,6 +295,16 @@ public class BlFacadeImplementation {
     }
 
 
+    /**
+     *
+     * @param choice
+     * @param name
+     * @param age
+     * @param id
+     * @param food
+     * @param restaurant
+     * @throws SQLException
+     */
     public void insertPersonUI(String choice, String name, String age, String id, String food, String restaurant) throws SQLException {
 
         dbManager.open();
@@ -314,8 +341,12 @@ public class BlFacadeImplementation {
     }
 
 
-
-
+    /**
+     *
+     * @param name
+     * @param id
+     * @throws SQLException
+     */
     public void deletePerson(String name, String id) throws SQLException {
         dbManager.open();
 
@@ -540,6 +571,15 @@ public class BlFacadeImplementation {
         }
     }
 
+    /**
+     * Method that gets all customers from a trip, given the destination and the departure date
+     *
+     * @param trip String - The destination
+     * @param departure String - The departure date
+     * @return Vector<String> - The customers information
+     * @throws SQLException
+     * @throws ParseException
+     */
     public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();

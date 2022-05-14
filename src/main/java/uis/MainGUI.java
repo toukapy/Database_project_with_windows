@@ -112,19 +112,19 @@ public class MainGUI {
         showMain();
     }
     /**
-     * Method to show the log in window
+     * Method to show the main window
      */
     public void showMain() {
         setupScene(mainPageWin.ui, "Main", 814,555);
     }
 
     /**
-     *
+     * Method to show the query selection window
      */
     public void showQuery(){ setupScene(queryPageWin.ui, "Queries",814,555);}
 
     /**
-     *
+     * Method to show the transaction selection window
      */
     public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",814,555);}
 

@@ -862,7 +862,7 @@ public class DataManager {
     public ResultSet getAllMenuOrders() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * from menu_order;");
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu_order;");
             rs = stmt.executeQuery();
             System.out.println("Query executed correctly!!");
             if(rs==null)  System.out.println("No matchings");

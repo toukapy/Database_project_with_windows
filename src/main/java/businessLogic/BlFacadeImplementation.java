@@ -374,7 +374,7 @@ public class BlFacadeImplementation {
      */
     public Vector<String> getAllMenuOrders(){
 
-    Vector<String> allorders = null;
+    Vector<String> allorders = new Vector<>();
     try {
         dbManager.open();
         ResultSet orders = dbManager.getAllMenuOrders();
@@ -515,7 +515,7 @@ public class BlFacadeImplementation {
      */
     public Vector<String> getAllPeople(){
 
-        Vector<String> answer = null;
+        Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
             ResultSet people = dbManager.getAllPeople();

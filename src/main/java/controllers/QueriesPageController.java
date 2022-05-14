@@ -21,8 +21,8 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickAllCheapestRestaurants() throws SQLException {
-        queryPageWin.showAllCheapestRest();
+    void onClickAllCheapestTrips() throws SQLException {
+        queryPageWin.showAllCheapestTrips();
     }
 
     @FXML

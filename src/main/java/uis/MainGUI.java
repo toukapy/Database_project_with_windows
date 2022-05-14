@@ -201,8 +201,9 @@ public class MainGUI {
     /**
      *
      */
-    public void showDeleteCustomer() {
+    public void showDeleteCustomer() throws SQLException {
         setupScene(deleteCustomerWin.ui, "Delete customer", 814, 555);
+        deleteCustomerWin.c.initializeInformation();
     }
 
     /**

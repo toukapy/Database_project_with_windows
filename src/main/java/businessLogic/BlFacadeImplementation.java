@@ -235,44 +235,38 @@ public class BlFacadeImplementation {
     }
 
 
+
+
     /**
      * This method adds a menu-order to the database
      * @param menu_mtype
      * @param menu_id
      * @param customer_id
      */
-    public void insertMenuOrder(String menu_mtype, String menu_id, String name, String customer_id) {
-        Scanner sc = new Scanner(System.in);
-        String choice = "";
-
+    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) {
         dbManager.open();
         try {
             if (!dbManager.personExists(name, customer_id)){
                 System.out.println("The person does not exist");
-                System.out.println("Do you want to create a new person? (y/n)\n");
-                choice = sc.nextLine();
 
                 if (choice.equals("y")) {
-                    dbManager.insertPerson(name, null, null, customer_id);
-                } else {
-                    return;
-                }
+                    System.out.println("Creating new person...");
+                    dbManager.insertPerson(name, null, customer_id);
+                } else return;
+
             }
 
             ResultSet menu = dbManager.getMenu(menu_id, customer_id);
             if(!menu.next()){
-                System.out.println("The customer does not exist");
-                System.out.println("Do you want to create a new customer? (y/n)\n");
-                choice = sc.nextLine();
+                System.out.println("The menu does not exist");
 
                 if (choice.equals("y")) {
-                    System.out.println("Creating a new menu with the data");
+                    System.out.println("Creating a new menu...");
                     dbManager.insertMenu(menu_id, customer_id);
                     menu = dbManager.getMenu(menu_id, customer_id);
                     menu.next();
-                }
+                } else return;
             }
-
 
             dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
 
@@ -281,40 +275,125 @@ public class BlFacadeImplementation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+
+    public void insertPersonUI(String choice, String name, String age, String id, String food, String restaurant) throws SQLException {
+
+        dbManager.open();
+        //check person exists -> create if must
+        if (dbManager.personExists(name, id)){
+            System.out.println("The person already exists!");
+            return;
+        }
+        dbManager.insertPerson(name, age, id);
+
+        // Check food exists -> create if must
+        if(!dbManager.foodExists(food)){
+            System.out.println("The dish does not exist");
+
+            if (choice.equals("y")) {
+                System.out.println("Creating a new dish...");
+                dbManager.insertDish(food);
+                dbManager.insertEats(name,food);
+            }
+        }else dbManager.insertEats(name,food);
+
+        // Check restaurant exists -> create if must (
+        if(!dbManager.restaurantExists(restaurant)){
+            System.out.println("The restaurant does not exist");
+
+            if (choice.equals("y")) {
+                System.out.println("Creating a new restaurant...");
+                dbManager.insertRestaurant(restaurant);
+                dbManager.addFrequents(name, restaurant);
+            }
+        } else dbManager.addFrequents(name, restaurant);
+
+            dbManager.close();
+    }
+
+
+
+
+    public void deletePerson(String name, String id) throws SQLException {
+        dbManager.open();
+
+        ResultSet person = dbManager.getPerson(name,id);
+
+        if(person == null){
+            System.out.println("There is no such person in the database!!");
+        }else{
+            dbManager.deletePerson(name, id);
+        }
+        dbManager.close();
     }
 
     /**
-     * This method adds a menu-order to the database
-     * @param menu_mtype
-     * @param menu_id
-     * @param customer_id
+     *
      */
-    public void insertMenuOrderUI(String menu_mtype, String menu_id,  String name, String customer_id) {
-        dbManager.open();
+    public Vector<String> getAllPeople(){
+
+        Vector<String> answer = null;
         try {
-            if (!dbManager.personExists(name, customer_id)){
-                dbManager.insertPerson(name, null, null, customer_id);
+            dbManager.open();
+            ResultSet people = dbManager.getAllPeople();
+            if (people==null) System.out.println("No person matching the requirements was found.");
+            else {
+                System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
+                answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
             }
-
-            ResultSet menu = dbManager.getMenu(menu_id, customer_id);
-            if(!menu.next()){
-                    System.out.println("Creating a new menu with the data");
-                    dbManager.insertMenu(menu_id, customer_id);
-                    menu = dbManager.getMenu(menu_id, customer_id);
-                    menu.next();
-            }
-
-            dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
             dbManager.close();
-
-        } catch (SQLException e) {
+            return answer;
+        }catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 
+    /**
+     *
+     */
+    public Vector<String> getAllMenuOrders(){
 
+        Vector<String> allorders = null;
+        try {
+            dbManager.open();
+            ResultSet orders = dbManager.getAllMenuOrders();
+            if (orders==null) System.out.println("No menu order was found.");
+            else {
+                System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+                allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+            }
+            dbManager.close();
+            return allorders;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 
+     */
+    public String getPerson(String name, String id){
+        try {
+            dbManager.open();
+            String answer="";
+            ResultSet person = dbManager.getPerson(name,id);
+            if (person==null) System.out.println("No person matching the requirements was found.");
+            else
+
+                    System.out.println("Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname"));
+                    answer="Name: " + person.getString("nameid") + ", id: " + person.getString("id") + ", eats:" + person.getString("dish") + ", frequented restaurant:" + person.getString("restaurname");
+
+            dbManager.close();
+            return answer;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     /**

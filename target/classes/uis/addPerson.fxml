@@ -26,4 +26,23 @@
    <TextField fx:id="id" layoutX="165.0" layoutY="169.0" prefHeight="26.0" prefWidth="571.0" />
    <Button fx:id="makeOrderBtn" layoutX="82.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickMakeOrder" prefHeight="35.0" prefWidth="149.0" text="Make Order" />
    <Button fx:id="addPersonBtn" layoutX="322.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickAddPerson" prefHeight="35.0" prefWidth="149.0" text="Add Person" />
+    <Button fx:id="backBtn" layoutX="592.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Label fx:id="nameLbl" layoutX="81.0" layoutY="43.0" text="Name:" />
+   <TextField fx:id="name" layoutX="198.0" layoutY="43.0" prefHeight="26.0" prefWidth="538.0" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="73.0" layoutY="412.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="77.0" layoutY="394.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+   <Label fx:id="ageLbl" layoutX="80.0" layoutY="85.0" text="Age:" />
+   <TextField fx:id="age" layoutX="198.0" layoutY="85.0" prefHeight="26.0" prefWidth="538.0" />
+   <TextField fx:id="gender" layoutX="198.0" layoutY="129.0" prefHeight="26.0" prefWidth="538.0" />
+   <Label fx:id="genderLbl" layoutX="79.0" layoutY="133.0" text="Gender:" />
+   <Label fx:id="idLbl" layoutX="78.0" layoutY="173.0" text="Id:" />
+   <TextField fx:id="id" layoutX="198.0" layoutY="169.0" prefHeight="26.0" prefWidth="538.0" />
+   <Button fx:id="addPersonBtn" layoutX="72.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickAddPerson" prefHeight="35.0" prefWidth="149.0" text="Add Person" />
+   <Label fx:id="foodLbl" layoutX="78.0" layoutY="211.0" text="Liked food:" />
+   <Label fx:id="restaurantLbl" layoutX="78.0" layoutY="249.0" text="Liked Restaurant:" />
+   <TextField fx:id="food" layoutX="198.0" layoutY="206.0" prefHeight="26.0" prefWidth="538.0" />
+   <TextField fx:id="restaurant" layoutX="195.0" layoutY="244.0" prefHeight="26.0" prefWidth="545.0" />
+   <Label fx:id="questionLbl" layoutX="68.0" layoutY="446.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
+   <TextField fx:id="answerField" layoutX="513.0" layoutY="442.0" prefHeight="35.0" prefWidth="79.0" />
+   <Button layoutX="625.0" layoutY="442.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
 </AnchorPane>

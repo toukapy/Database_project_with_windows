@@ -81,7 +81,7 @@ public class salesController implements Controller {
 
         // fill table with current dishes in the database
         Vector<String> rs = businessLogic.getAllDishes();
-        if (rs != null) {
+        if (!rs.isEmpty()) {
             dishTable.getItems().addAll(rs);
         } else {
             dishTable.getItems().add("No dish in the database");

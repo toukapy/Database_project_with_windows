@@ -65,6 +65,7 @@ public class addPersonController implements Controller {
         id.setText("");
         food.setText("");
         restaurant.setText("");
+        answerField.setText("");
         choice="";
     }
     @FXML
@@ -116,7 +117,7 @@ public class addPersonController implements Controller {
 
         // fill table with current people in the database
         Vector<String> rs = businessLogic.getAllPeople();
-        if(rs!=null){
+        if(!rs.isEmpty()){
             personTable.getItems().addAll(rs);
         }else{
             personTable.getItems().add("No people in the database");

@@ -53,9 +53,7 @@ public class addCustomerController implements Controller {
     @Override
     public void initializeInformation() throws SQLException {
         resetFields();
-        col.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
+        fillTable();
 
     }
 
@@ -68,6 +66,7 @@ public class addCustomerController implements Controller {
         hotelcity.setText("");
         TripTo.setText("");
         DepartureDate.setText("");
+        answerField.setText("");
         choice="";
     }
 
@@ -112,6 +111,24 @@ public class addCustomerController implements Controller {
             choice = answerField.getText();
         }else{
             errorLbl.setText("Enter a valid answer (y/n)");
+        }
+    }
+
+
+    private void fillTable() {
+        col.setCellValueFactory(data -> {
+            return new SimpleStringProperty(data.getValue());
+        });
+        // clear table
+        customerTable.getItems().clear();
+
+
+        // fill table with current customers in the database
+        Vector<String> rs = businessLogic.getAllCustomers();
+        if (!rs.isEmpty()) {
+            customerTable.getItems().addAll(rs);
+        } else {
+            customerTable.getItems().add("No customer in the database");
         }
     }
 }

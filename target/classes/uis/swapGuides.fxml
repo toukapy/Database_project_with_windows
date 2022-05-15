@@ -8,29 +8,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.swapGuidesController">
-    <TableView fx:id="guideTable" layoutX="72.0" layoutY="353.0" prefHeight="71.0" prefWidth="670.0">
+    <TableView fx:id="guideTable" layoutX="72.0" layoutY="314.0" prefHeight="132.0" prefWidth="670.0">
       <columns>
           <TableColumn fx:id="col" prefWidth="669.0" text="Swap guides" />
       </columns>
     </TableView>
-    <Button layoutX="593.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
-   <Button layoutX="72.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
-   <Label fx:id="name1Lbl" layoutX="72.0" layoutY="47.0" text="Name first guide:" />
-   <TextField fx:id="name1" layoutX="312.0" layoutY="43.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="trip1" layoutX="312.0" layoutY="119.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="phone1" layoutX="312.0" layoutY="79.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="date1" layoutX="312.0" layoutY="161.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="name2" layoutX="312.0" layoutY="200.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="phone2" layoutX="312.0" layoutY="239.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="trip2" layoutX="312.0" layoutY="277.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="phone1Lbl" layoutX="68.0" layoutY="83.0" text="Phone first guide:" />
-   <Label fx:id="trip1Lbl" layoutX="68.0" layoutY="123.0" text="Trip to first guide:" />
-   <Label fx:id="date1Lbl" layoutX="68.0" layoutY="165.0" text="Departure date first guide:" />
-   <Label fx:id="name2Lbl" layoutX="70.0" layoutY="204.0" text="Name second guide:" />
-   <Label fx:id="phone2Lbl" layoutX="68.0" layoutY="243.0" text="Phone second guide:" />
-   <Label fx:id="trip2Lbl" layoutX="68.0" layoutY="281.0" text="Trip to second guide:" />
-   <Label fx:id="date2Lbl" layoutX="68.0" layoutY="318.0" text="Departure date second guide:" />
-   <TextField fx:id="date2" layoutX="312.0" layoutY="313.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="93.0" layoutY="454.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
-   <Label fx:id="errorLbl" alignment="CENTER" layoutX="97.0" layoutY="435.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+    <Button layoutX="598.0" layoutY="498.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Button layoutX="77.0" layoutY="498.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
+   <Label fx:id="name1Lbl" layoutX="77.0" layoutY="18.0" text="Name first guide:" />
+   <TextField fx:id="name1" layoutX="317.0" layoutY="14.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="trip1" layoutX="317.0" layoutY="90.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="phone1" layoutX="317.0" layoutY="50.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="date1" layoutX="317.0" layoutY="132.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="name2" layoutX="317.0" layoutY="171.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="phone2" layoutX="317.0" layoutY="210.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="trip2" layoutX="317.0" layoutY="248.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="phone1Lbl" layoutX="73.0" layoutY="54.0" text="Phone first guide:" />
+   <Label fx:id="trip1Lbl" layoutX="73.0" layoutY="94.0" text="Trip to first guide:" />
+   <Label fx:id="date1Lbl" layoutX="73.0" layoutY="136.0" text="Departure date first guide:" />
+   <Label fx:id="name2Lbl" layoutX="75.0" layoutY="175.0" text="Name second guide:" />
+   <Label fx:id="phone2Lbl" layoutX="73.0" layoutY="214.0" text="Phone second guide:" />
+   <Label fx:id="trip2Lbl" layoutX="73.0" layoutY="252.0" text="Trip to second guide:" />
+   <Label fx:id="date2Lbl" layoutX="73.0" layoutY="289.0" text="Departure date second guide:" />
+   <TextField fx:id="date2" layoutX="317.0" layoutY="284.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="98.0" layoutY="471.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="102.0" layoutY="452.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
 </AnchorPane>

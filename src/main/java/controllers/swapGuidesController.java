@@ -100,7 +100,7 @@ public class swapGuidesController implements Controller {
 
         // fill table with current guides in the database
         Vector<String> rs = businessLogic.getAllTourguideTrips();
-        if (rs != null) {
+        if (!rs.isEmpty()) {
             guideTable.getItems().addAll(rs);
         } else {
             guideTable.getItems().add("No guide in the database");

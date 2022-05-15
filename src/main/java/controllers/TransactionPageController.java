@@ -28,11 +28,11 @@ public class TransactionPageController implements Controller {
     @FXML
     void onClickDeleteCustomer() throws SQLException {tranPageWin.showDeleteCustomer(); }
     @FXML
-    void onClickSwapGuides(){
+    void onClickSwapGuides() throws SQLException {
         tranPageWin.showSwapGuides();
     }
     @FXML
-    void onClickUpdateTourguide(){
+    void onClickUpdateTourguide() throws SQLException {
         tranPageWin.showUpdateGuide();
     }
     @FXML
@@ -50,7 +50,7 @@ public class TransactionPageController implements Controller {
     }
 
     @FXML
-    void onClickSales(){tranPageWin.showSales(); }
+    void onClickSales() throws SQLException {tranPageWin.showSales(); }
     @FXML
     void onClickBack(){
         tranPageWin.showMain();

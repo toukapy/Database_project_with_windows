@@ -36,7 +36,8 @@ public class OneRestaurantCityController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-
+        cityField.setText("");
+        tblEmployee.getItems().clear();
     }
 
     @FXML

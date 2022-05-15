@@ -47,8 +47,14 @@ public class deletePersonController implements Controller {
     @Override
     public void initializeInformation() throws SQLException {
       fillTable();
-      errorLbl.setText("");
-      correctLbl.setText("");
+      resetFields();
+    }
+
+    private void resetFields(){
+        errorLbl.setText("");
+        correctLbl.setText("");
+        name.setText("");
+        id.setText("");
     }
 
     @FXML
@@ -80,11 +86,11 @@ public class deletePersonController implements Controller {
         col1.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());
         });
-        // clear first table
+        // clear table
         personTable1.getItems().clear();
 
 
-        // fill first table with current people in the database
+        // fill table with current people in the database
         Vector<String> rs = businessLogic.getAllPeople();
         if(rs!=null){
             personTable1.getItems().addAll(rs);

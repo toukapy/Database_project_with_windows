@@ -34,7 +34,8 @@ public class GuideAllTripYearController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-
+        tblTrip.getItems().clear();
+        dateField.setText("");
     }
 
     @FXML
@@ -70,11 +71,13 @@ public class GuideAllTripYearController implements Controller {
     }
 
     public boolean checkDate(String date){
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
         try {
-            format.parse(date);
+            /* Given year has 4 digits */
+            if(date.length()==4)
+                Integer.parseInt(date);
             return true;
-        } catch (ParseException e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }

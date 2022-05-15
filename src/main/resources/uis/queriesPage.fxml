@@ -17,7 +17,7 @@
       <Button layoutX="71.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickGuidesCustomers" prefHeight="62.0" prefWidth="258.0" text="How many customers do guides have?" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="71.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickLikedAllManagers" prefHeight="62.0" prefWidth="258.0" text="What restaurants serve food liked by all managers?" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="354.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickFrequentsOneCity" prefHeight="62.0" prefWidth="258.0" text="Which employee frequents just one restaurant in the city?" textAlignment="CENTER" wrapText="true" />
-      <Button layoutX="353.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickAllCheapestTrips" prefHeight="62.0" prefWidth="258.0" text="Customers in all cheapest restaurants" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="353.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickAllCheapestTrips" prefHeight="62.0" prefWidth="258.0" text="Customers in all cheapest trips" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="354.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickGuideAllTripYear" prefHeight="62.0" prefWidth="258.0" text="Which tourguides have gone to all trips in a given year?" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="348.0" layoutY="398.0" mnemonicParsing="false" onAction="#onClickSpeakAllLanguages" prefHeight="35.0" prefWidth="270.0" text="Tourguides speaking all languages" />
       <Button layoutX="417.0" layoutY="484.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="133.0" text="Back" />

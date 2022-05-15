@@ -52,11 +52,23 @@ public class addCustomerController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-
+        resetFields();
         col.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
 
+    }
+
+    private void resetFields(){
+        correctLbl.setText("");
+        errorLbl.setText("");
+        custname.setText("");
+        custphone.setText("");
+        hotelname.setText("");
+        hotelcity.setText("");
+        TripTo.setText("");
+        DepartureDate.setText("");
+        choice="";
     }
 
     @FXML

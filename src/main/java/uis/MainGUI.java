@@ -163,8 +163,9 @@ public class MainGUI {
     /**
      * Method to show the window that displays the employees that frequent just one restaurant in a city given
      */
-    public void showOneRestaurantCity(){
+    public void showOneRestaurantCity() throws SQLException {
         setupScene(oneRestaurantCityWin.ui, "Employees that frequent just one restaurant in a city", 814, 555);
+        oneRestaurantCityWin.c.initializeInformation();
     }
 
     /**
@@ -178,8 +179,9 @@ public class MainGUI {
     /**
      * Method to show the window that displays the guides in all trips of one given year
      */
-    public void showGuideAllTripYear(){
+    public void showGuideAllTripYear() throws SQLException {
         setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
+        allTripYear.c.initializeInformation();
     }
 
     /**
@@ -209,15 +211,17 @@ public class MainGUI {
     /**
      * Method to show the window that allows us to swap two guides between trips
      */
-    public void showSwapGuides() {
+    public void showSwapGuides() throws SQLException {
         setupScene(swapGuidesWin.ui, "Swap guides", 814, 555);
+        swapGuidesWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that allows us to update the trip of a guide
      */
-    public void showUpdateGuide() {
+    public void showUpdateGuide() throws SQLException {
             setupScene(updateGuideWin.ui, "Update guide", 814, 555);
+        updateGuideWin.c.initializeInformation();
     }
 
     /**
@@ -247,8 +251,9 @@ public class MainGUI {
     /**
      * Method to show the window that allows us to update a dish's price to the half
      */
-    public void showSales(){
+    public void showSales() throws SQLException {
         setupScene(salesWin.ui, "Sales", 814, 555);
+        salesWin.c.initializeInformation();
     }
 
 

@@ -11,6 +11,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class salesController implements Controller {
 
@@ -18,9 +19,9 @@ public class salesController implements Controller {
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> dishTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String, String> col;
 
     @FXML
     private TextField dish;
@@ -39,10 +40,14 @@ public class salesController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
+        fillTable();
+        resetFields();
+    }
 
-        guideColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
+    private void resetFields(){
+        errorLbl.setText("");
+        correctLbl.setText("");
+        dish.setText("");
 
     }
 
@@ -60,6 +65,26 @@ public class salesController implements Controller {
         else {
             businessLogic.updateDishPrice(dish.getText());
             correctLbl.setText("Transaction executed!!");
+            fillTable();
+        }
+    }
+
+
+
+    private void fillTable() {
+        col.setCellValueFactory(data -> {
+            return new SimpleStringProperty(data.getValue());
+        });
+        // clear table
+        dishTable.getItems().clear();
+
+
+        // fill table with current dishes in the database
+        Vector<String> rs = businessLogic.getAllDishes();
+        if (rs != null) {
+            dishTable.getItems().addAll(rs);
+        } else {
+            dishTable.getItems().add("No dish in the database");
         }
     }
 }

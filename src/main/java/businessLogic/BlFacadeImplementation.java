@@ -267,6 +267,25 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+
+    public Vector<String> getAllTourguideTrips() {
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+
+            ResultSet tourguides = dbManager.getAllTourguideTrips();
+            while (tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+            }
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
+
     /**
      * This method updates the tour-guide of the trips between two given dates.
      * @param tgprev previous tourguide
@@ -576,12 +595,31 @@ public class BlFacadeImplementation {
 
 
 
+    public Vector<String> getAllDishes() {
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+            ResultSet dishes = dbManager.getAllDishes();
+            if (dishes==null) System.out.println("No dish matching the requirements was found.");
+            else {
+                while(dishes.next()){
+                    System.out.println("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
+                    answer.add("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
+                }
+            }
+            dbManager.close();
+            return answer;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 
 
-    /* EMPLOYEES-RELATED*/
 
+    /* RESTAURANT RELATED */
 
     /**
      * This method gets the restaurants that provide food liked by all managers
@@ -604,6 +642,11 @@ public class BlFacadeImplementation {
         }
         return answer;
     }
+
+    /* EMPLOYEES-RELATED*/
+
+
+
 
 
 
@@ -631,8 +674,6 @@ public class BlFacadeImplementation {
         }
         return answer;
     }
-
-
 
 
 

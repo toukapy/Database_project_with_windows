@@ -54,10 +54,19 @@ public class addPersonController implements Controller {
     @Override
     public void initializeInformation() throws SQLException {
         fillTable();
-        errorLbl.setText("");
-        correctLbl.setText("");
+        resetFields();
     }
 
+    private void resetFields(){
+        errorLbl.setText("");
+        correctLbl.setText("");
+        name.setText("");
+        age.setText("");
+        id.setText("");
+        food.setText("");
+        restaurant.setText("");
+        choice="";
+    }
     @FXML
     void onClickBack(){
         mainWin.showTransaction();

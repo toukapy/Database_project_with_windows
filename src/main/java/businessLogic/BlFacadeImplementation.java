@@ -340,6 +340,27 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+    /**
+     *
+     * @return
+     */
+    public Vector<String> getAllTourguideTripsNotNull() {
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+
+            ResultSet tourguides = dbManager.getAllTourguideTripsNotNull();
+            while (tourguides.next()) {
+                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+            }
+            dbManager.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
 
     /**
      * This method updates the tour-guide of the trips between two given dates.

@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.addPersonController">
     <TableView fx:id="personTable" layoutX="72.0" layoutY="239.0" prefHeight="144.0" prefWidth="670.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="669.0" text="People in the database" />
+          <TableColumn fx:id="col" prefWidth="669.0" text="Restaurant-related people" />
       </columns>
     </TableView>
     <Button fx:id="backBtn" layoutX="592.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />

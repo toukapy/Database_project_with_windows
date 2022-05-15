@@ -152,6 +152,28 @@ public class BlFacadeImplementation {
         return answer;
     }
 
+
+    public Vector<String> getAllCustomers()  {
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+            ResultSet rs = dbManager.getAllCustomers();
+            if (rs == null) {
+                return null;
+            }
+            while (rs.next()) {
+                System.out.println("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
+                answer.add("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
+            }
+            dbManager.close();
+
+            return answer;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
     /**
      * Transaction 2 -> Method that adds a customer to a trip
      *

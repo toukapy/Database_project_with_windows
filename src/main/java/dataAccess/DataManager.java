@@ -668,16 +668,33 @@ public class DataManager {
                 return rs;
             }
 
-
-
-
         } catch (SQLException e) {
             System.out.println("System rolling back");
-            connector.getConnector().commit();
+            connector.getConnector().rollback();
             e.printStackTrace();
         }
         return null;
     }
+
+
+    public ResultSet getAllCustomers() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT htc.TripTo, htc.DepartureDate, h.hotelname, h.hotelcity, c.custname, c.custphone " +
+                    "FROM hotel_trip_customer AS htc INNER JOIN hotel AS h ON htc.HotelId=h.HotelId " +
+                    "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
+
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+
+    }
+
 
 
 
@@ -886,7 +903,6 @@ public class DataManager {
             System.out.println("Couldn't execute query.");
         }
         return rs;
-
     }
 
     /* DISH RELATED */
@@ -1081,7 +1097,6 @@ public class DataManager {
             e.printStackTrace();
         }
     }
-
 
 
 }

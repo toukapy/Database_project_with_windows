@@ -92,7 +92,7 @@ public class deletePersonController implements Controller {
 
         // fill table with current people in the database
         Vector<String> rs = businessLogic.getAllPeople();
-        if(rs!=null){
+        if(!rs.isEmpty()){
             personTable1.getItems().addAll(rs);
         }else{
             personTable1.getItems().add("No people in the database");

@@ -87,7 +87,7 @@ public class updateGuideController implements Controller {
 
         // fill table with current guides in the database
         Vector<String> rs = businessLogic.getAllTourguideTrips();
-        if (rs != null) {
+        if (!rs.isEmpty()) {
             tourguideTable.getItems().addAll(rs);
         } else {
             tourguideTable.getItems().add("No guide in the database");

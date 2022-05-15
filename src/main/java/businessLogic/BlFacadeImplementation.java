@@ -154,8 +154,9 @@ public class BlFacadeImplementation {
 
 
     /**
+     * Method to get the information about all customers in a trip and a hotel
      *
-     * @return
+     * @return Vector<String> - A vector containing strings with such information
      */
     public Vector<String> getAllCustomers()  {
         Vector<String> answer = new Vector<>();
@@ -179,8 +180,9 @@ public class BlFacadeImplementation {
     }
 
     /**
+     * Method to get the information about a customer in just a trip
      *
-     * @return
+     * @return Vector<String> - Vector containing strings with such information
      */
     public Vector<String> getAllCustomersJustTrip()  {
         Vector<String> answer = new Vector<>();
@@ -320,8 +322,9 @@ public class BlFacadeImplementation {
 
 
     /**
+     * Method to get all guides, either the ones in trips or the ones that are not
      *
-     * @return
+     * @return Vector<String> - A vector containing strings with that information
      */
     public Vector<String> getAllTourguideTrips() {
         Vector<String> answer = new Vector<>();
@@ -341,8 +344,9 @@ public class BlFacadeImplementation {
     }
 
     /**
+     * Method to get the information of guides that are in trips (guides who do not have a trip are not going to appear here)
      *
-     * @return
+     * @return Vector<Strin> - A vector containing strings with that information
      */
     public Vector<String> getAllTourguideTripsNotNull() {
         Vector<String> answer = new Vector<>();
@@ -351,8 +355,8 @@ public class BlFacadeImplementation {
 
             ResultSet tourguides = dbManager.getAllTourguideTripsNotNull();
             while (tourguides.next()) {
-                System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
-                answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+                System.out.println("Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+                answer.add("Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
             }
             dbManager.close();
         }catch (SQLException e) {
@@ -396,7 +400,7 @@ public class BlFacadeImplementation {
         try {
             dbManager.open();
 
-            System.out.println("Finding the frist tourguide");
+            System.out.println("Finding the first tourguide");
             ResultSet guide1 = dbManager.getGuide(guidename1,guidephone1);
             if(!guide1.next()){
                 System.out.println("System creating a guide");
@@ -409,6 +413,11 @@ public class BlFacadeImplementation {
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 dbManager.close();
+                return;
+            }
+
+            if(!dbManager.existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
+                System.out.println("This guide is not in this trip!!!");
                 return;
             }
 
@@ -425,6 +434,11 @@ public class BlFacadeImplementation {
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 dbManager.close();
+                return;
+            }
+
+            if(!dbManager.existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
+                System.out.println("This guide is not in this trip!!!");
                 return;
             }
 
@@ -536,13 +550,14 @@ public class BlFacadeImplementation {
     /* PEOPLE RELATED (restaurant db) */
 
     /**
+     * MEthod used by the user interface to insert a person in a restaurant
      *
-     * @param choice
-     * @param name
-     * @param age
-     * @param id
-     * @param food
-     * @param restaurant
+     * @param choice - Whether we want to create the objects if they do not exist
+     * @param name - The name of the person
+     * @param age - The age of the person
+     * @param id - The id of the person
+     * @param food - The dish they want to eat
+     * @param restaurant - The restaurant they want to be added
      * @throws SQLException
      */
     public void insertPersonUI(String choice, String name, String age, String id, String food, String restaurant) throws SQLException {
@@ -631,7 +646,10 @@ public class BlFacadeImplementation {
 
 
     /**
-     *
+     * Method that returns a person's likes as a string
+     * @param name The name of the person
+     * @param id The id of the person
+     * @return String - The information os that person
      */
     public String getPerson(String name, String id){
         try {
@@ -671,8 +689,9 @@ public class BlFacadeImplementation {
 
 
     /**
+     * Method to retrieve the information about dishes
      *
-     * @return
+     * @return Vector<String> - A vector containing that information
      */
     public Vector<String> getAllDishes() {
         Vector<String> answer = new Vector<>();
@@ -723,11 +742,6 @@ public class BlFacadeImplementation {
     }
 
     /* EMPLOYEES-RELATED*/
-
-
-
-
-
 
     /**
      * This method gets the employees who have attended a single restaurant of a given city

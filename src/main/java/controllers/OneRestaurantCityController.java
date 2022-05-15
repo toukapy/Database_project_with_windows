@@ -29,17 +29,28 @@ public class OneRestaurantCityController implements Controller {
     private Label errorLbl;
 
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         oneRestaurCityWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
         cityField.setText("");
         tblEmployee.getItems().clear();
     }
 
+    /**
+     *
+     */
     @FXML
     public void onClickEnter() {
         employeeColumn.setCellValueFactory(data ->{
@@ -64,6 +75,11 @@ public class OneRestaurantCityController implements Controller {
 
     }
 
+    /**
+     * Check whether the text inserted is not a number
+     * @param text String - the city
+     * @return boolean - whether or not is valid
+     */
     private boolean check(String text) {
         for(int i = 0; i<text.length();i++){
             if(text.charAt(i) >= '0' && text.charAt(i)<='9'){
@@ -74,6 +90,9 @@ public class OneRestaurantCityController implements Controller {
         return true;
     }
 
+    /**
+     * Method to return to the parent window
+     */
     public void onClickBack() {
         oneRestaurCityWin.showQuery();
     }

@@ -21,11 +21,19 @@ public class CustomerAllCheapestTripsController implements Controller {
     @FXML
     private TableColumn<String,String> customerColumn;
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         allCheapestRestWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
         customerColumn.setCellValueFactory(data ->{
@@ -43,6 +51,9 @@ public class CustomerAllCheapestTripsController implements Controller {
         }
     }
 
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         allCheapestRestWin.showQuery();

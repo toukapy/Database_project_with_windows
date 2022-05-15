@@ -21,11 +21,19 @@ public class RestaurantFoodManagerController implements Controller {
     @FXML
     private TableColumn<String,String> columnRestaur;
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         restaurantFoodWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
 
@@ -46,6 +54,9 @@ public class RestaurantFoodManagerController implements Controller {
 
     }
 
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         restaurantFoodWin.showQuery();

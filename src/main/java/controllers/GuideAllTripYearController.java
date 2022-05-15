@@ -27,17 +27,28 @@ public class GuideAllTripYearController implements Controller {
     @FXML
     private TableColumn<String,String> tripColumn;
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         guideAllTripWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
         tblTrip.getItems().clear();
         dateField.setText("");
     }
 
+    /**
+     * Method that retrieves guides who have been in all trips on a given year
+     */
     @FXML
     void onClickEnter(){
         tripColumn.setCellValueFactory(data ->{
@@ -65,11 +76,19 @@ public class GuideAllTripYearController implements Controller {
 
     }
 
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         guideAllTripWin.showQuery();
     }
 
+    /**
+     * Check whether the text is a date or not
+     * @param date String - The year
+     * @return boolean - whether it is valid or not
+     */
     public boolean checkDate(String date){
 
         try {

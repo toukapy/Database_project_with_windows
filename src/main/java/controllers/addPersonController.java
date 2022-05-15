@@ -65,6 +65,7 @@ public class addPersonController implements Controller {
         id.setText("");
         food.setText("");
         restaurant.setText("");
+        answerField.setText("");
         choice="";
     }
     @FXML

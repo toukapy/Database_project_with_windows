@@ -68,6 +68,7 @@ public class addCustomerController implements Controller {
         hotelcity.setText("");
         TripTo.setText("");
         DepartureDate.setText("");
+        answerField.setText("");
         choice="";
     }
 

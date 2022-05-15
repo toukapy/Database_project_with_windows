@@ -499,16 +499,18 @@ public class DataManager {
     public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt1 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
+            PreparedStatement stmt1 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt1.setString(1,guideId1);
-            stmt1.setString(2,tripTo1);
-            stmt1.setString(3,departureDate1);
+            stmt1.setString(2,guideId);
+            stmt1.setString(3,tripTo1);
+            stmt1.setString(4,departureDate1);
             stmt1.executeUpdate();
 
-            PreparedStatement stmt2 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
+            PreparedStatement stmt2 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt2.setString(1,guideId);
-            stmt2.setString(2,tripTo2);
-            stmt2.setString(3,departureDate2);
+            stmt2.setString(2,guideId1);
+            stmt2.setString(3,tripTo2);
+            stmt2.setString(4,departureDate2);
             stmt2.executeUpdate();
 
             connector.getConnector().commit();
@@ -620,6 +622,27 @@ public class DataManager {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
                     "FROM tourguide AS g LEFT JOIN trip AS t ON g.GuideId=t.GuideId " +
+                    "ORDER BY t.DepartureDate ASC ");
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+    }
+
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
+    public ResultSet getAllTourguideTripsNotNull() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
+                    "FROM tourguide AS g INNER JOIN trip AS t ON g.GuideId=t.GuideId " +
                     "ORDER BY t.DepartureDate ASC ");
             rs = stmt.executeQuery();
             System.out.println("Query executed correctly!!");

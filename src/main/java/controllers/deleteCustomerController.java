@@ -42,12 +42,19 @@ public class deleteCustomerController implements Controller {
     private String departure = "";
 
 
-
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
         resetFields();
@@ -55,6 +62,9 @@ public class deleteCustomerController implements Controller {
 
     }
 
+    /**
+     * Method to reset the different fields in the UI
+     */
     private void resetFields(){
         correctLbl.setText("");
         errorLbl.setText("");
@@ -65,11 +75,17 @@ public class deleteCustomerController implements Controller {
     }
 
 
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         mainWin.showTransaction();
     }
 
+    /**
+     * Method that deletes the person matching the given information
+     */
     @FXML
     void onClickExecute() {
         errorLbl.setText("");
@@ -94,6 +110,10 @@ public class deleteCustomerController implements Controller {
         }
     }
 
+    /**
+     * Method that takes the information of the trip given
+     * @throws SQLException
+     */
     @FXML
     void onClickEnterTrip() throws SQLException {
         if(TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()){
@@ -123,6 +143,11 @@ public class deleteCustomerController implements Controller {
         }
     }
 
+    /**
+     * Method that checks whether the trip given is appropriate
+     * @param text - The trip
+     * @return boolean- whether it is appropriate or not
+     */
     private boolean check(String text) {
         for(int i = 0; i<text.length();i++){
             if(text.charAt(i) >= '0' && text.charAt(i)<='9'){
@@ -134,6 +159,9 @@ public class deleteCustomerController implements Controller {
     }
 
 
+    /**
+     * Method to fill the table with the initial information
+     */
     private void fillTable() {
         col.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());

@@ -17,7 +17,7 @@ public class DataManager {
     private long currentGuideId;
 
     /**
-     *
+     * MEthod that opens a connection with the Database connector
      */
     public void open(){
         connector = new DatabaseConnector();
@@ -43,9 +43,10 @@ public class DataManager {
     }
 
     /**
+     * Method that inserts a customer in the customer table
      *
-     * @param custname
-     * @param custphone
+     * @param custname - Customer's name
+     * @param custphone - Customer's phone
      */
     public void insertCustomer(String custname, String custphone) throws SQLException {
 
@@ -79,10 +80,11 @@ public class DataManager {
     }
 
     /**
+     * Retrieve the set of customers that go to that trip
      *
-     * @param trip
-     * @param departure
-     * @return
+     * @param trip - Destination
+     * @param departure - Departure date
+     * @return ResultSet - The customers that attend that trip
      * @throws ParseException
      */
     public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
@@ -103,10 +105,11 @@ public class DataManager {
 
     /* HOTEL-RELATED */
     /**
+     * Method to get the hotel object of a given hotel
      *
-     * @param hotelname
-     * @param hotelcity
-     * @return
+     * @param hotelname - The name of the hotel
+     * @param hotelcity - The city where the hotel is
+     * @return ResultSet - The hotels matching that information
      * @throws SQLException
      */
     public ResultSet getHotel(String hotelname, String hotelcity) throws SQLException {
@@ -126,9 +129,10 @@ public class DataManager {
     }
 
     /**
+     * Method to insert a hotel in the hotel table
      *
-     * @param hotelname
-     * @param hotelcity
+     * @param hotelname - The name of the hotel
+     * @param hotelcity - The city where the hotel is
      */
     public void insertHotel(String hotelname, String hotelcity) throws SQLException {
         try {
@@ -162,10 +166,11 @@ public class DataManager {
     /* TRIP-RELATED */
 
     /**
+     * Method to get the trips that match that conditions
      *
-     * @param tripTo
-     * @param departureDate
-     * @return
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @return ResultSet - The trips that match that condition
      * @throws SQLException
      */
     public ResultSet getTrip(String tripTo, String departureDate) throws SQLException {
@@ -185,9 +190,10 @@ public class DataManager {
     }
 
     /**
+     * Method to insert a trip into the trip table
      *
-     * @param tripTo
-     * @param departureDate
+     * @param tripTo - Destination of the trip
+     * @param departureDate - Date of the trip
      */
     public void insertTrip(String tripTo, String departureDate) throws SQLException {
         try {
@@ -208,10 +214,11 @@ public class DataManager {
     }
 
     /**
+     * Method to create the relationship between the hotel and the trip associated with it
      *
-     * @param tripTo
-     * @param departureDate
-     * @param hotelId
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @param hotelId - The id of the hotel
      * @throws SQLException
      */
     public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException {
@@ -234,11 +241,12 @@ public class DataManager {
     }
 
     /**
+     * Method to get the hotel trip relation that matches the information
      *
-     * @param tripTo
-     * @param departureDate
-     * @param hotelId
-     * @return
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @param hotelId - The id of the hotel
+     * @return ResultSet - The Relation between the hotel and the trip
      * @throws SQLException
      */
     public ResultSet getHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException {
@@ -1128,4 +1136,27 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @return
+     */
+    public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) {
+        try {
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
+            stmt.setString(1,GuideId);
+            stmt.setString(2,TripTo);
+            stmt.setString(3,DepartureDate);
+            ResultSet rs = stmt.executeQuery();
+
+            if(!rs.next()){
+                return false;
+            }
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

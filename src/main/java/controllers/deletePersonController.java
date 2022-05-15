@@ -39,17 +39,28 @@ public class deletePersonController implements Controller {
     @FXML
     private Label correctLbl;
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
       fillTable();
       resetFields();
     }
 
+    /**
+     * Method to reset the different fields in the UI
+     */
     private void resetFields(){
         errorLbl.setText("");
         correctLbl.setText("");
@@ -57,11 +68,17 @@ public class deletePersonController implements Controller {
         id.setText("");
     }
 
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         mainWin.showTransaction();
     }
 
+    /**
+     *
+     */
     @FXML
     void onClickDeletePerson(){
         errorLbl.setText("");
@@ -82,6 +99,9 @@ public class deletePersonController implements Controller {
         }
     }
 
+    /**
+     * Method to fill the table with the initial information
+     */
     private void fillTable(){
         col1.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());

@@ -46,17 +46,28 @@ public class addPersonController implements Controller {
 
     private String choice="";
 
+    /**
+     * Method that sets this window as the main window
+     * @param main MainGUI - Current window
+     */
     @Override
     public void setMainApp(MainGUI main) {
         mainWin = main;
     }
 
+    /**
+     * Method to initialize the information in the UI
+     * @throws SQLException
+     */
     @Override
     public void initializeInformation() throws SQLException {
         fillTable();
         resetFields();
     }
 
+    /**
+     * Method to reset the different fields in the UI
+     */
     private void resetFields(){
         errorLbl.setText("");
         correctLbl.setText("");
@@ -68,12 +79,19 @@ public class addPersonController implements Controller {
         answerField.setText("");
         choice="";
     }
+
+    /**
+     * Method to return to the parent window
+     */
     @FXML
     void onClickBack(){
         mainWin.showTransaction();
     }
 
 
+    /**
+     *
+     */
     @FXML
     void onClickAddPerson(){
         errorLbl.setText("");
@@ -95,6 +113,9 @@ public class addPersonController implements Controller {
 
     }
 
+    /**
+     * Method to get the information about whether the user wants to create the objects if they do not exist
+     */
     @FXML
     void onClickAnswer(){
         errorLbl.setText("");
@@ -107,6 +128,9 @@ public class addPersonController implements Controller {
         }
     }
 
+    /**
+     * Method to fill the table with the initial information
+     */
     private void fillTable(){
         col.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());

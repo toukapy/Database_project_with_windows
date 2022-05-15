@@ -1,6 +1,7 @@
 package controllers;
 
 import businessLogic.BlFacadeImplementation;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,6 +11,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.util.Vector;
 
 public class updateGuideController implements Controller {
 
@@ -17,9 +19,9 @@ public class updateGuideController implements Controller {
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
-    private TableView<String> tblGuide;
+    private TableView<String> tourguideTable;
     @FXML
-    private TableColumn<String, String> guideColumn;
+    private TableColumn<String, String> col;
 
     @FXML
     private TextField tgprev;
@@ -43,15 +45,12 @@ public class updateGuideController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-/*
-        guideColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
-*/
+        fillTable();
+        resetFields();
     }
 
     @FXML
-    void onClickBack(){
+    void onClickBack() {
         mainWin.showTransaction();
     }
 
@@ -64,6 +63,34 @@ public class updateGuideController implements Controller {
         else {
             businessLogic.updateTourguide(tgprev.getText(), tgnew.getText(), date1.getText(), date2.getText());
             correctLbl.setText("Transaction executed!!");
+            fillTable();
+        }
+    }
+
+
+    private void resetFields() {
+        errorLbl.setText("");
+        correctLbl.setText("");
+        tgnew.setText("");
+        tgprev.setText("");
+        date1.setText("");
+        date2.setText("");
+    }
+
+    private void fillTable() {
+        col.setCellValueFactory(data -> {
+            return new SimpleStringProperty(data.getValue());
+        });
+        // clear table
+        tourguideTable.getItems().clear();
+
+
+        // fill table with current guides in the database
+        Vector<String> rs = businessLogic.getAllTourguideTrips();
+        if (rs != null) {
+            tourguideTable.getItems().addAll(rs);
+        } else {
+            tourguideTable.getItems().add("No guide in the database");
         }
     }
 }

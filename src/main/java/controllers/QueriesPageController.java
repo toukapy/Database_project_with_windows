@@ -31,7 +31,7 @@ public class QueriesPageController implements Controller {
     }
 
     @FXML
-    void onClickFrequentsOneCity(){
+    void onClickFrequentsOneCity() throws SQLException {
         queryPageWin.showOneRestaurantCity();
     }
 

@@ -15,10 +15,10 @@
     </TableView>
     <Button layoutX="593.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
    <Button layoutX="72.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
-   <Label fx:id="tgprevLbl" layoutX="72.0" layoutY="47.0" text="Original tour-guide:" />
+   <Label fx:id="tgprevLbl" layoutX="72.0" layoutY="47.0" text="Original tour-guide id:" />
    <TextField fx:id="tgprev" layoutX="312.0" layoutY="43.0" prefHeight="26.0" prefWidth="424.0" />
    <Label fx:id="date2Lbl" layoutX="72.0" layoutY="177.0" text="Second date of interval:" />
-   <Label fx:id="tgnewLbl" layoutX="72.0" layoutY="91.0" text="New tour-guide:" />
+   <Label fx:id="tgnewLbl" layoutX="72.0" layoutY="91.0" text="New tour-guide id:" />
    <Label fx:id="date1Lbl" layoutX="72.0" layoutY="136.0" text="First date of interval:" />
    <TextField fx:id="date2" layoutX="312.0" layoutY="173.0" prefHeight="26.0" prefWidth="424.0" />
    <TextField fx:id="tgnew" layoutX="312.0" layoutY="87.0" prefHeight="26.0" prefWidth="424.0" />

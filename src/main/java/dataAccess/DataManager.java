@@ -609,7 +609,21 @@ public class DataManager {
         return rs;
     }
 
+    public ResultSet getAllTourguideTrips() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
+                    "FROM tourguide AS g LEFT JOIN trip AS t ON g.GuideId=t.GuideId " +
+                    "ORDER BY t.DepartureDate ASC ");
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
 
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+    }
 
 
     public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException {
@@ -941,6 +955,20 @@ public class DataManager {
         }
     }
 
+    public ResultSet getAllDishes() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT s.dish, s.restaurname, s.price FROM serves as s;");
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+    }
+
 
 /* RESTAURANT RELATED */
 
@@ -1053,9 +1081,6 @@ public class DataManager {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 

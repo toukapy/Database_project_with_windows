@@ -50,12 +50,22 @@ public class deleteCustomerController implements Controller {
 
     @Override
     public void initializeInformation() throws SQLException {
-
+        resetFields();
         col.setCellValueFactory(data -> {
             return new SimpleStringProperty(data.getValue());
         });
 
     }
+
+    private void resetFields(){
+        correctLbl.setText("");
+        errorLbl.setText("");
+        name.setText("");
+        phoneNum.setText("");
+        TripTo.setText("");
+        DepartureDate.setText("");
+    }
+
 
     @FXML
     void onClickBack(){

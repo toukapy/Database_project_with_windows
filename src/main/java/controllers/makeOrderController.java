@@ -50,10 +50,20 @@ private String choice="";
     @Override
     public void initializeInformation() throws SQLException {
         fillTable();
-        errorLbl.setText("");
-        correctLbl.setText("");
+        resetFields();
+
     }
 
+    private void resetFields(){
+        errorLbl.setText("");
+        correctLbl.setText("");
+        name.setText("");
+        menu_mtype.setText("");
+        menu_id.setText("");
+        customer_id.setText("");
+        answerField.setText("");
+        choice="";
+    }
     @FXML
     void onClickBack(){
         mainWin.showTransaction();

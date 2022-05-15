@@ -78,12 +78,18 @@ public class DataManager {
 
     }
 
-
+    /**
+     *
+     * @param trip
+     * @param departure
+     * @return
+     * @throws ParseException
+     */
     public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         PreparedStatement stmt = null;
         try {
-            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE TripTo=? AND DepartureDate=?;");
+            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
             stmt.setString(1,trip);
             stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
             rs = stmt.executeQuery();

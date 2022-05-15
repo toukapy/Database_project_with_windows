@@ -117,7 +117,7 @@ public class BlFacadeImplementation {
         ResultSet rs = dbManager.getCustomerTrip(trip,departure);
 
         while(rs.next()){
-            answer.add("Customer: "+rs.getString("CustomerId")+", TripTo: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+            answer.add("Customer: "+rs.getString("custname")+ ", Phone: " + rs.getString("custphone"));
         }
 
         dbManager.close();
@@ -153,6 +153,10 @@ public class BlFacadeImplementation {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public Vector<String> getAllCustomers()  {
         Vector<String> answer = new Vector<>();
         try {
@@ -164,6 +168,31 @@ public class BlFacadeImplementation {
             while (rs.next()) {
                 System.out.println("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
                 answer.add("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
+            }
+            dbManager.close();
+
+            return answer;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Vector<String> getAllCustomersJustTrip()  {
+        Vector<String> answer = new Vector<>();
+        try {
+            dbManager.open();
+            ResultSet rs = dbManager.getAllCustomers();
+            if (rs == null) {
+                return null;
+            }
+            while (rs.next()) {
+                System.out.println("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") );
+                answer.add("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate"));
             }
             dbManager.close();
 
@@ -290,6 +319,10 @@ public class BlFacadeImplementation {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public Vector<String> getAllTourguideTrips() {
         Vector<String> answer = new Vector<>();
         try {
@@ -616,7 +649,10 @@ public class BlFacadeImplementation {
     }
 
 
-
+    /**
+     *
+     * @return
+     */
     public Vector<String> getAllDishes() {
         Vector<String> answer = new Vector<>();
         try {

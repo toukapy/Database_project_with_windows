@@ -1,5 +1,6 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -21,7 +22,7 @@ import java.util.Vector;
 public class OneRestaurantCityController implements Controller {
 
     private MainGUI oneRestaurCityWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TextField cityField;

@@ -1,5 +1,6 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -23,7 +24,7 @@ public class addCustomerController implements Controller {
     public Label questionLbl;
     public TextField answerField;
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> customerTable;

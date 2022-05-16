@@ -1,5 +1,6 @@
 package uis;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ public class MainGUI {
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
 
-    private BlFacadeImplementation businessLogic;
+    private BlFacade businessLogic;
     private Stage stage;
     private Scene scene;
     private FXMLLoader loader;

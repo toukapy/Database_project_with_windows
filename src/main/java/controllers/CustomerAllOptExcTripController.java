@@ -1,5 +1,6 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,7 +26,7 @@ import java.util.Vector;
 public class CustomerAllOptExcTripController implements Controller {
 
     private MainGUI allOptExcWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
     private ObservableList data;
 
     @FXML

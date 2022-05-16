@@ -1,5 +1,6 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -20,7 +21,7 @@ import java.util.Vector;
 public class GuideAllTripYearController implements Controller {
 
     private MainGUI guideAllTripWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TextField dateField;

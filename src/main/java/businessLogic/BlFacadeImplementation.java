@@ -13,7 +13,7 @@ import java.util.Vector;
  * @author Miren, Leire and Amanda
  * @version 1
  */
-public class BlFacadeImplementation {
+public class BlFacadeImplementation implements BlFacade{
 
     private DataManager dbManager = new DataManager();
 
@@ -28,6 +28,7 @@ public class BlFacadeImplementation {
      * @throws SQLException if rollback fails
      * @throws ParseException if the date is not valid
      */
+    @Override
     public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException {
         dbManager.open();
 
@@ -54,6 +55,7 @@ public class BlFacadeImplementation {
      * @return the trip that has obtained the highest amount of gains
      * @throws SQLException if rollback fails
      */
+    @Override
     public Vector<String> getMaximumGainedTrip() throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
@@ -74,6 +76,7 @@ public class BlFacadeImplementation {
      * @return the customers that have gone to every trip with optional excursion
      * @throws SQLException if rollback fails
      */
+    @Override
     public Vector<String> retrieveCustomerEveryTripExc() throws SQLException {
         Vector<String> answer = new Vector<String>();
         dbManager.open();
@@ -89,6 +92,7 @@ public class BlFacadeImplementation {
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      * @return the customers who have attended at least all cheapest trips attended by customers
      */
+    @Override
     public Vector<String> getCustomersAllCheapestTrips(){
         Vector<String> answer = new Vector<>();
         try {
@@ -118,6 +122,7 @@ public class BlFacadeImplementation {
      * @throws SQLException if rollback fails
      * @throws ParseException if the provided date is not valid
      */
+    @Override
     public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
@@ -144,6 +149,7 @@ public class BlFacadeImplementation {
      * @return Vector<String> Vector containing the customer (if it exists)
      * @throws SQLException if rollback fails
      */
+    @Override
     public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
@@ -165,6 +171,7 @@ public class BlFacadeImplementation {
      *
      * @return Vector<String> - A vector containing strings with such information
      */
+    @Override
     public Vector<String> getAllCustomers()  {
         Vector<String> answer = new Vector<>();
         try {
@@ -191,6 +198,7 @@ public class BlFacadeImplementation {
      *
      * @return Vector<String> - Vector containing strings with such information
      */
+    @Override
     public Vector<String> getAllCustomersJustTrip()  {
         Vector<String> answer = new Vector<>();
         try {
@@ -223,6 +231,7 @@ public class BlFacadeImplementation {
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
      */
+    @Override
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate){
         dbManager.open();
         try {
@@ -291,6 +300,7 @@ public class BlFacadeImplementation {
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
      */
+    @Override
     public Vector<String> getTourguidesAllLanguages(){
         Vector<String> answer = new Vector<>();
         try {
@@ -313,6 +323,7 @@ public class BlFacadeImplementation {
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
      */
+    @Override
     public Vector<String> getTourguidesAllTripsYear(String year){
         Vector<String> answer = new Vector<>();
         try {
@@ -336,6 +347,7 @@ public class BlFacadeImplementation {
      *
      * @return Vector<String> - A vector containing strings with that information
      */
+    @Override
     public Vector<String> getAllTourguideTrips() {
         Vector<String> answer = new Vector<>();
         try {
@@ -358,6 +370,7 @@ public class BlFacadeImplementation {
      *
      * @return Vector<String> - A vector containing strings with that information
      */
+    @Override
     public Vector<String> getAllTourguideTripsNotNull() {
         Vector<String> answer = new Vector<>();
         try {
@@ -383,6 +396,7 @@ public class BlFacadeImplementation {
      * @param date1 first date of the interval
      * @param date2 second date of the interval
      */
+    @Override
     public void updateTourguide(String tgprev, String tgnew, String date1, String date2) {
 
         try{
@@ -406,6 +420,7 @@ public class BlFacadeImplementation {
      * @param TripTo2 String - Destination of the second trip
      * @param DepartureDate2 String - Departure date of the second trip
      */
+    @Override
     public void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) {
         try {
             dbManager.open();
@@ -465,6 +480,7 @@ public class BlFacadeImplementation {
      * Retrieve the number of customer each guide is responsible of
      * @return the number of customer each guide is responsible of
      */
+    @Override
     public Vector<String> retrieveNumCustomerGuideResponsible(){
 
         Vector<String> answer = new Vector<>();
@@ -492,6 +508,7 @@ public class BlFacadeImplementation {
      * This method aims to provide all menu orders
      * @return all menu orders
      */
+    @Override
     public Vector<String> getAllMenuOrders(){
 
     Vector<String> allorders = new Vector<>();
@@ -521,6 +538,7 @@ public class BlFacadeImplementation {
      * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
      */
+    @Override
     public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) {
         dbManager.open();
         try {
@@ -569,6 +587,7 @@ public class BlFacadeImplementation {
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
      */
+    @Override
     public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException {
 
         dbManager.open();
@@ -615,6 +634,7 @@ public class BlFacadeImplementation {
      * @param id String that represents the id of the person
      * @throws SQLException if rollback could not be done
      */
+    @Override
     public void deletePerson(String name, String id) throws SQLException {
         dbManager.open();
 
@@ -632,6 +652,7 @@ public class BlFacadeImplementation {
      * This method provides all the people that belong to the restaurants database
      * @return all the people that belong to the restaurants database
      */
+    @Override
     public Vector<String> getAllPeople(){
 
         Vector<String> answer = new Vector<>();
@@ -663,6 +684,7 @@ public class BlFacadeImplementation {
      * This method updates a given dishes' price to its half
      * @param dish provided dish
      */
+    @Override
     public void updateDishPrice(String dish)  {
         try{
             dbManager.open();
@@ -679,6 +701,7 @@ public class BlFacadeImplementation {
      *
      * @return Vector<String> - A vector containing that information
      */
+    @Override
     public Vector<String> getAllDishes() {
         Vector<String> answer = new Vector<>();
         try {
@@ -709,6 +732,7 @@ public class BlFacadeImplementation {
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
      */
+    @Override
     public Vector<String> getRestaurantLikedManagers(){
         Vector<String> answer = new Vector<String>();
         try {
@@ -735,6 +759,7 @@ public class BlFacadeImplementation {
      * @param city provided city
      * @return the employees who have attended a single restaurant of a given city
      */
+    @Override
     public Vector<String> getEmployee1RestCity(String city){
         Vector<String> answer = new Vector<>();
         try {

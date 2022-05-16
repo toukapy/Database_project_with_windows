@@ -1,5 +1,6 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -19,7 +20,7 @@ import java.util.Vector;
 public class GuideAllLanguagesController implements Controller {
 
     private MainGUI guideAllLanWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> tblGuide;

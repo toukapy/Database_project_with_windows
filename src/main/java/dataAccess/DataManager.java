@@ -416,12 +416,12 @@ public class DataManager {
     }
 
     /**
+     * Method to see whether a customer exists in a trip or not, but without specifying the hotel
      *
-     *
-     * @param customerId
-     * @param TripTo
-     * @param DepartureDate
-     * @return
+     * @param customerId String - Customer's id
+     * @param TripTo String - Trip's destination
+     * @param DepartureDate String - Trip's date
+     * @return boolean- Whether the customer exists in the trip or not
      * @throws SQLException
      */
     public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException {
@@ -479,6 +479,7 @@ public class DataManager {
     }
 
     /**
+     *
      *
      * @return
      * @throws SQLException

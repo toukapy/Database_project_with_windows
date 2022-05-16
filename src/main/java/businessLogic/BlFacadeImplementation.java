@@ -203,7 +203,7 @@ public class BlFacadeImplementation implements BlFacade{
         Vector<String> answer = new Vector<>();
         try {
             dbManager.open();
-            ResultSet rs = dbManager.getAllCustomers();
+            ResultSet rs = dbManager.getAllCustomersJustTrip();
             if (rs == null) {
                 return null;
             }

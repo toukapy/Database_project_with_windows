@@ -270,10 +270,11 @@ public class DataManager {
     /* TOUR-GUIDE RELATED */
 
     /**
+     * Method to get a guide object by name and phone
      *
-     * @param guidename
-     * @param guidephone
-     * @return
+     * @param guidename String - Guide's name
+     * @param guidephone String - Guide's phone
+     * @return ResultSet - Set containing the guide that matches that conditions
      * @throws SQLException
      */
     public ResultSet getGuide(String guidename, String guidephone) throws SQLException {
@@ -293,9 +294,10 @@ public class DataManager {
     }
 
     /**
+     * Method to insert a guide in the database by name and phone
      *
-     * @param guidename
-     * @param guidephone
+     * @param guidename String - Guide's name
+     * @param guidephone String - Guide's phone
      */
     public void createGuide(String guidename, String guidephone) {
         try {
@@ -326,6 +328,7 @@ public class DataManager {
 
     /**
      * Deletes the customer (CustomerId) from a trip (TripTo, DepartureDate)
+     *
      * @param CustomerId String - The id of the customer
      * @param TripTo String - The destination of the trip
      * @param DepartureDate String - The departure date of the trip
@@ -355,11 +358,12 @@ public class DataManager {
     }
 
     /**
+     * Method to add a customer to the trip table
      *
-     * @param CustomerId
-     * @param TripTo
-     * @param DepartureDate
-     * @param HotelId
+     * @param CustomerId String - customer's id
+     * @param TripTo String - Trip's destination
+     * @param DepartureDate String - Trip's date
+     * @param HotelId String - Hotel's id
      */
     public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException {
         try {
@@ -386,12 +390,13 @@ public class DataManager {
     }
 
     /**
+     * Method that returns whether a customer exists in a trip or not
      *
-     * @param customerId
-     * @param tripTo
-     * @param departureDate
-     * @param hotelId
-     * @return
+     * @param customerId String - Customer's id
+     * @param tripTo String - Trip's destination
+     * @param departureDate String - trip's date
+     * @param hotelId String - Hotel's id
+     * @return boolean - Whether or not the customer is in the trip
      * @throws SQLException
      */
     private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException {
@@ -411,6 +416,7 @@ public class DataManager {
     }
 
     /**
+     *
      *
      * @param customerId
      * @param TripTo
@@ -446,6 +452,7 @@ public class DataManager {
 
     /**
      * Method that retrieves the trip (TripTo, DepartureDate) that has gained the maximum amount of money
+     *
      * @return ResultSet - The set that has the object specified in the objectives
      * @throws SQLException
      */

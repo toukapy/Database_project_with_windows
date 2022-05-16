@@ -503,14 +503,14 @@ public class DataManager {
     }
 
     /**
-     * Method
+     * Method that swaps two guides between two trips
      *
-     * @param guideId
-     * @param guideId1
-     * @param tripTo1
-     * @param tripTo2
-     * @param departureDate1
-     * @param departureDate2
+     * @param guideId String - First guide's id
+     * @param guideId1 String - Second guide's id
+     * @param tripTo1 String - First trip's destination
+     * @param tripTo2 String - Second trip's destination
+     * @param departureDate1 String - First trip's date
+     * @param departureDate2 String - Second trip's date
      * @throws SQLException
      */
     public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException {
@@ -541,6 +541,7 @@ public class DataManager {
     }
 
     /**
+     *
      *
      * @return
      * @throws SQLException

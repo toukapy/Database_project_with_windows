@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacadeImplementation;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -13,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles getting the people that attend a single restaurant in a given city
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class OneRestaurantCityController implements Controller {
 
     private MainGUI oneRestaurCityWin;
@@ -49,7 +53,7 @@ public class OneRestaurantCityController implements Controller {
     }
 
     /**
-     *
+     * This method handles getting the customers that attend a single restaurant in the given city
      */
     @FXML
     public void onClickEnter() {

@@ -4,7 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+/**
+ * This class aims to represent the database connector
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class DatabaseConnector {
 
     private Connection connector;
@@ -47,7 +52,7 @@ public class DatabaseConnector {
 
     /**
      * Closes the connection and the statement created
-     * @throws SQLException
+     * @throws SQLException if an exception is thrown in the closing
      */
     public void close() throws SQLException {
         if(connector != null){

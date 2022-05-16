@@ -12,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles making an order
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class makeOrderController implements Controller {
 
     private MainGUI mainWin;
@@ -86,7 +91,7 @@ public class makeOrderController implements Controller {
     }
 
     /**
-     *
+     * Method that handles making an order
      */
     @FXML
     void onClickMakeOrder(){

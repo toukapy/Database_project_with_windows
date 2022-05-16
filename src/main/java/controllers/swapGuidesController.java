@@ -12,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles swapping guides between two trips
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class swapGuidesController implements Controller {
 
     private MainGUI mainWin;
@@ -114,7 +119,7 @@ public class swapGuidesController implements Controller {
         // clear table
         guideTable.getItems().clear();
 
-        // fill table with current guides in the database
+        // fill table with current guides that have attended trips in the database
         Vector<String> rs = businessLogic.getAllTourguideTripsNotNull();
         if (!rs.isEmpty()) {
             guideTable.getItems().addAll(rs);

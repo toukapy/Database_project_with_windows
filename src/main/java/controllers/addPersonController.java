@@ -13,6 +13,12 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 
+/**
+ * This class aims to deal with the window that handles adding people to the restaurant database
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class addPersonController implements Controller {
 
     private MainGUI mainWin;
@@ -102,7 +108,7 @@ public class addPersonController implements Controller {
             errorLbl.setText("Please, fill all fields");
         else {
             try {
-                businessLogic.insertPersonUI(choice, name.getText(), age.getText(), id.getText(), food.getText(), restaurant.getText());
+                businessLogic.insertPerson(choice, name.getText(), age.getText(), id.getText(), food.getText(), restaurant.getText());
                 fillTable();
                 correctLbl.setText("Transaction executed!!");
             } catch (SQLException e) {
@@ -139,7 +145,7 @@ public class addPersonController implements Controller {
         personTable.getItems().clear();
 
 
-        // fill table with current people in the database
+        // fill table with current people in the restaurant database
         Vector<String> rs = businessLogic.getAllPeople();
         if(!rs.isEmpty()){
             personTable.getItems().addAll(rs);

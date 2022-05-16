@@ -10,10 +10,15 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles getting the customers that attended all the cheapest trips
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class CustomerAllCheapestTripsController implements Controller {
 
-    private MainGUI allCheapestRestWin;
+    private MainGUI allCheapestTripWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
 
     @FXML
@@ -27,7 +32,7 @@ public class CustomerAllCheapestTripsController implements Controller {
      */
     @Override
     public void setMainApp(MainGUI main) {
-        allCheapestRestWin = main;
+        allCheapestTripWin = main;
     }
 
     /**
@@ -56,6 +61,6 @@ public class CustomerAllCheapestTripsController implements Controller {
      */
     @FXML
     void onClickBack(){
-        allCheapestRestWin.showQuery();
+        allCheapestTripWin.showQuery();
     }
 }

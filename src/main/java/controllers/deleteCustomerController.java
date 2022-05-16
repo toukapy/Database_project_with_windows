@@ -13,7 +13,12 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles deleting a customer from a trip
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class deleteCustomerController implements Controller {
 
     private MainGUI mainWin;

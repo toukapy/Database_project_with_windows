@@ -416,12 +416,12 @@ public class DataManager {
     }
 
     /**
+     * Method to see whether a customer exists in a trip or not, but without specifying the hotel
      *
-     *
-     * @param customerId
-     * @param TripTo
-     * @param DepartureDate
-     * @return
+     * @param customerId String - Customer's id
+     * @param TripTo String - Trip's destination
+     * @param DepartureDate String - Trip's date
+     * @return boolean- Whether the customer exists in the trip or not
      * @throws SQLException
      */
     public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException {
@@ -479,8 +479,9 @@ public class DataManager {
     }
 
     /**
+     * Method that returns a set that has all customers in trips with optional excursions
      *
-     * @return
+     * @return ResultSet - A set with customer's in all trips with optional excursions
      * @throws SQLException
      */
     public ResultSet retrieveCustomerEveryTripExc() throws SQLException {
@@ -502,13 +503,14 @@ public class DataManager {
     }
 
     /**
+     * Method that swaps two guides between two trips
      *
-     * @param guideId
-     * @param guideId1
-     * @param tripTo1
-     * @param tripTo2
-     * @param departureDate1
-     * @param departureDate2
+     * @param guideId String - First guide's id
+     * @param guideId1 String - Second guide's id
+     * @param tripTo1 String - First trip's destination
+     * @param tripTo2 String - Second trip's destination
+     * @param departureDate1 String - First trip's date
+     * @param departureDate2 String - Second trip's date
      * @throws SQLException
      */
     public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException {
@@ -539,6 +541,7 @@ public class DataManager {
     }
 
     /**
+     *
      *
      * @return
      * @throws SQLException

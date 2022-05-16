@@ -541,16 +541,16 @@ public class DataManager {
     }
 
     /**
+     * Method that returns the number of customers a guide is responsible for
      *
-     *
-     * @return
+     * @return ResultSet - A set with all guides, with each's number of customers they are responsible for
      * @throws SQLException
      */
     public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
-                    "FROM (trip AS t INNER JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
+                    "FROM (trip AS t LEFT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
                     "GROUP BY tg.GuideId " +
                     "ORDER BY tg.GuideId;");
             rs = stmt.executeQuery();
@@ -566,10 +566,11 @@ public class DataManager {
 
     }
 
-
-
-
-
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -589,7 +590,12 @@ public class DataManager {
         return rs;
     }
 
-
+    /**
+     *
+     * @param year
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getTourguidesAllTripsYear(String year) throws SQLException {
         try {
             String date1 =  year + "-01-01";
@@ -617,6 +623,11 @@ public class DataManager {
         return rs;
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getTourguidesAllLanguages() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -635,6 +646,11 @@ public class DataManager {
         return rs;
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getAllTourguideTrips() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -673,6 +689,14 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @param Guideidprev
+     * @param Guideidnew
+     * @param departuredate
+     * @param departuredate2
+     * @throws SQLException
+     */
     public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
@@ -699,6 +723,17 @@ public class DataManager {
 
     }
 
+    /**
+     *
+     * @param custname
+     * @param custphone
+     * @param hotelname
+     * @param hotelcity
+     * @param tripTo
+     * @param departureDate
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException {
         try {
 
@@ -724,6 +759,11 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getAllCustomers() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -762,6 +802,13 @@ public class DataManager {
 
 /*   PERSON RELATED */
 
+    /**
+     *
+     * @param nameid
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     public boolean personExists(String nameid, String id) throws SQLException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=? AND id=?;");
@@ -776,6 +823,13 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @param name
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getPerson(String name, String id) throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -794,6 +848,11 @@ public class DataManager {
 
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getAllPeople() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -812,6 +871,13 @@ public class DataManager {
 
     }
 
+    /**
+     *
+     * @param name
+     * @param age
+     * @param id
+     * @throws SQLException
+     */
     public void insertPerson(String name, String age, String id) throws SQLException {
         try {
 
@@ -835,6 +901,12 @@ public class DataManager {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @param id
+     * @throws SQLException
+     */
     public void deletePerson(String name, String id) throws SQLException {
         try{
             connector.getConnector().setAutoCommit(false);
@@ -859,7 +931,13 @@ public class DataManager {
     /* MENU AND MENU-ORDERS RELATED */
 
 
-
+    /**
+     *
+     * @param menu_mtype
+     * @param menu_id
+     * @param customer_id
+     * @throws SQLException
+     */
     public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException {
         try {
 
@@ -907,6 +985,7 @@ public class DataManager {
 
     /**
      * This method provides a menu
+     *
      * @param menu_mtype String that represents the type of menu
      * @param menu_id String that represents the identifier of the menu
      * @return the menu to be provided
@@ -934,6 +1013,7 @@ public class DataManager {
 
     /**
      * This method provides all menu-orders
+     *
      * @return all menu-orders
      * @throws SQLException if rollback fails
      */
@@ -956,6 +1036,7 @@ public class DataManager {
 
     /**
      * This method adds  a dish to the database
+     *
      * @param food String that represents a certain dish
      * @throws SQLException if rollback fails
      */
@@ -978,6 +1059,7 @@ public class DataManager {
 
     /**
      * This method provides whether a certain dish exists.
+     *
      * @param food String that represents a certain dish
      * @return whether a certain dish exists.
      * @throws SQLException if rollback fails
@@ -996,6 +1078,7 @@ public class DataManager {
 
     /**
      * This method updates a given dishes' price to its half
+     *
      * @param dish provided dish
      * @throws SQLException if rollback fails
      */
@@ -1018,6 +1101,11 @@ public class DataManager {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getAllDishes() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -1035,6 +1123,12 @@ public class DataManager {
 
 /* RESTAURANT RELATED */
 
+    /**
+     *
+     * @param restaurant
+     * @return
+     * @throws SQLException
+     */
     public boolean restaurantExists(String restaurant) throws SQLException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM restaurant as r WHERE r.restaurname=?;");
@@ -1048,6 +1142,11 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @param restaurant
+     * @throws SQLException
+     */
     public void insertRestaurant(String restaurant) throws SQLException {
         try {
 
@@ -1067,6 +1166,11 @@ public class DataManager {
     }
 
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getRestaurantLikedManagers() throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -1085,6 +1189,12 @@ public class DataManager {
     /* EMPLOYEE-RELATED */
 
 
+    /**
+     *
+     * @param city
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getEmployee1RestCity(String city) throws SQLException {
         try {
             connector.getConnector().setAutoCommit(false);
@@ -1109,6 +1219,12 @@ public class DataManager {
 
     /* PREFERENCES RELATED */
 
+    /**
+     *
+     * @param name
+     * @param food
+     * @throws SQLException
+     */
     public void insertEats(String name, String food) throws SQLException {
         try {
 
@@ -1127,6 +1243,12 @@ public class DataManager {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @param restaurant
+     * @throws SQLException
+     */
     public void addFrequents(String name, String restaurant) throws SQLException {
         try {
 
@@ -1147,8 +1269,8 @@ public class DataManager {
 
 
     /**
-     *
-     * @return
+     * Method that says whether a guide is in a given trip or not
+     * @return boolean - Whether the guide is in the trip or not
      */
     public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) {
         try {

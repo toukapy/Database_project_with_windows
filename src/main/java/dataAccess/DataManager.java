@@ -782,6 +782,29 @@ public class DataManager {
 
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
+    public ResultSet getAllCustomersJustTrip() throws SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT DISTINCT htc.TripTo, htc.DepartureDate " +
+                    "FROM hotel_trip_customer AS htc " +
+                    "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
+
+            rs = stmt.executeQuery();
+            System.out.println("Query executed correctly!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+        }
+        return rs;
+
+    }
+
 
 
 

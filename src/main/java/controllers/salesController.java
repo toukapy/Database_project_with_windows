@@ -13,6 +13,12 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 
+/**
+ * This class aims to deal with the window that handles setting a dish to half its price
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class salesController implements Controller {
 
     private MainGUI mainWin;
@@ -70,8 +76,7 @@ public class salesController implements Controller {
     }
 
     /**
-     *
-     *
+     * This method updates the price of a given dish to its half
      */
     @FXML
     void onClickExecute() {

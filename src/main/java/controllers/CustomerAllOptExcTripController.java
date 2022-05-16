@@ -16,7 +16,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles getting the customers that attended all optional excursions
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class CustomerAllOptExcTripController implements Controller {
 
     private MainGUI allOptExcWin;

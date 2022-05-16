@@ -153,7 +153,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the restaurants that has the food liked by a manager
+     * Method to show the window that displays the restaurants that offer food liked by all managers
      */
     public void showRestaurantFoodManager() throws SQLException {
         setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
@@ -161,7 +161,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the employees that frequent just one restaurant in a city given
+     * Method to show the window that displays the employees that frequent a single restaurant in a given city
      */
     public void showOneRestaurantCity() throws SQLException {
         setupScene(oneRestaurantCityWin.ui, "Employees that frequent just one restaurant in a city", 814, 555);
@@ -169,7 +169,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the customers in all cheapest trips
+     * Method to show the window that displays the customers that attended all cheapest trips
      */
     public void showAllCheapestTrips() throws SQLException {
         setupScene(allCheapestTripsWin.ui, "Customers in all cheapest trips", 814, 555);
@@ -177,7 +177,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the guides in all trips of one given year
+     * Method to show the window that displays the guides that attended all trips of a given year
      */
     public void showGuideAllTripYear() throws SQLException {
         setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
@@ -185,7 +185,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that displays the guides that speak all languages
+     * Method to show the window that displays the guides that speak all languages registered
      */
     public void showGuideAllLanguages() throws SQLException {
         setupScene(guideAllLang.ui, "Guides speaks all languages", 814, 555);
@@ -217,7 +217,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows us to update the trip of a guide
+     * Method to show the window that allows us to update the guide of the trips in a given interval of time
      */
     public void showUpdateGuide() throws SQLException {
             setupScene(updateGuideWin.ui, "Update guide", 814, 555);
@@ -225,7 +225,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows us to add a person to a restaurant
+     * Method to show the window that allows the user to add a person to the restaurant database
      */
     public void showAddPerson() throws SQLException {
         setupScene(addPersonWin.ui, "Add Person", 814, 555);
@@ -233,7 +233,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows us to delete a person from a restaurant
+     * Method to show the window that allows the user to delete a person from the restaurant database
      */
     public void showDeletePerson() throws SQLException {
         setupScene(deletePersonWin.ui, "Delete Person", 814, 555);
@@ -241,7 +241,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows us to make an order
+     * Method to show the window that allows the user to make an order
      */
     public void showMakeOrder() throws SQLException {
         setupScene(makeOrderWin.ui, "Make order", 814, 555);
@@ -249,7 +249,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows us to update a dish's price to the half
+     * Method to show the window that allows the user to update a dish's price to its half
      */
     public void showSales() throws SQLException {
         setupScene(salesWin.ui, "Sales", 814, 555);

@@ -12,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles updating a guide on the trips of a given interval of time
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class updateGuideController implements Controller {
 
     private MainGUI mainWin;
@@ -65,7 +70,7 @@ public class updateGuideController implements Controller {
     }
 
     /**
-     *
+     * Method that updates the guide of the trips in a given interval of time
      */
     @FXML
     void onClickExecute() {

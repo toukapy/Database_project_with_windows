@@ -12,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles adding a customer to the trip database
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class addCustomerController implements Controller {
 
     public Label questionLbl;
@@ -147,7 +152,7 @@ public class addCustomerController implements Controller {
         customerTable.getItems().clear();
 
 
-        // fill table with current customers in the database
+        // fill table with current trips in the database
         Vector<String> rs = businessLogic.getAllCustomers();
         if (!rs.isEmpty()) {
             customerTable.getItems().addAll(rs);

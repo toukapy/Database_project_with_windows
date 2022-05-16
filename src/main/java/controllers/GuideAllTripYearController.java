@@ -10,11 +10,13 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles getting the guides that have attended all trips in a given year
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class GuideAllTripYearController implements Controller {
 
     private MainGUI guideAllTripWin;
@@ -58,7 +60,7 @@ public class GuideAllTripYearController implements Controller {
         if(!dateField.getText().isEmpty()){
 
             if(!checkDate(dateField.getText())){
-                System.out.println("The date has to be yyyy-MM-dd format");
+                System.out.println("The year has to be yyyy");
             }else{
                 Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
 
@@ -85,14 +87,14 @@ public class GuideAllTripYearController implements Controller {
     }
 
     /**
-     * Check whether the text is a date or not
+     * Check whether the text is a valid year
      * @param date String - The year
      * @return boolean - whether it is valid or not
      */
     public boolean checkDate(String date){
 
         try {
-            /* Given year has 4 digits */
+            /* Given year should have 4 digits */
             if(date.length()==4)
                 Integer.parseInt(date);
             return true;

@@ -14,8 +14,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
-
-public class maximumGainsTripController<TableColum> implements Controller {
+/**
+ * This class aims to deal with the window that handles getting the trips with maximum gains
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
+public class maximumGainsTripController implements Controller {
 
     private MainGUI maximumGainsWin;
     private BlFacadeImplementation businessLogic = new BlFacadeImplementation();

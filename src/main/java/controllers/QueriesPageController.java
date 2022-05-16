@@ -5,7 +5,12 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
-
+/**
+ * This class aims to deal with the window that displays the available queries
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class QueriesPageController implements Controller {
 
     private MainGUI queryPageWin;
@@ -29,7 +34,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that returns all cheapest trips in the database
+     * Method to go to the window that returns the customers that have attended all cheapest trips in the database
      * @throws SQLException
      */
     @FXML
@@ -38,7 +43,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * MEthod to go to the window that retrieves all customers in trips with optional excursions
+     * Method to go to the window that retrieves all customers in trips with optional excursions
      * @throws SQLException
      */
     @FXML
@@ -47,7 +52,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves the customers that frequent one restaurant in a city
+     * Method to go to the window that retrieves the customers that frequent only one restaurant in a city
      * @throws SQLException
      */
     @FXML
@@ -56,7 +61,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves the guides that have gone to all trips in a year
+     * Method to go to the window that retrieves the guides that have gone to all trips in a given year
      * @throws SQLException
      */
     @FXML
@@ -74,7 +79,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves all customers that have gone to a restaurant liked by all managers
+     * Method to go to the window that retrieves the restaurants that offer food liked by all managers
      * @throws SQLException
      */
     @FXML
@@ -92,7 +97,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves guides that speak all languages
+     * Method to go to the window that retrieves guides that speak all languages registered in the trip database
      * @throws SQLException
      */
     @FXML

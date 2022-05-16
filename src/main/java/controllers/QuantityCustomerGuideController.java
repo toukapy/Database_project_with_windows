@@ -8,10 +8,14 @@ import javafx.scene.control.TableView;
 import uis.Controller;
 import uis.MainGUI;
 
-import javax.swing.text.BadLocationException;
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that handles getting the quantity of customers a guide is responsible for
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class QuantityCustomerGuideController implements Controller {
 
     private MainGUI customerGuideWin;

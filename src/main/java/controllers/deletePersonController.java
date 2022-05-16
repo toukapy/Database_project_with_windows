@@ -12,7 +12,12 @@ import uis.MainGUI;
 
 import java.sql.SQLException;
 import java.util.Vector;
-
+/**
+ * This class aims to deal with the window that deletes a person from the restaurant database
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class deletePersonController implements Controller {
 
     private MainGUI mainWin;
@@ -77,7 +82,7 @@ public class deletePersonController implements Controller {
     }
 
     /**
-     *
+     * Method that deletes a person from the restaurant database
      */
     @FXML
     void onClickDeletePerson(){

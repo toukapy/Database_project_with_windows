@@ -479,9 +479,9 @@ public class DataManager {
     }
 
     /**
+     * Method that returns a set that has all customers in trips with optional excursions
      *
-     *
-     * @return
+     * @return ResultSet - A set with customer's in all trips with optional excursions
      * @throws SQLException
      */
     public ResultSet retrieveCustomerEveryTripExc() throws SQLException {
@@ -503,6 +503,7 @@ public class DataManager {
     }
 
     /**
+     * Method
      *
      * @param guideId
      * @param guideId1

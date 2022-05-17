@@ -6,5 +6,5 @@ public interface Controller {
 
     void setMainApp(MainGUI main);
 
-    void initializeInformation() throws SQLException;
+    void initializeInformation();
 }

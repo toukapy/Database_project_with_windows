@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -59,10 +60,9 @@ public class deleteCustomerController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         resetFields();
         fillTable();
 
@@ -109,19 +109,20 @@ public class deleteCustomerController implements Controller {
                 customerTable.getItems().clear();
                 customerTable.getItems().addAll(customers);
             }catch (SQLException e){
-                e.printStackTrace();
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             } catch (ParseException e) {
-                e.printStackTrace();
+                errorLbl.setText("Please introduce a valid date.");
             }
         }
     }
 
     /**
      * Method that takes the information of the trip given
-     * @throws SQLException
      */
     @FXML
-    void onClickEnterTrip() throws SQLException {
+    void onClickEnterTrip() {
         if(TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()){
             errorLbl.setText("PLEASE, fill all fields");
         }else if(!check(TripTo.getText())){
@@ -144,7 +145,9 @@ public class deleteCustomerController implements Controller {
                     phoneNum.setDisable(false);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                errorLbl.setText("Please introduce a valid date format");
+            } catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
             }
         }
     }
@@ -169,19 +172,23 @@ public class deleteCustomerController implements Controller {
      * Method to fill the table with the initial information
      */
     private void fillTable() {
-        col.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
-        // clear table
-        customerTable.getItems().clear();
+        try {
+            col.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
+            // clear table
+            customerTable.getItems().clear();
 
 
-        // fill table with current customers in the database
-        Vector<String> rs = businessLogic.getAllCustomersJustTrip();
-        if (rs != null) {
-            customerTable.getItems().addAll(rs);
-        } else {
-            customerTable.getItems().add("No customer in the database");
+            // fill table with current customers in the database
+            Vector<String> rs = businessLogic.getAllCustomersJustTrip();
+            if (rs != null) {
+                customerTable.getItems().addAll(rs);
+            } else {
+                customerTable.getItems().add("No customer in the database");
+            }
+        }catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 }

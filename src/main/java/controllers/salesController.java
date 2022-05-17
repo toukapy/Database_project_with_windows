@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -50,10 +51,9 @@ public class salesController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         fillTable();
         resetFields();
     }
@@ -83,12 +83,19 @@ public class salesController implements Controller {
     void onClickExecute() {
         errorLbl.setText("");
         correctLbl.setText("");
-        if (dish.getText().isEmpty())
-            errorLbl.setText("Please, fill all fields");
-        else {
-            businessLogic.updateDishPrice(dish.getText());
-            correctLbl.setText("Transaction executed!!");
-            fillTable();
+
+        try {
+            if (dish.getText().isEmpty())
+                errorLbl.setText("Please, fill all fields");
+            else {
+                businessLogic.updateDishPrice(dish.getText());
+                correctLbl.setText("Transaction executed!!");
+                fillTable();
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
     }
 
@@ -103,13 +110,16 @@ public class salesController implements Controller {
         // clear table
         dishTable.getItems().clear();
 
-
-        // fill table with current dishes in the database
-        Vector<String> rs = businessLogic.getAllDishes();
-        if (!rs.isEmpty()) {
-            dishTable.getItems().addAll(rs);
-        } else {
-            dishTable.getItems().add("No dish in the database");
+        try {
+            // fill table with current dishes in the database
+            Vector<String> rs = businessLogic.getAllDishes();
+            if (!rs.isEmpty()) {
+                dishTable.getItems().addAll(rs);
+            } else {
+                dishTable.getItems().add("No dish in the database");
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 }

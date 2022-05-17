@@ -26,10 +26,9 @@ public class QueriesPageController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation(){
 
     }
 

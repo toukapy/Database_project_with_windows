@@ -109,6 +109,7 @@ public class OneRestaurantCityController implements Controller {
     /**
      * Method to return to the parent window
      */
+    @FXML
     public void onClickBack() {
         oneRestaurCityWin.showQuery();
     }

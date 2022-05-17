@@ -127,7 +127,7 @@ public class MainGUI {
     /**
      * Method to show the transaction selection window
      */
-    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",964,623);}
+    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",964,653);}
 
     /**
      * Method to show the window that displays the customers that have been in all optional excursions
@@ -165,7 +165,7 @@ public class MainGUI {
      * Method to show the window that displays the employees that frequent a single restaurant in a given city
      */
     public void showOneRestaurantCity() {
-        setupScene(oneRestaurantCityWin.ui, "Employees that frequent a single restaurant in a city", 814, 555);
+        setupScene(oneRestaurantCityWin.ui, "Employees that frequent a single restaurant in a city", 814, 575);
         oneRestaurantCityWin.c.initializeInformation();
     }
 
@@ -173,7 +173,7 @@ public class MainGUI {
      * Method to show the window that displays the customers that attended all cheapest trips
      */
     public void showAllCheapestTrips() {
-        setupScene(allCheapestTripsWin.ui, "Customers in all cheapest trips", 814, 555);
+        setupScene(allCheapestTripsWin.ui, "Customers in all cheapest trips", 814, 575);
         allCheapestTripsWin.c.initializeInformation();
     }
 
@@ -189,7 +189,7 @@ public class MainGUI {
      * Method to show the window that displays the guides that speak all languages registered
      */
     public void showGuideAllLanguages()  {
-        setupScene(guideAllLang.ui, "Guides speaking all languages", 814, 555);
+        setupScene(guideAllLang.ui, "Guides speaking all languages", 814, 575);
         guideAllLang.c.initializeInformation();
     }
 
@@ -205,7 +205,7 @@ public class MainGUI {
      * Method to show the window that allows us to delete a customer from a trip
      */
     public void showDeleteCustomer() {
-        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 639);
+        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 657);
         deleteCustomerWin.c.initializeInformation();
     }
 
@@ -213,7 +213,7 @@ public class MainGUI {
      * Method to show the window that allows us to swap two guides between trips
      */
     public void showSwapGuides() {
-        setupScene(swapGuidesWin.ui, "Swap guides", 814, 555);
+        setupScene(swapGuidesWin.ui, "Swap guides", 814, 637);
         swapGuidesWin.c.initializeInformation();
     }
 
@@ -221,7 +221,7 @@ public class MainGUI {
      * Method to show the window that allows us to update the guide of the trips in a given interval of time
      */
     public void showUpdateGuide()  {
-            setupScene(updateGuideWin.ui, "Update guide", 814, 555);
+            setupScene(updateGuideWin.ui, "Update guide", 814, 575);
         updateGuideWin.c.initializeInformation();
     }
 
@@ -229,7 +229,7 @@ public class MainGUI {
      * Method to show the window that allows the user to add a person to the restaurant database
      */
     public void showAddPerson()  {
-        setupScene(addPersonWin.ui, "Add Person", 814, 555);
+        setupScene(addPersonWin.ui, "Add Person", 814, 585);
         addPersonWin.c.initializeInformation();
     }
 
@@ -237,7 +237,7 @@ public class MainGUI {
      * Method to show the window that allows the user to delete a person from the restaurant database
      */
     public void showDeletePerson() {
-        setupScene(deletePersonWin.ui, "Delete Person", 814, 555);
+        setupScene(deletePersonWin.ui, "Delete Person", 814, 585);
         deletePersonWin.c.initializeInformation();
     }
 
@@ -245,7 +245,7 @@ public class MainGUI {
      * Method to show the window that allows the user to make an order
      */
     public void showMakeOrder() {
-        setupScene(makeOrderWin.ui, "Make order", 814, 555);
+        setupScene(makeOrderWin.ui, "Make order", 814, 585);
         makeOrderWin.c.initializeInformation();
     }
 
@@ -253,7 +253,7 @@ public class MainGUI {
      * Method to show the window that allows the user to update a dish's price to its half
      */
     public void showSales() {
-        setupScene(salesWin.ui, "Sales", 814, 555);
+        setupScene(salesWin.ui, "Sales", 814, 575);
         salesWin.c.initializeInformation();
     }
 

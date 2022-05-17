@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="358.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainPageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainPageController">
    <children>
-      <Button fx:id="queryBtn" layoutX="178.0" layoutY="161.0" mnemonicParsing="false" onAction="#onClickQueries" prefHeight="35.0" prefWidth="246.0" text="QUERIES">
+      <Button fx:id="queryBtn" layoutX="212.0" layoutY="160.0" mnemonicParsing="false" onAction="#onClickQueries" prefHeight="35.0" prefWidth="246.0" text="QUERIES">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="transactionBtn" layoutX="178.0" layoutY="228.0" mnemonicParsing="false" onAction="#onClickTransactions" prefHeight="35.0" prefWidth="246.0" text="TRANSACTIONS">
+      <Button fx:id="transactionBtn" layoutX="212.0" layoutY="229.0" mnemonicParsing="false" onAction="#onClickTransactions" prefHeight="35.0" prefWidth="246.0" text="TRANSACTIONS">
          <font>
             <Font size="18.0" />
          </font>
@@ -22,6 +22,6 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="backBtn" layoutX="274.0" layoutY="295.0" mnemonicParsing="false" onAction="#onClickBack" text="Close" />
+      <Button fx:id="backBtn" layoutX="305.0" layoutY="295.0" mnemonicParsing="false" onAction="#onClickBack" text="Close" />
    </children>
 </AnchorPane>

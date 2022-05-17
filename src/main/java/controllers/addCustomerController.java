@@ -114,7 +114,7 @@ public class addCustomerController implements Controller {
                 businessLogic.addCustomerToTrip(choice, custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
                 correctLbl.setText("Transaction executed!!");
                 Vector<String> answer = businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
-                customerTable.getItems().clear();
+
 
                 if (!answer.isEmpty()) {
                     for (String s : answer) {

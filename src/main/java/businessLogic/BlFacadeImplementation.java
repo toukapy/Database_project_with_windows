@@ -168,7 +168,7 @@ public class BlFacadeImplementation implements BlFacade{
             return null;
         }
         while(rs.next()){
-            answer.add("Customer: "+rs.getString("CustomerId")+", HotelId: "+rs.getString("HotelId")+", Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate"));
+            answer.add("Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate")+", Hotel name: "+rs.getString("hotelname")+", hotel city: "+rs.getString("hotelcity")+ ", Name: "+rs.getString("custname")+", Phone: "+rs.getString("custphone"));
         }
         dbManager.close();
 

@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="952.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.addCustomerController">
-    <TableView fx:id="customerTable" layoutX="38.0" layoutY="300.0" prefHeight="146.0" prefWidth="872.0">
+    <TableView fx:id="customerTable" editable="true" layoutX="38.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="146.0" prefWidth="824.0" AnchorPane.rightAnchor="61.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="871.1999931335449" text="Customers" />
+          <TableColumn fx:id="col" maxWidth="2000.0" prefWidth="1200.0" text="Customers" />
       </columns>
     </TableView>
     <Button layoutX="663.0" layoutY="538.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />

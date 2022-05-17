@@ -32,6 +32,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
+
         dbManager.open();
 
         ResultSet customer = dbManager.getCustomer(name,phoneNum);
@@ -80,6 +81,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
+
         Vector<String> answer = new Vector<String>();
         dbManager.open();
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
@@ -96,6 +98,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -173,6 +176,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllCustomers() throws SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -197,6 +201,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllCustomersJustTrip() throws SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -227,6 +232,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException {
+
         dbManager.open();
 
 
@@ -293,6 +299,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -314,6 +321,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -336,6 +344,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllTourguideTrips() throws SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -357,6 +366,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllTourguideTripsNotNull() throws SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -385,7 +395,6 @@ public class BlFacadeImplementation implements BlFacade{
         dbManager.open();
         dbManager.updateTourguide(tgprev, tgnew, date1, date2);
         dbManager.close();
-
     }
 
     /**
@@ -461,6 +470,7 @@ public class BlFacadeImplementation implements BlFacade{
     @Override
     public Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException {
 
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -513,6 +523,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException {
+
         dbManager.open();
 
         //Check if person exists -> create if must
@@ -561,6 +572,7 @@ public class BlFacadeImplementation implements BlFacade{
     @Override
     public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest {
 
+
         dbManager.open();
         //check person exists -> create if must
         if (dbManager.personExists(name, id)){
@@ -607,6 +619,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
+
         dbManager.open();
 
         ResultSet person = dbManager.getPerson(name,id);
@@ -625,6 +638,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllPeople() throws SQLException {
+
 
         Vector<String> answer = new Vector<>();
 
@@ -653,11 +667,9 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void updateDishPrice(String dish) throws SQLException, UncompletedRequest {
-
         dbManager.open();
         dbManager.updateDishPrice(dish);
         dbManager.close();
-
     }
 
 
@@ -668,6 +680,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllDishes() throws SQLException {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -696,6 +709,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
+
         Vector<String> answer = new Vector<String>();
 
         dbManager.open();
@@ -721,6 +735,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
+
         Vector<String> answer = new Vector<>();
 
         dbManager.open();

@@ -28,5 +28,6 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <Label fx:id="errorLbl1" alignment="CENTER" layoutX="64.0" layoutY="454.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
    </children>
 </AnchorPane>

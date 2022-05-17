@@ -1,5 +1,7 @@
 package dataAccess;
 
+import exceptions.UncompletedRequest;
+
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,7 +50,7 @@ public class DataManager {
      * @param custname - Customer's name
      * @param custphone - Customer's phone
      */
-    public void insertCustomer(String custname, String custphone) throws SQLException {
+    public void insertCustomer(String custname, String custphone) throws SQLException, UncompletedRequest {
 
         try {
             connector.getConnector().setAutoCommit(false);
@@ -73,7 +75,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
 
 
@@ -134,7 +136,7 @@ public class DataManager {
      * @param hotelname - The name of the hotel
      * @param hotelcity - The city where the hotel is
      */
-    public void insertHotel(String hotelname, String hotelcity) throws SQLException {
+    public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             ResultSet hotels = connector.getStatement().executeQuery("SELECT HotelId FROM hotel WHERE HotelId LIKE 'h%';");
@@ -158,7 +160,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -195,7 +197,7 @@ public class DataManager {
      * @param tripTo - Destination of the trip
      * @param departureDate - Date of the trip
      */
-    public void insertTrip(String tripTo, String departureDate) throws SQLException {
+    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
@@ -209,7 +211,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -221,7 +223,7 @@ public class DataManager {
      * @param hotelId - The id of the hotel
      * @throws SQLException
      */
-    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException {
+    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
 
@@ -235,7 +237,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
 
     }
@@ -299,7 +301,7 @@ public class DataManager {
      * @param guidename String - Guide's name
      * @param guidephone String - Guide's phone
      */
-    public void createGuide(String guidename, String guidephone) {
+    public void createGuide(String guidename, String guidephone) throws UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
@@ -321,7 +323,7 @@ public class DataManager {
             System.out.println("Database updated and guide added succesfully!!");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
 
     }
@@ -334,7 +336,7 @@ public class DataManager {
      * @param DepartureDate String - The departure date of the trip
      * @throws SQLException
      */
-    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException {
+    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             connector.getConnector().setAutoCommit(false);
@@ -353,6 +355,7 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
+            throw new UncompletedRequest();
         }
 
     }
@@ -365,7 +368,7 @@ public class DataManager {
      * @param DepartureDate String - Trip's date
      * @param HotelId String - Hotel's id
      */
-    public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException {
+    public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException, UncompletedRequest {
         try {
 
             if(customerExistsInTrip(CustomerId,TripTo,DepartureDate,HotelId)){
@@ -385,7 +388,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -456,7 +459,7 @@ public class DataManager {
      * @return ResultSet - The set that has the object specified in the objectives
      * @throws SQLException
      */
-    public ResultSet getMaximumGainedTrip() throws SQLException {
+    public ResultSet getMaximumGainedTrip() throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
@@ -472,8 +475,7 @@ public class DataManager {
 
         } catch (SQLException e) {
             connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -484,7 +486,7 @@ public class DataManager {
      * @return ResultSet - A set with customer's in all trips with optional excursions
      * @throws SQLException
      */
-    public ResultSet retrieveCustomerEveryTripExc() throws SQLException {
+    public ResultSet retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
         try {
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.custname, c.custphone, c.CustomerId FROM customer as c WHERE NOT EXISTS(" +
                     "SELECT * FROM trip as t WHERE NOT EXISTS(" +
@@ -495,8 +497,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("system rolling back");
             connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
 
         return rs;
@@ -513,7 +514,7 @@ public class DataManager {
      * @param departureDate2 String - Second trip's date
      * @throws SQLException
      */
-    public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException {
+    public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt1 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
@@ -536,7 +537,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("System rolling back!");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -546,7 +547,7 @@ public class DataManager {
      * @return ResultSet - A set with all guides, with each's number of customers they are responsible for
      * @throws SQLException
      */
-    public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException {
+    public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
@@ -559,7 +560,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("System rolling back!!");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
 
         return rs;
@@ -571,7 +572,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getCustomersAllCheapestTrips() throws SQLException {
+    public ResultSet getCustomersAllCheapestTrips() throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.customerid as id, c.custname as name " +
@@ -586,6 +587,7 @@ public class DataManager {
         } catch (SQLException e) {
             connector.getConnector().rollback();
             System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -596,7 +598,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException {
+    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest {
         try {
             String date1 =  year + "-01-01";
             String date2 =  year + "-12-31";
@@ -619,6 +621,7 @@ public class DataManager {
         } catch (SQLException e) {
             connector.getConnector().rollback();
             System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -628,7 +631,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getTourguidesAllLanguages() throws SQLException {
+    public ResultSet getTourguidesAllLanguages() throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, COUNT(DISTINCT l.Lang) AS LangCount " +
@@ -642,6 +645,7 @@ public class DataManager {
         } catch (SQLException e) {
             connector.getConnector().rollback();
             System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -697,7 +701,7 @@ public class DataManager {
      * @param departuredate2
      * @throws SQLException
      */
-    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException {
+    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             connector.getConnector().setAutoCommit(false);
@@ -717,6 +721,7 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
+            throw new UncompletedRequest();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -808,20 +813,6 @@ public class DataManager {
 
 
 
-/*
-    public boolean orderExists(String numord) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM menu_order WHERE numord=?;");
-            p.setString(1,numord);
-            rs = p.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rs.next();
-    }
-
- */
 
 /*   PERSON RELATED */
 
@@ -901,7 +892,7 @@ public class DataManager {
      * @param id
      * @throws SQLException
      */
-    public void insertPerson(String name, String age, String id) throws SQLException {
+    public void insertPerson(String name, String age, String id) throws SQLException, UncompletedRequest {
         try {
 
             if(personExists(name, id)){
@@ -920,7 +911,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -930,7 +921,7 @@ public class DataManager {
      * @param id
      * @throws SQLException
      */
-    public void deletePerson(String name, String id) throws SQLException {
+    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
         try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
@@ -946,6 +937,7 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
+            throw new UncompletedRequest();
         }
 
     }
@@ -961,7 +953,7 @@ public class DataManager {
      * @param customer_id
      * @throws SQLException
      */
-    public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException {
+    public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -977,7 +969,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -987,7 +979,7 @@ public class DataManager {
      * @param menu_id
      * @throws SQLException
      */
-    public void insertMenu(String menu_mtype, String menu_id) throws SQLException {
+    public void insertMenu(String menu_mtype, String menu_id) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -1002,7 +994,7 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -1063,7 +1055,7 @@ public class DataManager {
      * @param food String that represents a certain dish
      * @throws SQLException if rollback fails
      */
-    public void insertDish(String food) throws SQLException {
+    public void insertDish(String food) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -1076,7 +1068,7 @@ public class DataManager {
         }  catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -1105,7 +1097,7 @@ public class DataManager {
      * @param dish provided dish
      * @throws SQLException if rollback fails
      */
-    public void updateDishPrice(String dish) throws SQLException {
+    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest {
         try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
@@ -1121,6 +1113,7 @@ public class DataManager {
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
+            throw new UncompletedRequest();
         }
     }
 
@@ -1170,7 +1163,7 @@ public class DataManager {
      * @param restaurant
      * @throws SQLException
      */
-    public void insertRestaurant(String restaurant) throws SQLException {
+    public void insertRestaurant(String restaurant) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -1184,7 +1177,7 @@ public class DataManager {
         }  catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -1194,7 +1187,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getRestaurantLikedManagers() throws SQLException {
+    public ResultSet getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
@@ -1204,6 +1197,7 @@ public class DataManager {
         } catch (SQLException e) {
             connector.getConnector().rollback();
             System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -1218,7 +1212,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getEmployee1RestCity(String city) throws SQLException {
+    public ResultSet getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT f.nameid  as name, p.id as id " +
@@ -1234,6 +1228,7 @@ public class DataManager {
         } catch (SQLException e) {
             connector.getConnector().rollback();
             System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
         }
         return rs;
     }
@@ -1248,7 +1243,7 @@ public class DataManager {
      * @param food
      * @throws SQLException
      */
-    public void insertEats(String name, String food) throws SQLException {
+    public void insertEats(String name, String food) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -1262,7 +1257,7 @@ public class DataManager {
         }  catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 
@@ -1272,7 +1267,7 @@ public class DataManager {
      * @param restaurant
      * @throws SQLException
      */
-    public void addFrequents(String name, String restaurant) throws SQLException {
+    public void addFrequents(String name, String restaurant) throws SQLException, UncompletedRequest {
         try {
 
             connector.getConnector().setAutoCommit(false);
@@ -1286,7 +1281,7 @@ public class DataManager {
         }  catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
     }
 

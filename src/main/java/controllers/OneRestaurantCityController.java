@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -44,11 +45,10 @@ public class OneRestaurantCityController implements Controller {
     }
 
     /**
-     * Method to initialize the information in the UI
-     * @throws SQLException
+     * Method to initialize the information in the UIç
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
         cityField.setText("");
         tblEmployee.getItems().clear();
     }
@@ -58,24 +58,31 @@ public class OneRestaurantCityController implements Controller {
      */
     @FXML
     public void onClickEnter() {
-        employeeColumn.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
+        try {
+            employeeColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        if(cityField.getText().isEmpty()) {
-            errorLbl.setText("Please, fill all the fields");
-        }else if(!check(cityField.getText())){
-            errorLbl.setText("Please, enter a city, not a number");
-        }else{
+            if (cityField.getText().isEmpty()) {
+                errorLbl.setText("Please, fill all the fields");
+            } else if (!check(cityField.getText())) {
+                errorLbl.setText("Please, enter a city, not a number");
+            } else {
 
-            Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
-            tblEmployee.getItems().clear();
+                Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
+                tblEmployee.getItems().clear();
 
-            if(!rs.isEmpty()){
-                tblEmployee.getItems().addAll(rs);
-            }else{
-                tblEmployee.getItems().add("There is no such employee");
+                if (!rs.isEmpty()) {
+                    tblEmployee.getItems().addAll(rs);
+                } else {
+                    tblEmployee.getItems().add("There is no such employee");
+                }
+
             }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
     }

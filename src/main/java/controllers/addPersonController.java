@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -64,10 +65,9 @@ public class addPersonController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         fillTable();
         resetFields();
     }
@@ -97,23 +97,26 @@ public class addPersonController implements Controller {
 
 
     /**
-     *
+     * This method adds a person to the restaurant database.
      */
     @FXML
     void onClickAddPerson(){
         errorLbl.setText("");
         correctLbl.setText("");
+
         if(choice.equals(""))
             errorLbl.setText("Please, enter your choice");
-        if ((name.getText().isEmpty() || age.getText().isEmpty()|| id.getText().isEmpty() || food.getText().isEmpty()|| restaurant.getText().isEmpty() ))
+        else if ((name.getText().isEmpty() || age.getText().isEmpty()|| id.getText().isEmpty() || food.getText().isEmpty()|| restaurant.getText().isEmpty() ))
             errorLbl.setText("Please, fill all fields");
         else {
             try {
                 businessLogic.insertPerson(choice, name.getText(), age.getText(), id.getText(), food.getText(), restaurant.getText());
                 fillTable();
                 correctLbl.setText("Transaction executed!!");
-            } catch (SQLException e) {
-                errorLbl.setText("Transaction could not be executed. Please, change the data and try again.");
+            }catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             }
         }
 
@@ -145,13 +148,16 @@ public class addPersonController implements Controller {
         // clear table
         personTable.getItems().clear();
 
-
-        // fill table with current people in the restaurant database
-        Vector<String> rs = businessLogic.getAllPeople();
-        if(!rs.isEmpty()){
-            personTable.getItems().addAll(rs);
-        }else{
-            personTable.getItems().add("No people in the database");
+        try {
+            // fill table with current people in the restaurant database
+            Vector<String> rs = businessLogic.getAllPeople();
+            if (!rs.isEmpty()) {
+                personTable.getItems().addAll(rs);
+            } else {
+                personTable.getItems().add("No people in the database");
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 

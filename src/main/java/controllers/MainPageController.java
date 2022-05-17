@@ -1,20 +1,17 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import uis.Controller;
 import uis.MainGUI;
 
-import java.sql.SQLException;
-
+/**
+ * This class aims to deal with the main page
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class MainPageController implements Controller {
 
-    @FXML
-    private Button queryBtn;
-    @FXML
-    private Button transactionBtn;
-    @FXML
-    private Button backBtn;
 
     private MainGUI mainPageWin;
 
@@ -29,15 +26,14 @@ public class MainPageController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
 
     }
 
     /**
-     * MEthod to show the queries window
+     * Method to show the queries window
      */
     @FXML
     void onClickQueries(){

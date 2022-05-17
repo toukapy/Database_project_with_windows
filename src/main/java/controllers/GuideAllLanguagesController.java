@@ -2,8 +2,10 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uis.Controller;
@@ -26,6 +28,8 @@ public class GuideAllLanguagesController implements Controller {
     private TableView<String> tblGuide;
     @FXML
     private TableColumn<String,String> guideColumn;
+    @FXML
+    private Label errorLbl;
 
     /**
      * Method that sets this window as the main window
@@ -38,22 +42,27 @@ public class GuideAllLanguagesController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
-        guideColumn.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
+    public void initializeInformation()  {
+        try {
+            guideColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        tblGuide.getItems().clear();
+            tblGuide.getItems().clear();
 
-        Vector<String> rs = businessLogic.getTourguidesAllLanguages();
+            Vector<String> rs = businessLogic.getTourguidesAllLanguages();
 
-        if(!rs.isEmpty()){
-            tblGuide.getItems().addAll(rs);
-        }else{
-            tblGuide.getItems().add("There is no such tourguide");
+            if (!rs.isEmpty()) {
+                tblGuide.getItems().addAll(rs);
+            } else {
+                tblGuide.getItems().add("There is no such tourguide");
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
     }

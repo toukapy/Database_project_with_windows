@@ -2,8 +2,10 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,7 +31,8 @@ public class GuideAllTripYearController implements Controller {
     private TableView<String> tblTrip;
     @FXML
     private TableColumn<String,String> tripColumn;
-
+    @FXML
+    private Label errorLbl;
     /**
      * Method that sets this window as the main window
      * @param main MainGUI - Current window
@@ -41,10 +44,9 @@ public class GuideAllTripYearController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         tblTrip.getItems().clear();
         dateField.setText("");
     }
@@ -63,14 +65,20 @@ public class GuideAllTripYearController implements Controller {
             if(!checkDate(dateField.getText())){
                 System.out.println("The year has to be yyyy");
             }else{
-                Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
+                try {
+                    Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
 
-                tblTrip.getItems().clear();
+                    tblTrip.getItems().clear();
 
-                if(!rs.isEmpty()){
-                    tblTrip.getItems().addAll(rs);
-                }else{
-                    tblTrip.getItems().add("There is no such guide");
+                    if (!rs.isEmpty()) {
+                        tblTrip.getItems().addAll(rs);
+                    } else {
+                        tblTrip.getItems().add("There is no such guide");
+                    }
+                } catch (SQLException e){
+                    errorLbl.setText("An error with the database occurred. Please, try again later.");
+                } catch (UncompletedRequest e) {
+                    errorLbl.setText("Transaction could not be done. Please change the fields' information.");
                 }
             }
 

@@ -1,6 +1,7 @@
 package businessLogic;
 
 import dataAccess.DataManager;
+import exceptions.NoChange;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -362,8 +363,8 @@ public class BlFacadeImplementation implements BlFacade{
 
         ResultSet tourguides = dbManager.getAllTourguideTrips();
         while (tourguides.next()) {
-            System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
-            answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+            System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone: " + tourguides.getString("phone") + ", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
+            answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone: " + tourguides.getString("phone") +", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
         }
         dbManager.close();
 
@@ -401,7 +402,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @param date2 second date of the interval
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange {
 
         dbManager.open();
         dbManager.updateTourguide(tgprev, tgnew, date1, date2);

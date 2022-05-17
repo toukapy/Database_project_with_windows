@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.NoChange;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -13,6 +14,9 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles updating a guide on the trips of a given interval of time
@@ -79,6 +83,10 @@ public class updateGuideController implements Controller {
         correctLbl.setText("");
         if ((tgnew.getText().isEmpty() || tgprev.getText().isEmpty() || date1.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
+        else if(!validDate(date1.getText()) && !validDate(date2.getText()))
+            errorLbl.setText("Please, enter a valid date: yyyy-mm-dd");
+        else if(tgprev.getText().equals(tgnew.getText()))
+            errorLbl.setText("Please, enter a different tour-guide id");
         else {
             try {
                 businessLogic.updateTourguide(tgprev.getText(), tgnew.getText(), date1.getText(), date2.getText());
@@ -88,7 +96,24 @@ public class updateGuideController implements Controller {
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            } catch (NoChange e) {
+                errorLbl.setText("No information was updated through the transaction.");
             }
+        }
+    }
+
+    /**
+     * This method provides whether the date is valid
+     * @param date provided date
+     * @return whether the date is valid
+     */
+    private boolean validDate(String date){
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
         }
     }
 

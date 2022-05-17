@@ -30,7 +30,8 @@ public class DatabaseConnector {
             stmt = connector.createStatement();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("An error connecting to the database occurred. Please, try again later.");
+
         }
     }
 

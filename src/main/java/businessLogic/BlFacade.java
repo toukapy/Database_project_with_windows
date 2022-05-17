@@ -265,7 +265,9 @@ public interface BlFacade {
      * This method gets the employees who have attended a single restaurant of a given city
      * @param city provided city
      * @return the employees who have attended a single restaurant of a given city
+     * @throws SQLException if an error occurred when managing the database
+     * @throws UncompletedRequest if the query could not be carried out
      */
-    public Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest;
+    Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest;
 
 }

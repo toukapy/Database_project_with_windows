@@ -36,18 +36,20 @@ public interface BlFacade {
     /**
      * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
      * @return the trip that has obtained the highest amount of gains
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be completed
      */
-    public Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest;
+    Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest;
 
 
 
     /**
      * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      * @return the customers that have gone to every trip with optional excursion
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be carried out
      */
-    public Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest;
+    Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest;
 
 
     /**

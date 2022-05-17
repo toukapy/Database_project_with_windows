@@ -56,15 +56,18 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
      * @return the trip that has obtained the highest amount of gains
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be completed
      */
     @Override
     public Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest {
         Vector<String> answer = new Vector<>();
         dbManager.open();
 
+        // Get the due trips
         ResultSet trip = dbManager.getMaximumGainedTrip();
         if(trip.next()){
+            //Display and store the information
             answer.add("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
             System.out.println("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
         }
@@ -77,16 +80,18 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      * @return the customers that have gone to every trip with optional excursion
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be carried out
      */
     @Override
     public Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
-
         Vector<String> answer = new Vector<String>();
         dbManager.open();
+        //Get the due customers
         ResultSet customers = dbManager.retrieveCustomerEveryTripExc();
-
         while(customers.next()){
+            //display and store the information
+            System.out.println("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
             answer.add("CustomerId: "+ customers.getString("CustomerId") + ", name: " + customers.getString("custname") + ", phone: "+ customers.getString("custphone"));
         }
         dbManager.close();

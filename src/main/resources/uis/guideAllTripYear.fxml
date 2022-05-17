@@ -19,7 +19,7 @@
       <Button fx:id="enterBtn" layoutX="615.0" layoutY="62.0" mnemonicParsing="false" onAction="#onClickEnter" prefHeight="35.0" prefWidth="133.0" text="Enter" />
       <TableView fx:id="tblTrip" layoutX="66.0" layoutY="130.0" prefHeight="301.0" prefWidth="684.0">
         <columns>
-          <TableColumn fx:id="tripColumn" prefWidth="683.0" text="Tourguides that go in all trips on that year" />
+          <TableColumn fx:id="tripColumn" prefWidth="683.0" text="Tourguides going in all trips of that year" />
         </columns>
       </TableView>
       <Button fx:id="backBtn" layoutX="537.0" layoutY="463.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="211.0" text="Back" />

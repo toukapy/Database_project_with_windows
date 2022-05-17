@@ -362,8 +362,8 @@ public class BlFacadeImplementation implements BlFacade{
 
         ResultSet tourguides = dbManager.getAllTourguideTrips();
         while (tourguides.next()) {
-            System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
-            answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
+            System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone: " + tourguides.getString("phone") + ", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
+            answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone: " + tourguides.getString("phone") +", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
         }
         dbManager.close();
 

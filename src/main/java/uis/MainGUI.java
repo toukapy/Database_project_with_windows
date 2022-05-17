@@ -116,18 +116,18 @@ public class MainGUI {
      * Method to show the main window
      */
     public void showMain() {
-        setupScene(mainPageWin.ui, "Main", 814,555);
+        setupScene(mainPageWin.ui, "Main", 600,358);
     }
 
     /**
      * Method to show the query selection window
      */
-    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",814,555);}
+    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",964,555);}
 
     /**
      * Method to show the transaction selection window
      */
-    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",814,555);}
+    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",964,623);}
 
     /**
      * Method to show the window that displays the customers that have been in all optional excursions
@@ -196,16 +196,16 @@ public class MainGUI {
     /**
      * Method to show the window that allows us to add a customer to a trip with a hotel
      */
-    public void showAddCustomer() throws SQLException {
-        setupScene(addCustomerWin.ui, "Add customer", 814, 615);
+    public void showAddCustomer() {
+        setupScene(addCustomerWin.ui, "Add customer", 952, 600);
         addCustomerWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that allows us to delete a customer from a trip
      */
-    public void showDeleteCustomer() throws SQLException {
-        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 555);
+    public void showDeleteCustomer() {
+        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 639);
         deleteCustomerWin.c.initializeInformation();
     }
 
@@ -228,7 +228,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows the user to add a person to the restaurant database
      */
-    public void showAddPerson() throws SQLException {
+    public void showAddPerson()  {
         setupScene(addPersonWin.ui, "Add Person", 814, 555);
         addPersonWin.c.initializeInformation();
     }

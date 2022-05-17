@@ -60,31 +60,29 @@ public class GuideAllTripYearController implements Controller {
             return new SimpleStringProperty(data.getValue());
         });
 
-        if(!dateField.getText().isEmpty()){
+        if(dateField.getText().isEmpty())
+            errorLbl.setText("Please fill all fields.");
 
-            if(!checkDate(dateField.getText())){
-                System.out.println("The year has to be yyyy");
-            }else{
-                try {
-                    Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
+        else if(!checkDate(dateField.getText()))
+            errorLbl.setText("The year has to be yyyy");
 
-                    tblTrip.getItems().clear();
+        else{
+            try {
+                Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
 
-                    if (!rs.isEmpty()) {
-                        tblTrip.getItems().addAll(rs);
-                    } else {
-                        tblTrip.getItems().add("There is no such guide");
-                    }
-                } catch (SQLException e){
-                    errorLbl.setText("An error with the database occurred. Please, try again later.");
-                } catch (UncompletedRequest e) {
-                    errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+                tblTrip.getItems().clear();
+
+                if (!rs.isEmpty()) {
+                    tblTrip.getItems().addAll(rs);
+                } else {
+                    tblTrip.getItems().add("There is no such guide");
                 }
+            } catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             }
-
         }
-
-
     }
 
     /**
@@ -97,15 +95,15 @@ public class GuideAllTripYearController implements Controller {
 
     /**
      * Check whether the text is a valid year
-     * @param date String - The year
+     * @param year String - The year
      * @return boolean - whether it is valid or not
      */
-    public boolean checkDate(String date){
+    public boolean checkDate(String year){
 
         try {
             /* Given year should have 4 digits */
-            if(date.length()==4)
-                Integer.parseInt(date);
+            if(year.length()==4)
+                Integer.parseInt(year);
             return true;
         } catch (NumberFormatException e) {
             return false;

@@ -15,7 +15,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles getting the people that attend a single restaurant in a given city
+ * This class aims to deal with the window that handles getting the employees that attend a single restaurant in a given city
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -50,11 +50,12 @@ public class OneRestaurantCityController implements Controller {
     @Override
     public void initializeInformation()  {
         cityField.setText("");
+        errorLbl.setText("");
         tblEmployee.getItems().clear();
     }
 
     /**
-     * This method handles getting the customers that attend a single restaurant in the given city
+     * This method handles getting the employees that attend a single restaurant in the given city
      */
     @FXML
     public void onClickEnter() {
@@ -62,12 +63,15 @@ public class OneRestaurantCityController implements Controller {
             employeeColumn.setCellValueFactory(data -> {
                 return new SimpleStringProperty(data.getValue());
             });
-
-            if (cityField.getText().isEmpty()) {
+            // check if empty fields -> inform user
+            if (cityField.getText().isEmpty())
                 errorLbl.setText("Please, fill all the fields");
-            } else if (!check(cityField.getText())) {
+            //check if data is valid -> inform user
+            else if (!check(cityField.getText()))
                 errorLbl.setText("Please, enter a city, not a number");
-            } else {
+
+            // get employees who attend a single restaurant
+            else {
 
                 Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
                 tblEmployee.getItems().clear();
@@ -98,7 +102,6 @@ public class OneRestaurantCityController implements Controller {
                 return false;
             }
         }
-
         return true;
     }
 

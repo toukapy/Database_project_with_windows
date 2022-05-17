@@ -116,13 +116,13 @@ public class MainGUI {
      * Method to show the main window
      */
     public void showMain() {
-        setupScene(mainPageWin.ui, "Main", 600,358);
+        setupScene(mainPageWin.ui, "Main", 655,398);
     }
 
     /**
      * Method to show the query selection window
      */
-    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",964,555);}
+    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",964,595);}
 
     /**
      * Method to show the transaction selection window
@@ -133,7 +133,7 @@ public class MainGUI {
      * Method to show the window that displays the customers that have been in all optional excursions
      */
     public void showCustomerAllOptExc(){
-        setupScene(allOptExcTripWin.ui, "Customers in all trips with optional excursions",814,555);
+        setupScene(allOptExcTripWin.ui, "Customers in all trips with optional excursions",814,595);
         allOptExcTripWin.c.initializeInformation();
     }
 
@@ -141,7 +141,7 @@ public class MainGUI {
      * Method to show the window that displays the trip that gained the maximum amount of money
      */
     public void showMaximumGainedTrip() {
-        setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
+        setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 595);
         maximumGainedWin.c.initializeInformation();
     }
 
@@ -149,7 +149,7 @@ public class MainGUI {
      * Method to show the window that displays the quantity of customers each guide has
      */
     public void showQuantityCustomer() {
-        setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 555);
+        setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 595);
         quantityCustomerWin.c.initializeInformation();
     }
 
@@ -157,7 +157,7 @@ public class MainGUI {
      * Method to show the window that displays the restaurants that offer food liked by all managers
      */
     public void showRestaurantFoodManager()  {
-        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 555);
+        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 595);
         restaurantFoodWin.c.initializeInformation();
     }
 
@@ -197,7 +197,7 @@ public class MainGUI {
      * Method to show the window that allows us to add a customer to a trip with a hotel
      */
     public void showAddCustomer() {
-        setupScene(addCustomerWin.ui, "Add customer", 952, 600);
+        setupScene(addCustomerWin.ui, "Add customer", 952, 630);
         addCustomerWin.c.initializeInformation();
     }
 

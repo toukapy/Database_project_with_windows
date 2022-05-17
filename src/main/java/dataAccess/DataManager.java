@@ -550,7 +550,7 @@ public class DataManager {
         try {
             connector.getConnector().setAutoCommit(false);
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
-                    "FROM (trip AS t LEFT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
+                    "FROM (trip AS t RIGHT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
                     "GROUP BY tg.GuideId " +
                     "ORDER BY tg.GuideId;");
             rs = stmt.executeQuery();
@@ -745,7 +745,7 @@ public class DataManager {
             ResultSet hotel = getHotel(hotelname,hotelcity);
 
             if(customer.next() && hotel.next()){
-                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? AND HotelId=? AND TripTo=? AND DepartureDate=?;");
+                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM (hotel_trip_customer as htc INNER JOIN customer as c on htc.CustomerId=c.CustomerId) INNER JOIN hotel as h ON htc.HotelId=h.HotelId  WHERE htc.CustomerId=? AND htc.HotelId=? AND htc.TripTo=? AND htc.DepartureDate=?;");
                 stmt.setString(1,customer.getString("CustomerId"));
                 stmt.setString(2,hotel.getString("HotelId"));
                 stmt.setString(3,tripTo);

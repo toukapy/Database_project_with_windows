@@ -1,6 +1,7 @@
 package businessLogic;
 
 import dataAccess.DataManager;
+import exceptions.NoChange;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -401,7 +402,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @param date2 second date of the interval
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange {
 
         dbManager.open();
         dbManager.updateTourguide(tgprev, tgnew, date1, date2);

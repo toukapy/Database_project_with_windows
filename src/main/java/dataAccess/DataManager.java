@@ -1180,9 +1180,10 @@ public class DataManager {
 
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method gets the restaurants that provide food liked by all managers
+     * @return the restaurants that provide food liked by all managers
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if the query could not be executed
      */
     public ResultSet getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
         try {

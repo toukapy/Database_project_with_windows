@@ -711,6 +711,8 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be executed
      */
     @Override
     public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
@@ -723,8 +725,8 @@ public class BlFacadeImplementation implements BlFacade{
         if (restaurants==null) System.out.println("No restaurants matching the requirements were found.");
         else
             while (restaurants.next()) {
-                System.out.println("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
-                answer.add("Restaurname: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+                System.out.println("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+                answer.add("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
             }
         dbManager.close();
 

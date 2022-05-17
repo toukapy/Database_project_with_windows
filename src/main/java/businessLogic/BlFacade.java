@@ -257,8 +257,10 @@ public interface BlFacade {
     /**
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be executed
      */
-    public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest;
+    Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest;
 
 
     /* EMPLOYEES-RELATED*/

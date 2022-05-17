@@ -157,7 +157,7 @@ public class MainGUI {
      * Method to show the window that displays the restaurants that offer food liked by all managers
      */
     public void showRestaurantFoodManager()  {
-        setupScene(restaurantFoodWin.ui, "Restaurants' dish like by all manager", 814, 555);
+        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 555);
         restaurantFoodWin.c.initializeInformation();
     }
 

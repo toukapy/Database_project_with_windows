@@ -1,6 +1,9 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.ObjectNotCreated;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -23,7 +26,7 @@ public class addCustomerController implements Controller {
     public Label questionLbl;
     public TextField answerField;
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> customerTable;
@@ -61,13 +64,11 @@ public class addCustomerController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         resetFields();
         fillTable();
-
     }
 
     /**
@@ -96,32 +97,42 @@ public class addCustomerController implements Controller {
 
     /**
      * Method that adds a customer in the selected trip and hotel
-     * @throws SQLException
      */
     @FXML
-    void onClickExecute() throws SQLException {
+    void onClickExecute()  {
         errorLbl.setText("");
         correctLbl.setText("");
-        if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
-            errorLbl.setText("Please, fill all fields");
-        else if(businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText())!= null){errorLbl.setText("The customer is already in the trip");}
-        else if(choice.equals("")){errorLbl.setText("Answer the question first");}
-        else {
-            businessLogic.addCustomerToTrip(choice,custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
-            correctLbl.setText("Transaction executed!!");
-            Vector<String> answer = businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
-            customerTable.getItems().clear();
 
-            if(!answer.isEmpty()){
-                for(String s: answer){
-                    System.out.println(s+"\n");
-                    customerTable.getItems().add(s);
+        try {
+            if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
+                errorLbl.setText("Please, fill all fields");
+            else if (businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText()) != null) {
+                errorLbl.setText("The customer is already in the trip");
+            } else if (choice.equals("")) {
+                errorLbl.setText("Answer the question first");
+            } else {
+                businessLogic.addCustomerToTrip(choice, custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
+                correctLbl.setText("Transaction executed!!");
+                Vector<String> answer = businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
+                customerTable.getItems().clear();
+
+                if (!answer.isEmpty()) {
+                    for (String s : answer) {
+                        System.out.println(s + "\n");
+                        customerTable.getItems().add(s);
+                    }
+
+                } else {
+                    customerTable.getItems().add("There is no such customer");
                 }
 
-            }else{
-                customerTable.getItems().add("There is no such customer");
             }
-
+        }catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+        } catch (ObjectNotCreated e) {
+            errorLbl.setText("Transaction not completed. Change choice to 'y' for creating necessary intermediate objects.");
         }
     }
 
@@ -152,12 +163,16 @@ public class addCustomerController implements Controller {
         customerTable.getItems().clear();
 
 
-        // fill table with current trips in the database
-        Vector<String> rs = businessLogic.getAllCustomers();
-        if (!rs.isEmpty()) {
-            customerTable.getItems().addAll(rs);
-        } else {
-            customerTable.getItems().add("No customer in the database");
+        try {
+            // fill table with current trips in the database
+            Vector<String> rs = businessLogic.getAllCustomers();
+            if (!rs.isEmpty()) {
+                customerTable.getItems().addAll(rs);
+            } else {
+                customerTable.getItems().add("No customer in the database");
+            }
+        }catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 }

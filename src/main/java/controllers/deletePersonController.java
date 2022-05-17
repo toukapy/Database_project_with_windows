@@ -1,6 +1,8 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +23,7 @@ import java.util.Vector;
 public class deletePersonController implements Controller {
 
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> personTable1;
@@ -55,10 +57,9 @@ public class deletePersonController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
       fillTable();
       resetFields();
     }
@@ -92,7 +93,6 @@ public class deletePersonController implements Controller {
             errorLbl.setText("Please, fill name and id fields");
         else {
             try {
-
                 // execute query and fill the table
                 businessLogic.deletePerson(name.getText(), id.getText());
                 fillTable();
@@ -100,6 +100,8 @@ public class deletePersonController implements Controller {
                 correctLbl.setText("Transaction executed!!");
             } catch(SQLException e){
                 errorLbl.setText("Transaction could not be executed. Please, change the data and try again.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             }
         }
     }
@@ -114,13 +116,16 @@ public class deletePersonController implements Controller {
         // clear table
         personTable1.getItems().clear();
 
-
-        // fill table with current people in the database
-        Vector<String> rs = businessLogic.getAllPeople();
-        if(!rs.isEmpty()){
-            personTable1.getItems().addAll(rs);
-        }else{
-            personTable1.getItems().add("No people in the database");
+        try {
+            // fill table with current people in the database
+            Vector<String> rs = businessLogic.getAllPeople();
+            if (!rs.isEmpty()) {
+                personTable1.getItems().addAll(rs);
+            } else {
+                personTable1.getItems().add("No people in the database");
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 

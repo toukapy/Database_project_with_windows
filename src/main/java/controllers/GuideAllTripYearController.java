@@ -1,8 +1,11 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -20,7 +23,7 @@ import java.util.Vector;
 public class GuideAllTripYearController implements Controller {
 
     private MainGUI guideAllTripWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TextField dateField;
@@ -28,7 +31,8 @@ public class GuideAllTripYearController implements Controller {
     private TableView<String> tblTrip;
     @FXML
     private TableColumn<String,String> tripColumn;
-
+    @FXML
+    private Label errorLbl;
     /**
      * Method that sets this window as the main window
      * @param main MainGUI - Current window
@@ -40,11 +44,11 @@ public class GuideAllTripYearController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         tblTrip.getItems().clear();
+        errorLbl.setText("");
         dateField.setText("");
     }
 
@@ -53,29 +57,35 @@ public class GuideAllTripYearController implements Controller {
      */
     @FXML
     void onClickEnter(){
+        errorLbl.setText("");
+        tblTrip.getItems().clear();
         tripColumn.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());
         });
 
-        if(!dateField.getText().isEmpty()){
+        if(dateField.getText().isEmpty())
+            errorLbl.setText("Please fill all fields.");
 
-            if(!checkDate(dateField.getText())){
-                System.out.println("The year has to be yyyy");
-            }else{
+        else if(!checkDate(dateField.getText()))
+            errorLbl.setText("The year has to be yyyy");
+
+        else{
+            try {
                 Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());
 
                 tblTrip.getItems().clear();
 
-                if(!rs.isEmpty()){
+                if (!rs.isEmpty()) {
                     tblTrip.getItems().addAll(rs);
-                }else{
+                } else {
                     tblTrip.getItems().add("There is no such guide");
                 }
+            } catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             }
-
         }
-
-
     }
 
     /**
@@ -88,16 +98,17 @@ public class GuideAllTripYearController implements Controller {
 
     /**
      * Check whether the text is a valid year
-     * @param date String - The year
+     * @param year String - The year
      * @return boolean - whether it is valid or not
      */
-    public boolean checkDate(String date){
+    public boolean checkDate(String year){
 
         try {
             /* Given year should have 4 digits */
-            if(date.length()==4)
-                Integer.parseInt(date);
-            return true;
+            if(year.length()==4) {
+                Integer.parseInt(year);
+                return true;
+            }else return false;
         } catch (NumberFormatException e) {
             return false;
         }

@@ -1,6 +1,9 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.ObjectNotCreated;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +24,7 @@ import java.util.Vector;
 public class makeOrderController implements Controller {
 
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> orderTable;
@@ -59,10 +62,9 @@ public class makeOrderController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         fillTable();
         resetFields();
 
@@ -102,9 +104,17 @@ public class makeOrderController implements Controller {
         else if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || name.getText().isEmpty() || customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
-            businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
-            fillTable();
-            correctLbl.setText("Transaction executed!!");
+            try {
+                businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
+                fillTable();
+                correctLbl.setText("Transaction executed!!");
+            } catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            } catch (ObjectNotCreated e) {
+                errorLbl.setText("Transaction not completed. Change choice to 'y' for creating necessary objects.");
+            }
         }
     }
 
@@ -129,19 +139,23 @@ public class makeOrderController implements Controller {
      */
     @FXML
     private void fillTable(){
-        col.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
-        // clear table
-        orderTable.getItems().clear();
+        try {
+            col.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
+            // clear table
+            orderTable.getItems().clear();
 
 
-        // fill table with current orders in the database
-        Vector<String> rs = businessLogic.getAllMenuOrders();
-        if(!rs.isEmpty()){
-            orderTable.getItems().addAll(rs);
-        }else{
-            orderTable.getItems().add("No orders in the database");
+            // fill table with current orders in the database
+            Vector<String> rs = businessLogic.getAllMenuOrders();
+            if (!rs.isEmpty()) {
+                orderTable.getItems().addAll(rs);
+            } else {
+                orderTable.getItems().add("No orders in the database");
+            }
+        }catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 

@@ -1,8 +1,11 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uis.Controller;
@@ -20,12 +23,14 @@ import java.util.Vector;
 public class RestaurantFoodManagerController implements Controller {
 
     private MainGUI restaurantFoodWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> tblRestaurants;
     @FXML
     private TableColumn<String,String> columnRestaur;
+    @FXML
+    private Label errorLbl;
 
     /**
      * Method that sets this window as the main window
@@ -41,22 +46,26 @@ public class RestaurantFoodManagerController implements Controller {
      * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
+        try {
+            columnRestaur.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        columnRestaur.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
+            Vector<String> rs = businessLogic.getRestaurantLikedManagers();
 
-        Vector<String> rs = businessLogic.getRestaurantLikedManagers();
+            tblRestaurants.getItems().clear();
 
-        tblRestaurants.getItems().clear();
-
-        if(!rs.isEmpty()){
-            tblRestaurants.getItems().addAll(rs);
-        }else{
-            tblRestaurants.getItems().add("There is not such restaurant");
+            if (!rs.isEmpty()) {
+                tblRestaurants.getItems().addAll(rs);
+            } else {
+                tblRestaurants.getItems().add("There is not such restaurant");
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
-
 
     }
 

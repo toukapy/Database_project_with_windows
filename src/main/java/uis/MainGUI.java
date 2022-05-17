@@ -1,5 +1,6 @@
 package uis;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ public class MainGUI {
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
 
-    private BlFacadeImplementation businessLogic;
+    private BlFacade businessLogic;
     private Stage stage;
     private Scene scene;
     private FXMLLoader loader;
@@ -115,31 +116,31 @@ public class MainGUI {
      * Method to show the main window
      */
     public void showMain() {
-        setupScene(mainPageWin.ui, "Main", 814,555);
+        setupScene(mainPageWin.ui, "Main", 600,358);
     }
 
     /**
      * Method to show the query selection window
      */
-    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",814,555);}
+    public void showQuery(){ setupScene(queryPageWin.ui, "Queries",964,555);}
 
     /**
      * Method to show the transaction selection window
      */
-    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",814,555);}
+    public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",964,623);}
 
     /**
      * Method to show the window that displays the customers that have been in all optional excursions
      */
-    public void showCustomerAllOptExc() throws SQLException {
-        setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);
+    public void showCustomerAllOptExc(){
+        setupScene(allOptExcTripWin.ui, "Customers in all trips with optional excursions",814,555);
         allOptExcTripWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that displays the trip that gained the maximum amount of money
      */
-    public void showMaximumGainedTrip() throws SQLException {
+    public void showMaximumGainedTrip() {
         setupScene(maximumGainedWin.ui, "Maximum gained trip", 814, 555);
         maximumGainedWin.c.initializeInformation();
     }
@@ -147,7 +148,7 @@ public class MainGUI {
     /**
      * Method to show the window that displays the quantity of customers each guide has
      */
-    public void showQuantityCustomer() throws SQLException {
+    public void showQuantityCustomer() {
         setupScene(quantityCustomerWin.ui, "Quantity of customers with guide", 814, 555);
         quantityCustomerWin.c.initializeInformation();
     }
@@ -155,23 +156,23 @@ public class MainGUI {
     /**
      * Method to show the window that displays the restaurants that offer food liked by all managers
      */
-    public void showRestaurantFoodManager() throws SQLException {
-        setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
+    public void showRestaurantFoodManager()  {
+        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 555);
         restaurantFoodWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that displays the employees that frequent a single restaurant in a given city
      */
-    public void showOneRestaurantCity() throws SQLException {
-        setupScene(oneRestaurantCityWin.ui, "Employees that frequent just one restaurant in a city", 814, 555);
+    public void showOneRestaurantCity() {
+        setupScene(oneRestaurantCityWin.ui, "Employees that frequent a single restaurant in a city", 814, 555);
         oneRestaurantCityWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that displays the customers that attended all cheapest trips
      */
-    public void showAllCheapestTrips() throws SQLException {
+    public void showAllCheapestTrips() {
         setupScene(allCheapestTripsWin.ui, "Customers in all cheapest trips", 814, 555);
         allCheapestTripsWin.c.initializeInformation();
     }
@@ -179,7 +180,7 @@ public class MainGUI {
     /**
      * Method to show the window that displays the guides that attended all trips of a given year
      */
-    public void showGuideAllTripYear() throws SQLException {
+    public void showGuideAllTripYear() {
         setupScene(allTripYear.ui, "Guides in all trips in a year", 814, 555);
         allTripYear.c.initializeInformation();
     }
@@ -187,31 +188,31 @@ public class MainGUI {
     /**
      * Method to show the window that displays the guides that speak all languages registered
      */
-    public void showGuideAllLanguages() throws SQLException {
-        setupScene(guideAllLang.ui, "Guides speaks all languages", 814, 555);
+    public void showGuideAllLanguages()  {
+        setupScene(guideAllLang.ui, "Guides speaking all languages", 814, 555);
         guideAllLang.c.initializeInformation();
     }
 
     /**
      * Method to show the window that allows us to add a customer to a trip with a hotel
      */
-    public void showAddCustomer() throws SQLException {
-        setupScene(addCustomerWin.ui, "Add customer", 814, 615);
+    public void showAddCustomer() {
+        setupScene(addCustomerWin.ui, "Add customer", 952, 600);
         addCustomerWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that allows us to delete a customer from a trip
      */
-    public void showDeleteCustomer() throws SQLException {
-        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 555);
+    public void showDeleteCustomer() {
+        setupScene(deleteCustomerWin.ui, "Delete customer", 814, 639);
         deleteCustomerWin.c.initializeInformation();
     }
 
     /**
      * Method to show the window that allows us to swap two guides between trips
      */
-    public void showSwapGuides() throws SQLException {
+    public void showSwapGuides() {
         setupScene(swapGuidesWin.ui, "Swap guides", 814, 555);
         swapGuidesWin.c.initializeInformation();
     }
@@ -219,7 +220,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows us to update the guide of the trips in a given interval of time
      */
-    public void showUpdateGuide() throws SQLException {
+    public void showUpdateGuide()  {
             setupScene(updateGuideWin.ui, "Update guide", 814, 555);
         updateGuideWin.c.initializeInformation();
     }
@@ -227,7 +228,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows the user to add a person to the restaurant database
      */
-    public void showAddPerson() throws SQLException {
+    public void showAddPerson()  {
         setupScene(addPersonWin.ui, "Add Person", 814, 555);
         addPersonWin.c.initializeInformation();
     }
@@ -235,7 +236,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows the user to delete a person from the restaurant database
      */
-    public void showDeletePerson() throws SQLException {
+    public void showDeletePerson() {
         setupScene(deletePersonWin.ui, "Delete Person", 814, 555);
         deletePersonWin.c.initializeInformation();
     }
@@ -243,7 +244,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows the user to make an order
      */
-    public void showMakeOrder() throws SQLException {
+    public void showMakeOrder() {
         setupScene(makeOrderWin.ui, "Make order", 814, 555);
         makeOrderWin.c.initializeInformation();
     }
@@ -251,7 +252,7 @@ public class MainGUI {
     /**
      * Method to show the window that allows the user to update a dish's price to its half
      */
-    public void showSales() throws SQLException {
+    public void showSales() {
         setupScene(salesWin.ui, "Sales", 814, 555);
         salesWin.c.initializeInformation();
     }

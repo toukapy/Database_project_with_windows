@@ -7,29 +7,29 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.addCustomerController">
-    <TableView fx:id="customerTable" layoutX="72.0" layoutY="300.0" prefHeight="146.0" prefWidth="670.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="952.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.addCustomerController">
+    <TableView fx:id="customerTable" layoutX="38.0" layoutY="300.0" prefHeight="146.0" prefWidth="872.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="669.0" text="Customers" />
+          <TableColumn fx:id="col" prefWidth="871.1999931335449" text="Customers" />
       </columns>
     </TableView>
-    <Button layoutX="593.0" layoutY="537.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
-   <Button layoutX="69.0" layoutY="537.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
-   <Label fx:id="custnameLbl" layoutX="72.0" layoutY="47.0" text="Customer name:" />
-   <TextField fx:id="custname" layoutX="312.0" layoutY="43.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="custphoneLbl" layoutX="72.0" layoutY="87.0" text="Customer phone:" />
-   <Label fx:id="hotelnameLbl" layoutX="72.0" layoutY="132.0" text="Hotel name:" />
-   <Label fx:id="hotelcityLbl" layoutX="72.0" layoutY="171.0" text="Hotel city:" />
-   <TextField fx:id="custphone" layoutX="312.0" layoutY="83.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="hotelname" layoutX="312.0" layoutY="128.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="hotelcity" layoutX="312.0" layoutY="167.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="TripToLbl" layoutX="72.0" layoutY="211.0" text="Trip to:" />
-   <Label fx:id="DepartureDateLbl" layoutX="76.0" layoutY="253.0" text="Departure date:" />
-   <TextField fx:id="TripTo" layoutX="312.0" layoutY="207.0" prefHeight="26.0" prefWidth="424.0" />
-   <TextField fx:id="DepartureDate" layoutX="312.0" layoutY="249.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="91.0" layoutY="455.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
+    <Button layoutX="663.0" layoutY="538.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Button layoutX="139.0" layoutY="538.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
+   <Label fx:id="custnameLbl" layoutX="142.0" layoutY="48.0" text="Customer name:" />
+   <TextField fx:id="custname" layoutX="382.0" layoutY="44.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="custphoneLbl" layoutX="142.0" layoutY="88.0" text="Customer phone:" />
+   <Label fx:id="hotelnameLbl" layoutX="142.0" layoutY="133.0" text="Hotel name:" />
+   <Label fx:id="hotelcityLbl" layoutX="142.0" layoutY="172.0" text="Hotel city:" />
+   <TextField fx:id="custphone" layoutX="382.0" layoutY="84.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="hotelname" layoutX="382.0" layoutY="129.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="hotelcity" layoutX="382.0" layoutY="168.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="TripToLbl" layoutX="142.0" layoutY="212.0" text="Trip to:" />
+   <Label fx:id="DepartureDateLbl" layoutX="146.0" layoutY="254.0" text="Departure date:" />
+   <TextField fx:id="TripTo" layoutX="382.0" layoutY="208.0" prefHeight="26.0" prefWidth="424.0" />
+   <TextField fx:id="DepartureDate" layoutX="382.0" layoutY="250.0" prefHeight="26.0" prefWidth="424.0" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="38.0" layoutY="455.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
    <Label fx:id="errorLbl" alignment="CENTER" layoutX="95.0" layoutY="436.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
-   <Label fx:id="questionLbl" layoutX="69.0" layoutY="494.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
-   <TextField fx:id="answerField" layoutX="514.0" layoutY="490.0" prefHeight="35.0" prefWidth="79.0" />
-   <Button layoutX="626.0" layoutY="490.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
+   <Label fx:id="questionLbl" layoutX="139.0" layoutY="495.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
+   <TextField fx:id="answerField" layoutX="584.0" layoutY="491.0" prefHeight="35.0" prefWidth="79.0" />
+   <Button layoutX="696.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
 </AnchorPane>

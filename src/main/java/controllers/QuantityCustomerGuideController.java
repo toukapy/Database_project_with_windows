@@ -1,8 +1,11 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uis.Controller;
@@ -19,12 +22,14 @@ import java.util.Vector;
 public class QuantityCustomerGuideController implements Controller {
 
     private MainGUI customerGuideWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> tblGuide;
     @FXML
     private TableColumn<String, String> guideColumn;
+    @FXML
+    private Label errorLbl;
 
 
     /**
@@ -38,21 +43,25 @@ public class QuantityCustomerGuideController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
+        try {
+            guideColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        guideColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
+            Vector<String> rs = businessLogic.retrieveNumCustomerGuideResponsible();
 
-        Vector<String> rs = businessLogic.retrieveNumCustomerGuideResponsible();
+            tblGuide.getItems().clear();
 
-        tblGuide.getItems().clear();
-
-        if(!rs.isEmpty()){
-            tblGuide.getItems().addAll(rs);
+            if (!rs.isEmpty()) {
+                tblGuide.getItems().addAll(rs);
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
     }

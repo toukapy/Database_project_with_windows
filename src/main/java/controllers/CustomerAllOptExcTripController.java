@@ -1,10 +1,13 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -25,13 +28,15 @@ import java.util.Vector;
 public class CustomerAllOptExcTripController implements Controller {
 
     private MainGUI allOptExcWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
     private ObservableList data;
 
     @FXML
     private TableView<String> customerTable;
     @FXML
     private TableColumn<String, String> idColumn;
+    @FXML
+    private Label errorLbl;
 
     /**
      * Method that sets this window as the main window
@@ -44,24 +49,28 @@ public class CustomerAllOptExcTripController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
+        try {
+            idColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        idColumn.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
+            Vector<String> rs = businessLogic.retrieveCustomerEveryTripExc();
 
-        Vector<String> rs = businessLogic.retrieveCustomerEveryTripExc();
+            customerTable.getItems().clear();
 
-        customerTable.getItems().clear();
-
-        if(rs.isEmpty()){
-            System.out.println("There is no such customer in the database!!");
-            customerTable.getItems().add("There is no such customer!!");
-        }else{
-            customerTable.getItems().addAll(rs);
+            if (rs.isEmpty()) {
+                System.out.println("There is no such customer in the database!!");
+                customerTable.getItems().add("There is no such customer!!");
+            } else {
+                customerTable.getItems().addAll(rs);
+            }
+        } catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e){
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
 

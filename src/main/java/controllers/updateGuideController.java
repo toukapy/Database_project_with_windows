@@ -1,6 +1,8 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +23,7 @@ import java.util.Vector;
 public class updateGuideController implements Controller {
 
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> tourguideTable;
@@ -53,10 +55,9 @@ public class updateGuideController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
         fillTable();
         resetFields();
     }
@@ -79,9 +80,15 @@ public class updateGuideController implements Controller {
         if ((tgnew.getText().isEmpty() || tgprev.getText().isEmpty() || date1.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
-            businessLogic.updateTourguide(tgprev.getText(), tgnew.getText(), date1.getText(), date2.getText());
-            correctLbl.setText("Transaction executed!!");
-            fillTable();
+            try {
+                businessLogic.updateTourguide(tgprev.getText(), tgnew.getText(), date1.getText(), date2.getText());
+                correctLbl.setText("Transaction executed!!");
+                fillTable();
+            } catch (SQLException e){
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            }
         }
     }
 
@@ -107,13 +114,16 @@ public class updateGuideController implements Controller {
         // clear table
         tourguideTable.getItems().clear();
 
-
-        // fill table with current guides in the database
-        Vector<String> rs = businessLogic.getAllTourguideTrips();
-        if (!rs.isEmpty()) {
-            tourguideTable.getItems().addAll(rs);
-        } else {
-            tourguideTable.getItems().add("No guide in the database");
+        try {
+            // fill table with current guides in the database
+            Vector<String> rs = businessLogic.getAllTourguideTrips();
+            if (!rs.isEmpty()) {
+                tourguideTable.getItems().addAll(rs);
+            } else {
+                tourguideTable.getItems().add("No guide in the database");
+            }
+        } catch (SQLException e) {
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 }

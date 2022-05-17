@@ -1,6 +1,8 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,7 +15,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles getting the people that attend a single restaurant in a given city
+ * This class aims to deal with the window that handles getting the employees that attend a single restaurant in a given city
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -21,7 +23,7 @@ import java.util.Vector;
 public class OneRestaurantCityController implements Controller {
 
     private MainGUI oneRestaurCityWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TextField cityField;
@@ -43,39 +45,50 @@ public class OneRestaurantCityController implements Controller {
     }
 
     /**
-     * Method to initialize the information in the UI
-     * @throws SQLException
+     * Method to initialize the information in the UIç
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
         cityField.setText("");
+        errorLbl.setText("");
         tblEmployee.getItems().clear();
     }
 
     /**
-     * This method handles getting the customers that attend a single restaurant in the given city
+     * This method handles getting the employees that attend a single restaurant in the given city
      */
     @FXML
     public void onClickEnter() {
-        employeeColumn.setCellValueFactory(data ->{
-            return new SimpleStringProperty(data.getValue());
-        });
-
-        if(cityField.getText().isEmpty()) {
-            errorLbl.setText("Please, fill all the fields");
-        }else if(!check(cityField.getText())){
-            errorLbl.setText("Please, enter a city, not a number");
-        }else{
-
-            Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
+            errorLbl.setText("");
             tblEmployee.getItems().clear();
+            employeeColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
+            // check if empty fields -> inform user
+            if (cityField.getText().isEmpty())
+                errorLbl.setText("Please, fill all the fields");
+            //check if data is valid -> inform user
+            else if (!check(cityField.getText()))
+                errorLbl.setText("Please, enter a city, not a number");
 
-            if(!rs.isEmpty()){
-                tblEmployee.getItems().addAll(rs);
-            }else{
-                tblEmployee.getItems().add("There is no such employee");
+            // get employees who attend a single restaurant
+            else {
+                try {
+                    Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
+                    tblEmployee.getItems().clear();
+
+                    if (!rs.isEmpty()) {
+                        tblEmployee.getItems().addAll(rs);
+                    } else {
+                        tblEmployee.getItems().add("There is no such employee");
+                    }
+                } catch (SQLException e){
+                    errorLbl.setText("An error with the database occurred. Please, try again later.");
+                } catch (UncompletedRequest e) {
+                    errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+                }
             }
-        }
+
 
     }
 
@@ -90,7 +103,6 @@ public class OneRestaurantCityController implements Controller {
                 return false;
             }
         }
-
         return true;
     }
 

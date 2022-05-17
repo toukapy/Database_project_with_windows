@@ -1,18 +1,18 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import uis.Controller;
 import uis.MainGUI;
 
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles getting the trips with maximum gains
@@ -23,12 +23,14 @@ import java.util.Vector;
 public class maximumGainsTripController implements Controller {
 
     private MainGUI maximumGainsWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> customerTable;
     @FXML
     private TableColumn<String,String> destColumn;
+    @FXML
+    private Label errorLbl;
 
     /**
      * Method that sets this window as the main window
@@ -41,22 +43,26 @@ public class maximumGainsTripController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation()  {
+        try {
+            destColumn.setCellValueFactory(data -> {
+                return new SimpleStringProperty(data.getValue());
+            });
 
-        destColumn.setCellValueFactory(data -> {
-            return new SimpleStringProperty(data.getValue());
-        });
+            customerTable.getItems().clear();
+            Vector<String> rs = businessLogic.getMaximumGainedTrip();
+            if (!rs.isEmpty()) {
+                System.out.println("Trip exists");
+                customerTable.getItems().addAll(rs);
+            }
 
-        customerTable.getItems().clear();
-        Vector<String> rs = businessLogic.getMaximumGainedTrip();
-        if(!rs.isEmpty()){
-            System.out.println("Trip exists");
-            customerTable.getItems().addAll(rs);
+        }catch (SQLException e){
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
+        } catch (UncompletedRequest e) {
+            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
-
     }
 
     /**

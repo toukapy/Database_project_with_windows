@@ -1,6 +1,8 @@
 package controllers;
 
+import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +23,7 @@ import java.util.Vector;
 public class swapGuidesController implements Controller {
 
     private MainGUI mainWin;
-    private BlFacadeImplementation businessLogic = new BlFacadeImplementation();
+    private BlFacade businessLogic = new BlFacadeImplementation();
 
     @FXML
     private TableView<String> guideTable;
@@ -61,10 +63,9 @@ public class swapGuidesController implements Controller {
 
     /**
      * Method to initialize the information in the UI
-     * @throws SQLException
      */
     @Override
-    public void initializeInformation() throws SQLException {
+    public void initializeInformation() {
         fillTable();
         resetFields();
     }
@@ -100,12 +101,18 @@ public class swapGuidesController implements Controller {
     void onClickExecute() {
         errorLbl.setText("");
         correctLbl.setText("");
-        if ((name1.getText().isEmpty() || phone1.getText().isEmpty() || date1.getText().isEmpty() || trip1.getText().isEmpty()|| name2.getText().isEmpty() || phone2.getText().isEmpty() || trip2.getText().isEmpty() || date2.getText().isEmpty()))
+        if ((name1.getText().isEmpty() || phone1.getText().isEmpty() || date1.getText().isEmpty() || trip1.getText().isEmpty() || name2.getText().isEmpty() || phone2.getText().isEmpty() || trip2.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
-            businessLogic.changeGuidesBetweenTrips(name1.getText(), phone1.getText(), trip1.getText(), date1.getText(), name2.getText(), phone2.getText(), trip2.getText(), date2.getText());
-            correctLbl.setText("Transaction executed!!");
-            fillTable();
+            try {
+                businessLogic.changeGuidesBetweenTrips(name1.getText(), phone1.getText(), trip1.getText(), date1.getText(), name2.getText(), phone2.getText(), trip2.getText(), date2.getText());
+                correctLbl.setText("Transaction executed!!");
+                fillTable();
+            } catch (SQLException e) {
+                errorLbl.setText("An error with the database occurred. Please, try again later.");
+            } catch (UncompletedRequest e) {
+                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            }
         }
     }
 
@@ -119,12 +126,16 @@ public class swapGuidesController implements Controller {
         // clear table
         guideTable.getItems().clear();
 
-        // fill table with current guides that have attended trips in the database
-        Vector<String> rs = businessLogic.getAllTourguideTripsNotNull();
-        if (!rs.isEmpty()) {
-            guideTable.getItems().addAll(rs);
-        } else {
-            guideTable.getItems().add("No guide in the database");
+        try {
+            // fill table with current guides that have attended trips in the database
+            Vector<String> rs = businessLogic.getAllTourguideTripsNotNull();
+            if (!rs.isEmpty()) {
+                guideTable.getItems().addAll(rs);
+            } else {
+                guideTable.getItems().add("No guide in the database");
+            }
+        } catch (SQLException e) {
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
     }
 }

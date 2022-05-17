@@ -1,5 +1,6 @@
 package dataAccess;
 
+import exceptions.NoChange;
 import exceptions.UncompletedRequest;
 
 import java.sql.*;
@@ -484,10 +485,9 @@ public class DataManager {
      * Method that returns a set that has all customers in trips with optional excursions
      *
      * @return ResultSet - A set with customer's in all trips with optional excursions
-     * @throws SQLException if rollback fails
      * @throws UncompletedRequest if there has been a problem during the execution of the query
      */
-    public ResultSet retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
+    public ResultSet retrieveCustomerEveryTripExc() throws UncompletedRequest {
         try {
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.custname, c.custphone, c.CustomerId FROM customer as c WHERE NOT EXISTS(" +
                     "SELECT * FROM trip as t WHERE NOT EXISTS(" +
@@ -702,7 +702,7 @@ public class DataManager {
      * @param departuredate2
      * @throws SQLException
      */
-    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest {
+    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest, NoChange {
 
         try{
             connector.getConnector().setAutoCommit(false);
@@ -712,10 +712,10 @@ public class DataManager {
             deleteStmt.setString(2,Guideidprev);
             deleteStmt.setString(3,departuredate);
             deleteStmt.setString(4, departuredate2);
-            deleteStmt.executeUpdate();
-
+            int changed = deleteStmt.executeUpdate();
             connector.getConnector().commit();
 
+            if (changed==0) throw new NoChange();
             System.out.println("Transaction committed successfully!!");
             System.out.println("Guideid was changed successfully between the given dates!!");
 

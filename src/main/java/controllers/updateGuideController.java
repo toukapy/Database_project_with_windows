@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.NoChange;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -95,6 +96,8 @@ public class updateGuideController implements Controller {
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            } catch (NoChange e) {
+                errorLbl.setText("No information was updated through the transaction.");
             }
         }
     }

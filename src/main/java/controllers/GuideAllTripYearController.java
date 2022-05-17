@@ -58,6 +58,7 @@ public class GuideAllTripYearController implements Controller {
     @FXML
     void onClickEnter(){
         errorLbl.setText("");
+        tblTrip.getItems().clear();
         tripColumn.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());
         });
@@ -104,9 +105,10 @@ public class GuideAllTripYearController implements Controller {
 
         try {
             /* Given year should have 4 digits */
-            if(year.length()==4)
+            if(year.length()==4) {
                 Integer.parseInt(year);
-            return true;
+                return true;
+            }else return false;
         } catch (NumberFormatException e) {
             return false;
         }

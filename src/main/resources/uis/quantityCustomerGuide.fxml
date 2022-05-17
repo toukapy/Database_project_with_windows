@@ -10,7 +10,7 @@
    <children>
       <TableView fx:id="tblGuide" layoutX="106.0" layoutY="98.0" prefHeight="344.0" prefWidth="616.0">
         <columns>
-          <TableColumn fx:id="guideColumn" editable="false" prefWidth="615.0" sortable="false" text="Quantity of the customers guide's are related to:" />
+          <TableColumn fx:id="guideColumn" editable="false" prefWidth="615.0" sortable="false" text="Quantity of the customers each guides is responsible for:" />
         </columns>
       </TableView>
       <Button layoutX="534.0" layoutY="486.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="188.0" text="Back" />

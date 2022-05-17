@@ -400,7 +400,7 @@ public class DataManager {
      * @param departureDate String - trip's date
      * @param hotelId String - Hotel's id
      * @return boolean - Whether or not the customer is in the trip
-     * @throws SQLException
+     * @throws SQLException if rollback fails
      */
     private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException {
         try {
@@ -425,7 +425,7 @@ public class DataManager {
      * @param TripTo String - Trip's destination
      * @param DepartureDate String - Trip's date
      * @return boolean- Whether the customer exists in the trip or not
-     * @throws SQLException
+     * @throws SQLException if rollback fails
      */
     public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException {
         try {
@@ -457,7 +457,8 @@ public class DataManager {
      * Method that retrieves the trip (TripTo, DepartureDate) that has gained the maximum amount of money
      *
      * @return ResultSet - The set that has the object specified in the objectives
-     * @throws SQLException
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if there has been a problem during the execution of the query
      */
     public ResultSet getMaximumGainedTrip() throws SQLException, UncompletedRequest {
         try {
@@ -474,7 +475,6 @@ public class DataManager {
             System.out.println("Query executed correctly!!");
 
         } catch (SQLException e) {
-            connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
         return rs;
@@ -484,7 +484,8 @@ public class DataManager {
      * Method that returns a set that has all customers in trips with optional excursions
      *
      * @return ResultSet - A set with customer's in all trips with optional excursions
-     * @throws SQLException
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if there has been a problem during the execution of the query
      */
     public ResultSet retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
         try {
@@ -495,8 +496,6 @@ public class DataManager {
             System.out.println("Query executed correctly!");
 
         } catch (SQLException e) {
-            System.out.println("system rolling back");
-            connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
 
@@ -568,9 +567,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method gets the customers who have attended at least all cheapest trips attended by customers
+     * @return the customers who have attended at least all cheapest trips attended by customers
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException, UncompletedRequest {
         try {
@@ -593,10 +593,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @param year
-     * @return
-     * @throws SQLException
+     * This method provides the tour-guides who have attended all trips of a given year.
+     * @param year provided year
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest {
         try {
@@ -627,9 +627,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides the tour-guides who speak all languages registered in the database
+     * @return the tour-guides who speak all languages registered in the database
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getTourguidesAllLanguages() throws SQLException, UncompletedRequest {
         try {
@@ -1181,9 +1182,10 @@ public class DataManager {
 
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method gets the restaurants that provide food liked by all managers
+     * @return the restaurants that provide food liked by all managers
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if the query could not be executed
      */
     public ResultSet getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
         try {

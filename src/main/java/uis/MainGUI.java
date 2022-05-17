@@ -133,7 +133,7 @@ public class MainGUI {
      * Method to show the window that displays the customers that have been in all optional excursions
      */
     public void showCustomerAllOptExc(){
-        setupScene(allOptExcTripWin.ui, "All optional excursion trip",814,555);
+        setupScene(allOptExcTripWin.ui, "Customers in all trips with optional excursions",814,555);
         allOptExcTripWin.c.initializeInformation();
     }
 
@@ -157,7 +157,7 @@ public class MainGUI {
      * Method to show the window that displays the restaurants that offer food liked by all managers
      */
     public void showRestaurantFoodManager()  {
-        setupScene(restaurantFoodWin.ui, "Restaurants' food like by manager", 814, 555);
+        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 555);
         restaurantFoodWin.c.initializeInformation();
     }
 
@@ -189,7 +189,7 @@ public class MainGUI {
      * Method to show the window that displays the guides that speak all languages registered
      */
     public void showGuideAllLanguages()  {
-        setupScene(guideAllLang.ui, "Guides speaks all languages", 814, 555);
+        setupScene(guideAllLang.ui, "Guides speaking all languages", 814, 555);
         guideAllLang.c.initializeInformation();
     }
 

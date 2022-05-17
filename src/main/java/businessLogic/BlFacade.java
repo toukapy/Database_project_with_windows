@@ -36,25 +36,29 @@ public interface BlFacade {
     /**
      * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
      * @return the trip that has obtained the highest amount of gains
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be completed
      */
-    public Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest;
+    Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest;
 
 
 
     /**
      * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      * @return the customers that have gone to every trip with optional excursion
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be carried out
      */
-    public Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest;
+    Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest;
 
 
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      * @return the customers who have attended at least all cheapest trips attended by customers
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException;
+    Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException;
 
 
     /**
@@ -118,15 +122,19 @@ public interface BlFacade {
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException;
+    Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException;
 
 
     /**
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException;
+    Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException;
 
 
     /**
@@ -255,8 +263,10 @@ public interface BlFacade {
     /**
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the query could not be executed
      */
-    public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest;
+    Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest;
 
 
     /* EMPLOYEES-RELATED*/

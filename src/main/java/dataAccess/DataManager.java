@@ -702,15 +702,15 @@ public class DataManager {
      * @throws SQLException
      */
     public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("UPDATE trip SET guideid=? WHERE guideid=? AND departuredate BETWEEN ? AND ?;");
 
             deleteStmt.setString(1,Guideidnew);
             deleteStmt.setString(2,Guideidprev);
-            deleteStmt.setDate(3,new Date(dateFormat.parse(departuredate).getTime()));
-            deleteStmt.setDate(4,new Date(dateFormat.parse(departuredate2).getTime()));
+            deleteStmt.setString(3,departuredate);
+            deleteStmt.setString(4, departuredate2);
             deleteStmt.executeUpdate();
 
             connector.getConnector().commit();
@@ -722,8 +722,6 @@ public class DataManager {
             System.out.println("Transaction is being rolled back!");
             connector.getConnector().rollback();
             throw new UncompletedRequest();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
     }

@@ -567,9 +567,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method gets the customers who have attended at least all cheapest trips attended by customers
+     * @return the customers who have attended at least all cheapest trips attended by customers
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException, UncompletedRequest {
         try {
@@ -592,10 +593,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @param year
-     * @return
-     * @throws SQLException
+     * This method provides the tour-guides who have attended all trips of a given year.
+     * @param year provided year
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest {
         try {
@@ -626,9 +627,10 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides the tour-guides who speak all languages registered in the database
+     * @return the tour-guides who speak all languages registered in the database
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if rollback fails
      */
     public ResultSet getTourguidesAllLanguages() throws SQLException, UncompletedRequest {
         try {

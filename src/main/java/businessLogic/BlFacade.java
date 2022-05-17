@@ -55,8 +55,10 @@ public interface BlFacade {
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      * @return the customers who have attended at least all cheapest trips attended by customers
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException;
+    Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException;
 
 
     /**
@@ -120,15 +122,19 @@ public interface BlFacade {
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException;
+    Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException;
 
 
     /**
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
+     * @throws UncompletedRequest if query could not be executed
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException;
+    Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException;
 
 
     /**

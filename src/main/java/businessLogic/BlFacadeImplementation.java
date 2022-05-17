@@ -732,26 +732,24 @@ public class BlFacadeImplementation implements BlFacade{
      * This method gets the employees who have attended a single restaurant of a given city
      * @param city provided city
      * @return the employees who have attended a single restaurant of a given city
+     * @throws SQLException if an error occurred when managing the database
+     * @throws UncompletedRequest if the query could not be carried out
      */
     @Override
     public Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
 
+        //obtain the due employees
         ResultSet employees = dbManager.getEmployee1RestCity(city);
             while (employees.next()) {
-                System.out.println("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
-                answer.add("Id: " + employees.getString("id") + ", Name: " + employees.getString("name"));
+                //display and store the information
+                System.out.println("Id: " + employees.getString("id") + ", First name: " + employees.getString("fname") + ", Last name: "+  employees.getString("lname"));
+                answer.add("Id: " + employees.getString("id") + ", First name: " + employees.getString("fname") + ", Last name: "+  employees.getString("lname"));
             }
 
         dbManager.close();
-
-
         return answer;
     }
-
-
 
 }

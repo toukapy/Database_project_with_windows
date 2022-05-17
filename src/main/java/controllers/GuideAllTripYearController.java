@@ -48,6 +48,7 @@ public class GuideAllTripYearController implements Controller {
     @Override
     public void initializeInformation() {
         tblTrip.getItems().clear();
+        errorLbl.setText("");
         dateField.setText("");
     }
 
@@ -56,6 +57,7 @@ public class GuideAllTripYearController implements Controller {
      */
     @FXML
     void onClickEnter(){
+        errorLbl.setText("");
         tripColumn.setCellValueFactory(data ->{
             return new SimpleStringProperty(data.getValue());
         });

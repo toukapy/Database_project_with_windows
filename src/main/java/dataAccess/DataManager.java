@@ -1205,15 +1205,16 @@ public class DataManager {
 
 
     /**
-     *
-     * @param city
-     * @return
-     * @throws SQLException
+     * This method provides the employees that frequent a single restaurant in the given city
+     * @param city Strig - the given city
+     * @return the employees that frequent a single restaurant in the given city
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if the query could not be executed
      */
     public ResultSet getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT f.nameid  as name, p.id as id " +
+            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.id, e.fname , e.lname  " +
                     "FROM frequents as f inner join (person as p inner join employee as e on e.ssn=p.id) ON f.nameid=p.nameid " +
                     "inner join restaurant as r on r.restaurname=f.restaurname " +
                     " WHERE  r.city=? " +

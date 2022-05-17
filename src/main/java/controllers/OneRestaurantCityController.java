@@ -59,7 +59,8 @@ public class OneRestaurantCityController implements Controller {
      */
     @FXML
     public void onClickEnter() {
-        try {
+            errorLbl.setText("");
+            tblEmployee.getItems().clear();
             employeeColumn.setCellValueFactory(data -> {
                 return new SimpleStringProperty(data.getValue());
             });
@@ -72,22 +73,22 @@ public class OneRestaurantCityController implements Controller {
 
             // get employees who attend a single restaurant
             else {
+                try {
+                    Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
+                    tblEmployee.getItems().clear();
 
-                Vector<String> rs = businessLogic.getEmployee1RestCity(cityField.getText());
-                tblEmployee.getItems().clear();
-
-                if (!rs.isEmpty()) {
-                    tblEmployee.getItems().addAll(rs);
-                } else {
-                    tblEmployee.getItems().add("There is no such employee");
+                    if (!rs.isEmpty()) {
+                        tblEmployee.getItems().addAll(rs);
+                    } else {
+                        tblEmployee.getItems().add("There is no such employee");
+                    }
+                } catch (SQLException e){
+                    errorLbl.setText("An error with the database occurred. Please, try again later.");
+                } catch (UncompletedRequest e) {
+                    errorLbl.setText("Transaction could not be done. Please change the fields' information.");
                 }
-
             }
-        } catch (SQLException e){
-            errorLbl.setText("An error with the database occurred. Please, try again later.");
-        } catch (UncompletedRequest e) {
-            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-        }
+
 
     }
 

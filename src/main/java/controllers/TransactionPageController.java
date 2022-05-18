@@ -87,6 +87,12 @@ public class TransactionPageController implements Controller {
     void onClickSales() {tranPageWin.showSales(); }
 
     /**
+     * Method to go to the window to execute a rise
+     */
+    @FXML
+    void onClickRise() {tranPageWin.showRise(); }
+
+    /**
      * Method to return to the parent window
      */
     @FXML

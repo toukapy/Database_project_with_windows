@@ -319,7 +319,7 @@ public interface BlFacade {
      * the average salary of the company. Also, if they have any dependent they get 100 dollars
      * per dependent
      */
-    void risesForEmployees();
+    void risesForEmployees() throws SQLException;
 
     /**
      * This query retrieves couples of names and a restaurant of people who frequent the same
@@ -327,4 +327,14 @@ public interface BlFacade {
      * @return the vestor with the pairings and restaurant
      */
     Vector<String> restaurantDates();
+
+    /**
+     * For choosing from dept and locations for "bookTripToDepartment"
+     * @return all the departments and locations
+     */
+    public Vector<String> getDepartmentsAndLocations();
+
+    Vector<String> hotelsCEO() throws SQLException;
+
+    Vector<String> getAllSalaries() throws SQLException;
 }

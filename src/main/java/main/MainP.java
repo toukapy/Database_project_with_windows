@@ -166,7 +166,7 @@ public class MainP {
                         String trip2 = sc.nextLine();
                         date2 = sc.nextLine();
 
-                        bl.changeGuidesBetweenTrips(name1, phone1, trip1, date1, name2, phone2, trip2, date2);
+                        bl.changeGuidesBetweenTrips("y", name1, phone1, trip1, date1, name2, phone2, trip2, date2);
                         System.out.println("End of execution!!");
                         break;
                     case 14:
@@ -200,6 +200,8 @@ public class MainP {
             } catch (ObjectNotCreated e) {
                 e.printStackTrace();
             } catch (NoChange | NotBelong e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }

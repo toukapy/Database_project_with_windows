@@ -13,6 +13,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles getting the guides that have attended all trips in a given year
@@ -84,6 +85,8 @@ public class GuideAllTripYearController implements Controller {
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            } catch (ParseException e) {
+                errorLbl.setText("Please, enter a valid date");
             }
         }
     }

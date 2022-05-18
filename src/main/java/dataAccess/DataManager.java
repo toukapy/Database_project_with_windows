@@ -17,6 +17,7 @@ public class DataManager {
     private long currentCustomerId;
     private long currentHotelId;
     private long currentGuideId;
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * MEthod that opens a connection with the Database connector
@@ -89,12 +90,11 @@ public class DataManager {
      * @throws ParseException
      */
     public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         PreparedStatement stmt = null;
         try {
             stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
             stmt.setString(1,trip);
-            stmt.setDate(2,new Date(dateFormat.parse(departure).getTime()));
+            stmt.setDate(2,new Date(format.parse(departure).getTime()));
             rs = stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -174,11 +174,11 @@ public class DataManager {
      * @return ResultSet - The trips that match that condition
      * @throws SQLException
      */
-    public ResultSet getTrip(String tripTo, String departureDate) throws SQLException {
+    public ResultSet getTrip(String tripTo, String departureDate) throws SQLException, ParseException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE TripTo=? and DepartureDate=?;");
             p.setString(1,tripTo);
-            p.setString(2,departureDate);
+            p.setDate(2,new Date(format.parse(departureDate).getTime()));
             rs =  p.executeQuery();
         } catch (SQLException e) {
             System.out.println("System is rolling back");
@@ -196,12 +196,13 @@ public class DataManager {
      * @param tripTo - Destination of the trip
      * @param departureDate - Date of the trip
      */
-    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest {
+    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
         try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
             p.setString(1,tripTo);
-            p.setString(2,departureDate);
+            p.setDate(2, new Date(format.parse(departureDate).getTime()));
             p.executeUpdate();
 
             connector.getConnector().commit();
@@ -222,13 +223,13 @@ public class DataManager {
      * @param hotelId - The id of the hotel
      * @throws SQLException
      */
-    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest {
+    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
             connector.getConnector().setAutoCommit(false);
 
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES(?,?,?,default)");
             p.setString(1,tripTo);
-            p.setString(2,departureDate);
+            p.setDate(2,new Date(format.parse(departureDate).getTime()));
             p.setString(3,hotelId);
             p.executeUpdate();
 
@@ -250,11 +251,11 @@ public class DataManager {
      * @return ResultSet - The Relation between the hotel and the trip
      * @throws SQLException
      */
-    public ResultSet getHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException {
+    public ResultSet getHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip WHERE TripTo=? and DepartureDate=? and HotelId=?;");
             p.setString(1,tripTo);
-            p.setString(2,departureDate);
+            p.setDate(2,new Date(format.parse(departureDate).getTime()));
             p.setString(3,hotelId);
             rs =  p.executeQuery();
         } catch (SQLException e) {
@@ -265,6 +266,24 @@ public class DataManager {
         }
 
         return rs;
+    }
+
+    public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
+            p.setString(1,guideId);
+            p.setString(2,tripTo1);
+            p.setDate(3,new Date(format.parse(departureDate1).getTime()));
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+
+        } catch (SQLException e) {
+            System.out.println("System rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
     }
 
 
@@ -387,7 +406,7 @@ public class DataManager {
      * @param DepartureDate String - Trip's date
      * @param HotelId String - Hotel's id
      */
-    public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException, UncompletedRequest {
+    public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
 
             if(customerExistsInTrip(CustomerId,TripTo,DepartureDate,HotelId)){
@@ -396,7 +415,7 @@ public class DataManager {
                 connector.getConnector().setAutoCommit(false);
                 PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip_customer VALUES (?,?,?,?,default);");
                 p.setString(1,TripTo);
-                p.setString(2,DepartureDate);
+                p.setDate(2,new Date(format.parse(DepartureDate).getTime()));
                 p.setString(3,HotelId);
                 p.setString(4,CustomerId);
                 p.executeUpdate();
@@ -421,12 +440,12 @@ public class DataManager {
      * @return boolean - Whether or not the customer is in the trip
      * @throws SQLException if rollback fails
      */
-    private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException {
+    private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=? and HotelId=?;");
             p.setString(1,customerId);
             p.setString(2,tripTo);
-            p.setString(3,departureDate);
+            p.setDate(3,new Date(format.parse(departureDate).getTime()));
             p.setString(4,hotelId);
             rs = p.executeQuery();
 
@@ -446,12 +465,12 @@ public class DataManager {
      * @return boolean- Whether the customer exists in the trip or not
      * @throws SQLException if rollback fails
      */
-    public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException {
+    public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException, ParseException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=?;");
             p.setString(1,customerId);
             p.setString(2,TripTo);
-            p.setString(3,DepartureDate);
+            p.setDate(3,new Date(format.parse(DepartureDate).getTime()));
             rs = p.executeQuery();
 
         } catch (SQLException e) {
@@ -521,31 +540,95 @@ public class DataManager {
     }
 
     /**
-     * Method that swaps two guides between two trips
      *
-     * @param guideId String - First guide's id
-     * @param guideId1 String - Second guide's id
-     * @param tripTo1 String - First trip's destination
-     * @param tripTo2 String - Second trip's destination
-     * @param departureDate1 String - First trip's date
-     * @param departureDate2 String - Second trip's date
+     * @param choice
+     * @param guidename1
+     * @param guidename2
+     * @param guidephone1
+     * @param guidephone2
+     * @param TripTo1
+     * @param TripTo2
+     * @param DepartureDate1
+     * @param DepartureDate2
      * @throws SQLException
+     * @throws UncompletedRequest
+     * @throws ParseException
      */
-    public void swapGuidesBetweenTrips(String guideId, String guideId1, String tripTo1, String tripTo2, String departureDate1, String departureDate2) throws SQLException, UncompletedRequest {
+    public void swapGuidesBetweenTrips(String choice, String guidename1, String guidename2, String guidephone1, String guidephone2, String TripTo1, String TripTo2, String DepartureDate1, String DepartureDate2) throws SQLException, UncompletedRequest, ParseException {
         try {
             connector.getConnector().setAutoCommit(false);
+
+            System.out.println("Finding the first tourguide");
+            ResultSet guide1 = getGuide(guidename1,guidephone1);
+            boolean exists = guide1.next();
+            if(!exists && choice.equals("y")){
+                System.out.println("System creating a guide");
+                createGuide(guidename1, guidephone1);
+                insertGuideInTrip(getGuide(guidename1,guidephone1).getString("GuideId"),TripTo1,DepartureDate1);
+            }else if(!exists && choice.equals("n")){
+                System.out.println("Guide does not exist");
+                System.out.println("Try again the transaction");
+                close();
+                throw new UncompletedRequest();
+            }
+
+            //find first trip -> if not exists  UncompletedRequest
+            System.out.println("Finding the first trip");
+            ResultSet trip1 = getTrip(TripTo1,DepartureDate1);
+            exists = trip1.next();
+            if(!exists && choice.equals("y")) {
+                System.out.println("System creating a trip");
+                insertTrip(TripTo1,DepartureDate1);
+                insertGuideInTrip(guide1.getString("GuideId"),trip1.getString("TripTo"),trip1.getString("DepartureDate"));
+            } else if(!exists && choice.equals("n")){
+                System.out.println("Trip does not exist in the database");
+                System.out.println("Try again the transaction");
+                close();
+                throw new UncompletedRequest();
+            }else if(!existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
+                System.out.println("This guide is not in this trip!!!");
+                throw new UncompletedRequest();
+            }
+
+            // find second tour-guide -> create if not exists
+            System.out.println("Finding the second tour-guide");
+            ResultSet guide2 = getGuide(guidename2,guidephone2);
+            if(!guide2.next()){
+                System.out.println("System creating a guide");
+                createGuide(guidename2, guidephone2);
+            }
+
+            //find second trip -> if not exists UncompletedRequest
+            System.out.println("Finding the second trip");
+            ResultSet trip2 = getTrip(TripTo2,DepartureDate2);
+            if(!trip2.next()){
+                System.out.println("Trip does not exist in the database");
+                System.out.println("Try again the transaction");
+                close();
+                throw new UncompletedRequest();
+            }
+
+            //check if second guide exists in trip -> if not UncompletedRequest
+            if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
+                System.out.println("This guide is not in this trip!!!");
+                throw new UncompletedRequest();
+            }
+
+            String guideId = guide1.getString("GuideId");
+            String guideId1 = guide2.getString("GuideId");
+
             PreparedStatement stmt1 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt1.setString(1,guideId1);
             stmt1.setString(2,guideId);
-            stmt1.setString(3,tripTo1);
-            stmt1.setString(4,departureDate1);
+            stmt1.setString(3,TripTo1);
+            stmt1.setDate(4,new Date(format.parse(DepartureDate1).getTime()));
             stmt1.executeUpdate();
 
             PreparedStatement stmt2 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt2.setString(1,guideId);
             stmt2.setString(2,guideId1);
-            stmt2.setString(3,tripTo2);
-            stmt2.setString(4,departureDate2);
+            stmt2.setString(3,TripTo2);
+            stmt2.setDate(4,new Date(format.parse(DepartureDate2).getTime()));
             stmt2.executeUpdate();
 
             connector.getConnector().commit();
@@ -616,7 +699,7 @@ public class DataManager {
      * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if rollback fails
      */
-    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest {
+    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest, ParseException {
         try {
             String date1 =  year + "-01-01";
             String date2 =  year + "-12-31";
@@ -628,10 +711,10 @@ public class DataManager {
                     "SELECT * from trip as t2 " +
                     "where t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
                     "and exists (SELECT * FROM trip as t where  t.departuredate between ? and ?);");
-            stmt.setString(1, date1);
-            stmt.setString(2,date2);
-            stmt.setString(3,date1);
-            stmt.setString(4,date2);
+            stmt.setDate(1, new Date(format.parse(date1).getTime()));
+            stmt.setDate(2,new Date(format.parse(date2).getTime()));
+            stmt.setDate(3,new Date(format.parse(date1).getTime()));
+            stmt.setDate(4,new Date(format.parse(date2).getTime()));
 
             rs = stmt.executeQuery();
             System.out.println("Query executed correctly!!");
@@ -720,7 +803,7 @@ public class DataManager {
      * @param departuredate2
      * @throws SQLException
      */
-    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest, NoChange {
+    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest, NoChange, ParseException {
 
         try{
             connector.getConnector().setAutoCommit(false);
@@ -728,8 +811,8 @@ public class DataManager {
 
             deleteStmt.setString(1,Guideidnew);
             deleteStmt.setString(2,Guideidprev);
-            deleteStmt.setString(3,departuredate);
-            deleteStmt.setString(4, departuredate2);
+            deleteStmt.setDate(3,new Date(format.parse(departuredate).getTime()));
+            deleteStmt.setDate(4, new Date(format.parse(departuredate2).getTime()));
             int changed = deleteStmt.executeUpdate();
             connector.getConnector().commit();
 
@@ -756,7 +839,7 @@ public class DataManager {
      * @return
      * @throws SQLException
      */
-    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException {
+    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException, ParseException {
         try {
 
             ResultSet customer = getCustomer(custname, custphone);
@@ -767,7 +850,7 @@ public class DataManager {
                 stmt.setString(1,customer.getString("CustomerId"));
                 stmt.setString(2,hotel.getString("HotelId"));
                 stmt.setString(3,tripTo);
-                stmt.setString(4,departureDate);
+                stmt.setDate(4,new Date(format.parse(departureDate).getTime()));
                 rs = stmt.executeQuery();
                 return rs;
             }
@@ -775,7 +858,6 @@ public class DataManager {
         } catch (SQLException e) {
             System.out.println("System rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
         }
         return null;
     }
@@ -1320,12 +1402,13 @@ public class DataManager {
      * Method that says whether a guide is in a given trip or not
      * @return boolean - Whether the guide is in the trip or not
      */
-    public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) {
+    public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) throws ParseException {
         try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt.setString(1,GuideId);
             stmt.setString(2,TripTo);
-            stmt.setString(3,DepartureDate);
+            stmt.setDate(3, new Date(format.parse(DepartureDate).getTime()));
             ResultSet rs = stmt.executeQuery();
 
             if(!rs.next()){
@@ -1339,4 +1422,6 @@ public class DataManager {
         }
         return true;
     }
+
+
 }

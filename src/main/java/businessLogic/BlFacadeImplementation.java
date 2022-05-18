@@ -161,7 +161,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      */
     @Override
-    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
+    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due customers
@@ -239,7 +239,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      */
     @Override
-    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException {
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException {
 
         dbManager.open();
 
@@ -332,7 +332,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      */
     @Override
-    public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException {
+    public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due tourguides
@@ -406,7 +406,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws NotBelong if tour-guides don't belong to the database
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong, ParseException {
 
         dbManager.open();
         //check if tour-guides belong to the database
@@ -423,6 +423,8 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Transition 3 -> Method that changes the guides between two trips
      *
+     *
+     * @param choice
      * @param guidename1 String - Name of first guide
      * @param guidephone1 String - Phone number of the first guide
      * @param TripTo1 String - Destination of the first trip
@@ -435,60 +437,12 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      */
     @Override
-    public void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException {
+    public void changeGuidesBetweenTrips(String choice, String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException, ParseException {
 
             dbManager.open();
 
-            //find first tour-guide -> create if must
-            System.out.println("Finding the first tourguide");
-            ResultSet guide1 = dbManager.getGuide(guidename1,guidephone1);
-            if(!guide1.next()){
-                System.out.println("System creating a guide");
-                dbManager.createGuide(guidename1, guidephone1);
-            }
-
-            //find first trip -> if not exists  UncompletedRequest
-            System.out.println("Finding the first trip");
-            ResultSet trip1 = dbManager.getTrip(TripTo1,DepartureDate1);
-            if(!trip1.next()){
-                System.out.println("Trip does not exist in the database");
-                System.out.println("Try again the transaction");
-                dbManager.close();
-                throw new UncompletedRequest();
-            }
-
-            //check if guide exists in trip -> if not UncompletedRequest
-            if(!dbManager.existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
-                System.out.println("This guide is not in this trip!!!");
-                throw new UncompletedRequest();
-            }
-
-            // find second tour-guide -> create if not exists
-            System.out.println("Finding the second tour-guide");
-            ResultSet guide2 = dbManager.getGuide(guidename2,guidephone2);
-            if(!guide2.next()){
-                System.out.println("System creating a guide");
-                dbManager.createGuide(guidename2, guidephone2);
-            }
-
-            //find second trip -> if not exists UncompletedRequest
-            System.out.println("Finding the second trip");
-            ResultSet trip2 = dbManager.getTrip(TripTo2,DepartureDate2);
-            if(!trip2.next()){
-                System.out.println("Trip does not exist in the database");
-                System.out.println("Try again the transaction");
-                dbManager.close();
-                throw new UncompletedRequest();
-            }
-
-            //check if second guide exists in trip -> if not UncompletedRequest
-            if(!dbManager.existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
-                System.out.println("This guide is not in this trip!!!");
-                throw new UncompletedRequest();
-            }
-
             //swap guides
-            dbManager.swapGuidesBetweenTrips(guide1.getString("GuideId"),guide2.getString("GuideId"),TripTo1,TripTo2,DepartureDate1,DepartureDate2);
+            dbManager.swapGuidesBetweenTrips(choice, guidename1, guidename2, guidephone1, guidephone2, TripTo1, TripTo2, DepartureDate1, DepartureDate2);
             System.out.println("Update done correctly!");
 
             dbManager.close();

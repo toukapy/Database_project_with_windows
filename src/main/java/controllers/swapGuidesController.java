@@ -13,6 +13,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles swapping guides between two trips
@@ -24,6 +25,7 @@ public class swapGuidesController implements Controller {
 
     private MainGUI mainWin;
     private BlFacade businessLogic = new BlFacadeImplementation();
+    private String choice;
 
     @FXML
     private TableView<String> guideTable;
@@ -46,6 +48,8 @@ public class swapGuidesController implements Controller {
     private TextField date1;
     @FXML
     private TextField date2;
+    @FXML
+    private TextField answerField;
 
     @FXML
     private Label errorLbl;
@@ -103,16 +107,28 @@ public class swapGuidesController implements Controller {
         correctLbl.setText("");
         if ((name1.getText().isEmpty() || phone1.getText().isEmpty() || date1.getText().isEmpty() || trip1.getText().isEmpty() || name2.getText().isEmpty() || phone2.getText().isEmpty() || trip2.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
-        else {
+        else if (choice.equals("")){ errorLbl.setText("Please, first answer the question");}
+        else{
             try {
-                businessLogic.changeGuidesBetweenTrips(name1.getText(), phone1.getText(), trip1.getText(), date1.getText(), name2.getText(), phone2.getText(), trip2.getText(), date2.getText());
+                businessLogic.changeGuidesBetweenTrips(choice,name1.getText(), phone1.getText(), trip1.getText(), date1.getText(), name2.getText(), phone2.getText(), trip2.getText(), date2.getText());
                 correctLbl.setText("Transaction executed!!");
                 fillTable();
             } catch (SQLException e) {
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            } catch (ParseException e) {
+                errorLbl.setText("Please, enter a valid date");
             }
+        }
+    }
+
+    @FXML
+    void onClickAnswer(){
+        if(answerField.getText().isEmpty() ){
+            errorLbl.setText("Please, answer the question");
+        }else{
+            choice = answerField.getText();
         }
     }
 

@@ -7,14 +7,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="607.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.swapGuidesController">
+<AnchorPane prefHeight="701.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.swapGuidesController">
     <TableView fx:id="guideTable" layoutX="73.0" layoutY="339.0" prefHeight="132.0" prefWidth="670.0">
       <columns>
           <TableColumn fx:id="col" prefWidth="669.0" text="Swap guides" />
       </columns>
     </TableView>
-    <Button layoutX="593.0" layoutY="545.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
-   <Button layoutX="74.0" layoutY="545.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
+    <Button layoutX="590.0" layoutY="639.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Button layoutX="74.0" layoutY="639.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
    <Label fx:id="name1Lbl" layoutX="77.0" layoutY="31.0" text="Name first guide:" />
    <TextField fx:id="name1" layoutX="317.0" layoutY="26.0" prefHeight="26.0" prefWidth="424.0" />
    <TextField fx:id="trip1" layoutX="315.0" layoutY="102.0" prefHeight="26.0" prefWidth="424.0" />
@@ -31,6 +31,9 @@
    <Label fx:id="trip2Lbl" layoutX="73.0" layoutY="265.0" text="Trip to second guide:" />
    <Label fx:id="date2Lbl" layoutX="73.0" layoutY="302.0" text="Departure date second guide:" />
    <TextField fx:id="date2" layoutX="315.0" layoutY="297.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="76.0" layoutY="505.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
-   <Label fx:id="errorLbl" alignment="CENTER" layoutX="76.0" layoutY="480.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="76.0" layoutY="607.0" prefHeight="18.0" prefWidth="663.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="76.0" layoutY="582.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+   <Label layoutX="77.0" layoutY="525.0" prefHeight="25.0" prefWidth="412.0" text="Do you want to create the guide if it does not exist (y/n)?" />
+   <TextField fx:id="answerField" layoutX="491.0" layoutY="520.0" prefHeight="35.0" prefWidth="86.0" />
+   <Button layoutX="605.0" layoutY="520.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="133.0" text="Answer" />
 </AnchorPane>

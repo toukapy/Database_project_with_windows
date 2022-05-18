@@ -1358,7 +1358,79 @@ public class DataManager {
             p.executeUpdate();
     }
 
+    /**
+     * This method gives a raise of 1000 dollars to the employees who are paid less than
+     * the average salary of the company. Also, if they have any dependent they get 100 dollars
+     * per dependent
+     */
+    public void rises(){
+
+        try {
+            connector.getConnector().setAutoCommit(false);
+
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT Ssn, Salary FROM employee WHERE Salary < (" +
+                    "SELECT AVG(Salary) FROM employee )");
+            rs = p.executeQuery();
+
+            System.out.println("Employees with salaries under the avg:");
+
+            while (rs.next()){
+
+                float salary = Float.parseFloat(rs.getString("Salary"));
+                String id = rs.getString("Ssn");
+                salary+=1000;
+
+                System.out.println("\tSsn: "+id+" recieves a 1000 dollar raise");
+
+                PreparedStatement p2 = connector.getConnector().prepareStatement("SELECT Ssn FROM dependent AS d, employee AS e WHERE " +
+                        "d.Essn=e.Ssn AND Ssn=?");
+                p2.setString(1,id);
+                ResultSet rs2 = p2.executeQuery();
+
+                int k=0;
+                while(rs2.next()) {
+                    k++;
+                }
+
+                salary+=100*k;
+
+                if(k>0)
+                    System.out.println("\t\tWith "+k+" dependants they also recieve "+k*100+" more dollars");
+
+                PreparedStatement updateSalary = connector.getConnector().prepareStatement("UPDATE employee SET salary=? WHERE Ssn=?;");
+                updateSalary.setString(1,Float.toString(salary));
+                updateSalary.setString(2,id);
+                updateSalary.executeUpdate();
+
+                connector.getConnector().commit();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
+    /**
+     * This query retrieves couples of names and a restaurant of people who frequent the same
+     * restaurant, have at least a liked dish in common and that restaurant serves it
+     */
+    public ResultSet resDates(){
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT f1.nameId as nId, f2.nameId, f1.restaurname " +
+                    "FROM frequents as f1, frequents as f2 " +
+                    "WHERE f1.restaurname=f2.restaurname AND f1.nameId<>f2.nameId AND " +
+                    "EXISTS (SELECT * FROM eats as e1, eats as e2 WHERE e1.dish=e2.dish AND f1.nameId=e1.nameId AND f2.nameId=e2.nameId AND " +
+                    "EXISTS (SELECT * FROM serves as s WHERE s.restaurname=f1.restaurname AND s.dish=e1.dish))");
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
+    }
 
 }

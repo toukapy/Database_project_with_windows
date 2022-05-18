@@ -314,4 +314,17 @@ public interface BlFacade {
      */
     Vector<String> getEmployee1RestCity(String city) throws SQLException;
 
+    /**
+     * This method gives a raise of 1000 dollars to the employees who are paid less than
+     * the average salary of the company. Also, if they have any dependent they get 100 dollars
+     * per dependent
+     */
+    void risesForEmployees();
+
+    /**
+     * This query retrieves couples of names and a restaurant of people who frequent the same
+     * restaurant, have at least a liked dish in common and that restaurant serves it
+     * @return the vestor with the pairings and restaurant
+     */
+    Vector<String> restaurantDates();
 }

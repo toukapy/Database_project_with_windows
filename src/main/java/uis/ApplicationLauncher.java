@@ -1,5 +1,6 @@
 package uis;
 
+
 /**
  * This class aims to represent the application launcher
  *

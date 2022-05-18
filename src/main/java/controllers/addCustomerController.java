@@ -107,7 +107,7 @@ public class addCustomerController implements Controller {
         try {
             if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
                 errorLbl.setText("Please, fill all fields");
-            else if (businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText()) != null) {
+            else if (!businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText()).isEmpty()) {
                 errorLbl.setText("The customer is already in the trip");
             } else if (choice.equals("")) {
                 errorLbl.setText("Answer the question first");

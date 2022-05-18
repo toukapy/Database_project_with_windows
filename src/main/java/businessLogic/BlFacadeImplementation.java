@@ -166,10 +166,12 @@ public class BlFacadeImplementation implements BlFacade{
         dbManager.open();
         //get due customers
         ResultSet rs = dbManager.getCustomerTripHotel(custname,custphone,hotelname,hotelcity,TripTo,DepartureDate);
-        while(rs.next()){
-            //display and store the due information
-            System.out.println("Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate")+", Hotel name: "+rs.getString("hotelname")+", hotel city: "+rs.getString("hotelcity")+ ", Name: "+rs.getString("custname")+", Phone: "+rs.getString("custphone"));
-            answer.add("Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate")+", Hotel name: "+rs.getString("hotelname")+", hotel city: "+rs.getString("hotelcity")+ ", Name: "+rs.getString("custname")+", Phone: "+rs.getString("custphone"));
+        if(rs != null) {
+            while (rs.next()) {
+                //display and store the due information
+                System.out.println("Destination: " + rs.getString("TripTo") + ", Departure date: " + rs.getString("DepartureDate") + ", Hotel name: " + rs.getString("hotelname") + ", hotel city: " + rs.getString("hotelcity") + ", Name: " + rs.getString("custname") + ", Phone: " + rs.getString("custphone"));
+                answer.add("Destination: " + rs.getString("TripTo") + ", Departure date: " + rs.getString("DepartureDate") + ", Hotel name: " + rs.getString("hotelname") + ", hotel city: " + rs.getString("hotelcity") + ", Name: " + rs.getString("custname") + ", Phone: " + rs.getString("custphone"));
+            }
         }
         dbManager.close();
 
@@ -245,52 +247,7 @@ public class BlFacadeImplementation implements BlFacade{
 
         dbManager.open();
 
-
-        // check if customer exists -> create if must
-        ResultSet customer = dbManager.getCustomer(custname, custphone);
-        if(!customer.next()){
-            System.out.println("The customer does not exist");
-            if(choice.equals("y")){
-                System.out.println("Creating a new customer with that data");
-                dbManager.insertCustomer(custname, custphone);
-                customer = dbManager.getCustomer(custname, custphone);
-                customer.next();
-            }
-        }
-
-        // check if trip exist ->  create if must
-        ResultSet trip = dbManager.getTrip(TripTo, DepartureDate);
-        if(!trip.next()) {
-            System.out.println("the trip does not exist");
-            if(choice.equals("y")){
-                System.out.println("Creating a new trip with the data");
-                dbManager.insertTrip(TripTo, DepartureDate);
-            }else{
-                throw new ObjectNotCreated();
-            }
-        }
-
-        // check if hotel exists -> create if must
-        ResultSet hotel = dbManager.getHotel(hotelname, hotelcity);
-        if(!hotel.next()){
-            System.out.println("The hotel does not exist");
-
-            if(choice.equals("y")){
-                System.out.println("Creating a new hotel with the data");
-                dbManager.insertHotel(hotelname, hotelcity);
-                hotel = dbManager.getHotel(hotelname, hotelcity);
-                hotel.next();
-            }else{
-                throw new ObjectNotCreated();
-            }
-        }
-
-        // check if hotel trip exists -> create if must
-        ResultSet hotelTrip = dbManager.getHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-        if(!hotelTrip.next())
-            dbManager.createHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
-
-        dbManager.addCustomerToTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"));
+        dbManager.addCustomerToTrip(choice, custname,custphone,hotelname,hotelcity,TripTo,DepartureDate);
 
         dbManager.close();
 

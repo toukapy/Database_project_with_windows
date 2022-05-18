@@ -522,36 +522,10 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException {
-
         dbManager.open();
-
-        //Check if person exists -> create if must
-        if (!dbManager.personExists(name, customer_id)){
-            System.out.println("The person does not exist");
-
-            if (choice.equals("y")) {
-                System.out.println("Creating new person...");
-                dbManager.insertPerson(name, null, customer_id);
-            } else throw new ObjectNotCreated();
-
-        }
-
-        //Check if menu exists -> create if must
-        ResultSet menu = dbManager.getMenu(menu_id, customer_id);
-        if(!menu.next()){
-            System.out.println("The menu does not exist");
-
-            if (choice.equals("y")) {
-                System.out.println("Creating a new menu...");
-                dbManager.insertMenu(menu_id, customer_id);
-            } else throw new ObjectNotCreated();
-        }
-
         //Add menu-order
-        dbManager.addMenuOrder(menu_mtype, menu_id, customer_id);
+        dbManager.addMenuOrder(choice, menu_mtype, menu_id, name, customer_id);
         dbManager.close();
-
-
     }
 
 

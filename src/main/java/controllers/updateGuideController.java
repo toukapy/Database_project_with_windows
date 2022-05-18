@@ -84,8 +84,6 @@ public class updateGuideController implements Controller {
         correctLbl.setText("");
         if ((tgnew.getText().isEmpty() || tgprev.getText().isEmpty() || date1.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
-        else if(!validDate(date1.getText()) && !validDate(date2.getText()))
-            errorLbl.setText("Please, enter a valid date: yyyy-mm-dd");
         else if(tgprev.getText().equals(tgnew.getText()))
             errorLbl.setText("Please, enter a different tour-guide id");
         else {
@@ -102,25 +100,11 @@ public class updateGuideController implements Controller {
             } catch (NotBelong e) {
                 errorLbl.setText("Specify tour-guides that belong to the database.");
             } catch (ParseException e) {
-                errorLbl.setText("Please, enter a valid date");
+                errorLbl.setText("Please, enter a valid date: yyyy-mm-dd");
             }
         }
     }
 
-    /**
-     * This method provides whether the date is valid
-     * @param date provided date
-     * @return whether the date is valid
-     */
-    private boolean validDate(String date){
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.parse(date);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
 
     /**
      * Method to reset the different fields in the UI

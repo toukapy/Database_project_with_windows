@@ -1,6 +1,7 @@
 package dataAccess;
 
 import exceptions.NoChange;
+import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
 import java.sql.*;
@@ -1071,15 +1072,46 @@ public class DataManager {
      * @param customer_id
      * @throws SQLException
      */
-    public void addMenuOrder(String menu_mtype, String menu_id, String customer_id) throws SQLException, UncompletedRequest {
+    public void addMenuOrder(String choice, String menu_mtype, String menu_id, String name, String customer_id) throws SQLException, UncompletedRequest {
         try {
-
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (default,?,?,?);");
-            p.setString(1,menu_mtype);
-            p.setString(2,menu_id);
-            p.setString(3,customer_id);
-            p.executeUpdate();
+
+            //Check if person exists -> create if must
+            if (!personExists(name, customer_id)){
+                System.out.println("The person does not exist");
+
+                if(choice.equals("y")) {
+                    System.out.println("Creating new person...");
+
+                    // insertPerson(name, null, customer_id);
+                    PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,NULL,NULL,?);");
+                    p.setString(1, name);
+                    p.setString(2, customer_id);
+                    p.executeUpdate();
+                }
+            }
+
+
+            //Check if menu exists -> create if must
+            ResultSet menu = getMenu(menu_id, customer_id);
+            if(!menu.next()){
+                System.out.println("The menu does not exist");
+                if(choice.equals("y")) {
+                    System.out.println("Creating a new menu...");
+                    //insertMenu(menu_mtype, menu_id);
+                    PreparedStatement p2 = connector.getConnector().prepareStatement("INSERT INTO menu VALUES (?,?,default);");
+                    p2.setString(1, menu_mtype);
+                    p2.setString(2, menu_id);
+                    p2.executeUpdate();
+                }
+            }
+
+            // insert
+            PreparedStatement p3 = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (default,?,?,?);");
+            p3.setString(1,menu_mtype);
+            p3.setString(2,menu_id);
+            p3.setString(3,customer_id);
+            p3.executeUpdate();
 
             connector.getConnector().commit();
             System.out.println("Menu order registered!!");

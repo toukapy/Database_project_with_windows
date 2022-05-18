@@ -41,7 +41,6 @@ public class DataManager {
         p.setString(2,custphone);
 
         rs = p.executeQuery();
-        if(rs != null) System.out.println("Person exists");
         return rs;
     }
 
@@ -851,7 +850,6 @@ public class DataManager {
             stmt.setString(1, name);
             stmt.setString(2, id);
             rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
 
         } catch (SQLException e) {
             connector.getConnector().rollback();
@@ -923,6 +921,19 @@ public class DataManager {
     public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
         try{
             connector.getConnector().setAutoCommit(false);
+
+            PreparedStatement deleteStmt0 = connector.getConnector().prepareStatement("DELETE FROM frequents as f WHERE f.nameid=?;");
+            deleteStmt0.setString(1, name);
+            deleteStmt0.executeUpdate();
+
+            PreparedStatement deleteStmt1 = connector.getConnector().prepareStatement("DELETE FROM eats as e WHERE e.nameid=?;");
+            deleteStmt1.setString(1, name);
+            deleteStmt1.executeUpdate();
+
+            PreparedStatement deleteStmt3 = connector.getConnector().prepareStatement("DELETE FROM menu_order as m WHERE m.customer_id=?;");
+            deleteStmt3.setString(1, id);
+            deleteStmt3.executeUpdate();
+
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
             deleteStmt.setString(1, name);
             deleteStmt.setString(2, id);
@@ -1015,7 +1026,6 @@ public class DataManager {
                 rs = stmt.executeQuery();
 
                 connector.getConnector().commit();
-                System.out.println("Menu registered!!");
 
             } catch (SQLException e) {
                 System.out.println("Database rolling back");
@@ -1037,7 +1047,6 @@ public class DataManager {
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu_order;");
             rs = stmt.executeQuery();
             System.out.println("Query executed correctly!!");
-            if(rs==null)  System.out.println("No matchings");
 
         } catch (SQLException e) {
             connector.getConnector().rollback();
@@ -1096,17 +1105,19 @@ public class DataManager {
      * @param dish provided dish
      * @throws SQLException if rollback fails
      */
-    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest {
+    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange {
         try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
 
             updateStmt.setString(1,dish);
-            updateStmt.executeUpdate();
+            int changed = updateStmt.executeUpdate();
 
             connector.getConnector().commit();
 
             System.out.println("Transaction committed successfully!!");
+
+            if(changed==0) throw new NoChange();
             System.out.println("Prices were updated successfully!!");
 
         }catch(SQLException e){

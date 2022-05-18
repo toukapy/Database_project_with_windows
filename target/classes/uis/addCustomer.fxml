@@ -27,8 +27,8 @@
    <Label fx:id="DepartureDateLbl" layoutX="146.0" layoutY="254.0" text="Departure date:" />
    <TextField fx:id="TripTo" layoutX="382.0" layoutY="208.0" prefHeight="26.0" prefWidth="424.0" />
    <TextField fx:id="DepartureDate" layoutX="382.0" layoutY="250.0" prefHeight="26.0" prefWidth="424.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="38.0" layoutY="455.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
-   <Label fx:id="errorLbl" alignment="CENTER" layoutX="95.0" layoutY="436.0" prefHeight="18.0" prefWidth="663.0" textFill="#8e1c1c" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="40.0" layoutY="454.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="69.0" layoutY="473.0" prefHeight="18.0" prefWidth="824.0" textFill="#8e1c1c" />
    <Label fx:id="questionLbl" layoutX="139.0" layoutY="495.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
    <TextField fx:id="answerField" layoutX="584.0" layoutY="491.0" prefHeight="35.0" prefWidth="79.0" />
    <Button layoutX="696.0" layoutY="491.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />

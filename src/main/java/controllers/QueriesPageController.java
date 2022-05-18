@@ -103,6 +103,12 @@ public class QueriesPageController implements Controller {
     void onClickHotelCEO() { queryPageWin.showHotelsCEO();}
 
     /**
+     * Method to go to the window that shows the employees who have gone to the same hotels as the CEO
+     */
+    @FXML
+    void onClickDates() { queryPageWin.showDates(); }
+
+    /**
      * Method to return to the parent window
      */
     @FXML

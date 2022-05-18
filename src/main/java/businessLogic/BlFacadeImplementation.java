@@ -672,27 +672,23 @@ public class BlFacadeImplementation implements BlFacade{
      * @return
      */
     @Override
-    public Vector<String> restaurantDates(){
+    public Vector<String> restaurantDates() throws SQLException {
         Vector<String> answer = new Vector<>();
 
-        try {
+        dbManager.open();
 
-            dbManager.open();
+        ResultSet dates = dbManager.resDates();
 
-            ResultSet dates = dbManager.resDates();
+        while(dates.next()){
+            System.out.println("Name: "+dates.getString("nId")+", Name: "+dates.getString("nameId")+", Restaurant: "+dates.getString("restaurname"));
 
-            while(dates.next()){
-                System.out.println("Name: "+dates.getString("nId")+", Name: "+dates.getString("nameId")+", Restaurant: "+dates.getString("restaurname"));
-
-                answer.add("Name: "+dates.getString("nId")+", Name: "+
-                        dates.getString("nameId")+", Restaurant: "+dates.getString("restaurname"));
-            }
-
-            dbManager.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            answer.add(dates.getString("nId")+" and "+
+                    dates.getString("nameId")+" in "+dates.getString("restaurname"));
         }
+
+        dbManager.close();
+
+
         return answer;
     }
 

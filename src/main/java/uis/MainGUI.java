@@ -18,7 +18,7 @@ public class MainGUI {
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
-    private Window hotelCEOWin, riseWin;
+    private Window hotelCEOWin, riseWin, datesWin;
 
     private BlFacade businessLogic;
     private Stage stage;
@@ -113,6 +113,7 @@ public class MainGUI {
         deletePersonWin = load("/uis/deletePerson.fxml");
         hotelCEOWin = load("/uis/hotelCEO.fxml");
         riseWin = load("/uis/rise.fxml");
+        datesWin = load("/uis/restDates.fxml");
         showMain();
     }
     /**
@@ -276,6 +277,13 @@ public class MainGUI {
         riseWin.c.initializeInformation();
     }
 
+    /**
+     * Method to show the window the restaurant dates
+     */
+    public void showDates() {
+        setupScene(datesWin.ui, "Restaurant dates", 814, 575);
+        datesWin.c.initializeInformation();
+    }
 
     /**
      * Method that sets the specified window and scene, and sets it visible for interaction

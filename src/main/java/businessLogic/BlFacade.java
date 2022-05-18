@@ -326,7 +326,7 @@ public interface BlFacade {
      * restaurant, have at least a liked dish in common and that restaurant serves it
      * @return the vestor with the pairings and restaurant
      */
-    Vector<String> restaurantDates();
+    Vector<String> restaurantDates() throws SQLException;
 
     /**
      * For choosing from dept and locations for "bookTripToDepartment"

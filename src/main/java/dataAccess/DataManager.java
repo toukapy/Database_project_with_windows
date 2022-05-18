@@ -591,14 +591,14 @@ public class DataManager {
      */
     public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
         try {
-            connector.getConnector().setAutoCommit(false);
+           // connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
             p.setString(1,guideId);
             p.setString(2,tripTo1);
             p.setDate(3,new Date(format.parse(departureDate1).getTime()));
             p.executeUpdate();
 
-            connector.getConnector().commit();
+           // connector.getConnector().commit();
 
         } catch (SQLException e) {
             System.out.println("System rolling back");
@@ -618,7 +618,7 @@ public class DataManager {
      */
     public void createGuide(String guidename, String guidephone) throws UncompletedRequest, SQLException {
         try {
-            connector.getConnector().setAutoCommit(false);
+            //connector.getConnector().setAutoCommit(false);
             PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
             ResultSet ids = guidesNumber.executeQuery();
             while(ids.next()){
@@ -634,7 +634,7 @@ public class DataManager {
             p.setString(3,guidephone);
             p.executeUpdate();
 
-            connector.getConnector().commit();
+            //connector.getConnector().commit();
             System.out.println("Database updated and guide added succesfully!!");
 
         } catch (SQLException e) {
@@ -687,7 +687,6 @@ public class DataManager {
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename1, guidephone1);
-                insertGuideInTrip(getGuide(guidename1,guidephone1).getString("GuideId"),TripTo1,DepartureDate1);
             }else if(!exists && choice.equals("n")){
                 System.out.println("Guide does not exist");
                 System.out.println("Try again the transaction");
@@ -720,7 +719,6 @@ public class DataManager {
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename2, guidephone2);
-                insertGuideInTrip(getGuide(guidename2,guidephone2).getString("GuideId"),TripTo2,DepartureDate2);
             }else if(!exists && choice.equals("n")){
                 System.out.println("Guide does not exist");
                 System.out.println("Try again the transaction");
@@ -769,6 +767,10 @@ public class DataManager {
             System.out.println("System rolling back!");
             connector.getConnector().rollback();
             throw new UncompletedRequest();
+        } catch (ParseException g){
+            System.out.println("Databse rolling back");
+            connector.getConnector().rollback();
+            throw new ParseException("Please,enter a valid date",1);
         }
     }
 

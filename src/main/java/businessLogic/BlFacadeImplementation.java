@@ -253,8 +253,6 @@ public class BlFacadeImplementation implements BlFacade{
                 dbManager.insertCustomer(custname, custphone);
                 customer = dbManager.getCustomer(custname, custphone);
                 customer.next();
-            }else {
-                throw new ObjectNotCreated();
             }
         }
 

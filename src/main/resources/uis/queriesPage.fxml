@@ -22,5 +22,6 @@
       <Button layoutX="348.0" layoutY="398.0" mnemonicParsing="false" onAction="#onClickSpeakAllLanguages" prefHeight="35.0" prefWidth="270.0" text="Tourguides speaking all languages" />
       <Button layoutX="417.0" layoutY="484.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="133.0" text="Back" />
       <Button layoutX="636.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickHotelCEO" prefHeight="62.0" prefWidth="258.0" text="Which employees have been to the same hotels as the company CEO?" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="636.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickDates" prefHeight="62.0" prefWidth="258.0" text="Restaurant dates" textAlignment="CENTER" wrapText="true" />
    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -114,6 +115,8 @@ public class deleteCustomerController implements Controller {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             } catch (ParseException e) {
                 errorLbl.setText("Please introduce a valid date.");
+            } catch (NotBelong e) {
+                errorLbl.setText("Customer does not belong to the trip.");
             }
         }
     }

@@ -610,7 +610,7 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getRestaurantLikedManagers() throws SQLException {
-        Vector<String> answer = new Vector<String>();
+        Vector<String> answer = new Vector<>();
         dbManager.open();
 
         //Obtain the due restaurants
@@ -717,7 +717,16 @@ public class BlFacadeImplementation implements BlFacade{
 
     }
 
-    public void bookTripToDepartment(String Dno, String location, String date){
+    /**
+     * Book a trip to the employees not in the given department to the location of that department
+     * in the given date
+     * @param Dno the department the trip is to
+     * @param location where the trip is to
+     * @param date what date the trip is
+     * @return
+     */
+    @Override
+    public Vector<String> bookTripToDepartment(String Dno, String location, String date){
 
         dbManager.open();
 
@@ -725,10 +734,6 @@ public class BlFacadeImplementation implements BlFacade{
 
         ResultSet hotel = dbManager.hotelsIn(location);
 
-        if(hotel==null){
-            System.out.println("No hotels in the location of that department");
-            return;
-        }
 
         try {
             dbManager.insertTrip(location,date);
@@ -748,9 +753,15 @@ public class BlFacadeImplementation implements BlFacade{
         } catch (SQLException | UncompletedRequest | ParseException e) {
             e.printStackTrace();
         }
+        return null;
 
     }
 
+    /**
+     * This method retrieves the employees that have been to the same hotels as the CEO
+     * @return the info about the employees
+     * @throws SQLException
+     */
     @Override
     public Vector<String> hotelsCEO() throws SQLException {
 
@@ -772,6 +783,11 @@ public class BlFacadeImplementation implements BlFacade{
         return asw;
     }
 
+    /**
+     * Method to get the ssn-s and salaries of all employees in the database
+     * @return the ssn and salary of all employees
+     * @throws SQLException
+     */
     @Override
     public Vector<String> getAllSalaries() throws SQLException {
 

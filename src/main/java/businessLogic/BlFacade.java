@@ -334,7 +334,27 @@ public interface BlFacade {
      */
     public Vector<String> getDepartmentsAndLocations();
 
+    /**
+     * This method retrieves the employees that have been to the same hotels as the CEO
+     * @return the info about the employees
+     * @throws SQLException
+     */
     Vector<String> hotelsCEO() throws SQLException;
 
+    /**
+     * Method to get the ssn-s and salaries of all employees in the database
+     * @return the ssn and salary of all employees
+     * @throws SQLException
+     */
     Vector<String> getAllSalaries() throws SQLException;
+
+    /**
+     * Book a trip to the employees not in the given department to the location of that department
+     * in the given date
+     * @param Dno the department the trip is to
+     * @param location where the trip is to
+     * @param date what date the trip is
+     * @return
+     */
+    Vector<String> bookTripToDepartment(String Dno, String location, String date);
 }

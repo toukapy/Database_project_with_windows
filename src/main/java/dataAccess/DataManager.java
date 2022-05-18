@@ -2,6 +2,7 @@ package dataAccess;
 
 import exceptions.NoChange;
 import exceptions.NotBelong;
+import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
 import java.sql.*;
@@ -71,7 +72,7 @@ public class DataManager {
     public void insertCustomer(String custname, String custphone) throws SQLException, UncompletedRequest {
 
         try {
-            connector.getConnector().setAutoCommit(false);
+           // connector.getConnector().setAutoCommit(false);
             ResultSet customers = connector.getStatement().executeQuery("SELECT CustomerId FROM customer WHERE CustomerId LIKE '100%';");
             while(customers.next()){
                 if(customers.isLast()){
@@ -87,7 +88,7 @@ public class DataManager {
 
             p.executeUpdate();
 
-            connector.getConnector().commit();
+         //   connector.getConnector().commit();
             System.out.println("Customer added successfully!!");
 
         } catch (SQLException e) {
@@ -247,30 +248,75 @@ public class DataManager {
     }
 
     /**
-     * Method to add a customer to the trip table
      *
-     * @param CustomerId String - customer's id
-     * @param TripTo String - Trip's destination
-     * @param DepartureDate String - Trip's date
-     * @param HotelId String - Hotel's id
+     * @param choice
+     * @param custname
+     * @param custphone
+     * @param hotelname
+     * @param hotelcity
+     * @param TripTo
+     * @param DepartureDate
+     * @throws SQLException
+     * @throws UncompletedRequest
+     * @throws ParseException
      */
-    public void addCustomerToTrip(String CustomerId, String TripTo, String DepartureDate, String HotelId) throws SQLException, UncompletedRequest, ParseException {
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException, UncompletedRequest, ParseException {
         try {
+            connector.getConnector().setAutoCommit(false);
+            // check if customer exists -> create if must
+            ResultSet customer = getCustomer(custname, custphone);
+            if(!customer.next()){
+                System.out.println("The customer does not exist");
+                if(choice.equals("y")){
+                    System.out.println("Creating a new customer with that data");
+                    insertCustomer(custname, custphone);
+                    customer = getCustomer(custname, custphone);
+                    customer.next();
+                }
+            }
 
-            if(customerExistsInTrip(CustomerId,TripTo,DepartureDate,HotelId)){
+            // check if trip exist ->  create if must
+            ResultSet trip = getTrip(TripTo, DepartureDate);
+            if(!trip.next()) {
+                System.out.println("the trip does not exist");
+                if(choice.equals("y")){
+                    System.out.println("Creating a new trip with the data");
+                   insertTrip(TripTo, DepartureDate);
+                }
+            }
+
+            // check if hotel exists -> create if must
+            ResultSet hotel = getHotel(hotelname, hotelcity);
+            if(!hotel.next()){
+                System.out.println("The hotel does not exist");
+
+                if(choice.equals("y")){
+                    System.out.println("Creating a new hotel with the data");
+                    insertHotel(hotelname, hotelcity);
+                    hotel = getHotel(hotelname, hotelcity);
+                    hotel.next();
+                }
+            }
+
+            // check if hotel trip exists -> create if must
+            ResultSet hotelTrip = getHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
+            if(!hotelTrip.next())
+                createHotelTrip(TripTo, DepartureDate, hotel.getString("HotelId"));
+
+            if(customerExistsInTrip(customer.getString("CustomerId"),TripTo,DepartureDate,hotel.getString("HotelId"))){
                 System.out.println("Customer already in trip !!");
             }else{
-                connector.getConnector().setAutoCommit(false);
+
                 PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip_customer VALUES (?,?,?,?,default);");
                 p.setString(1,TripTo);
                 p.setDate(2,new Date(format.parse(DepartureDate).getTime()));
-                p.setString(3,HotelId);
-                p.setString(4,CustomerId);
+                p.setString(3,hotel.getString("HotelId"));
+                p.setString(4,customer.getString("CustomerId"));
                 p.executeUpdate();
-
-                connector.getConnector().commit();
-                System.out.println("Customer added successfully to the trip!!");
             }
+
+            connector.getConnector().commit();
+            System.out.println("Customer added successfully to the trip!!");
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
@@ -351,7 +397,7 @@ public class DataManager {
      */
     public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
         try {
-            connector.getConnector().setAutoCommit(false);
+          //  connector.getConnector().setAutoCommit(false);
             ResultSet hotels = connector.getStatement().executeQuery("SELECT HotelId FROM hotel WHERE HotelId LIKE 'h%';");
             while(hotels.next()){
                 if(hotels.isLast()){
@@ -367,7 +413,7 @@ public class DataManager {
 
             p.executeUpdate();
 
-            connector.getConnector().commit();
+          //  connector.getConnector().commit();
             System.out.println("Hotel added successfully!!");
 
         } catch (SQLException e) {
@@ -408,13 +454,13 @@ public class DataManager {
      */
     public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
         try {
-            connector.getConnector().setAutoCommit(false);
+            //connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
             p.setString(1,tripTo);
             p.setDate(2, new Date(format.parse(departureDate).getTime()));
             p.executeUpdate();
 
-            connector.getConnector().commit();
+            //connector.getConnector().commit();
             System.out.println("Trip added successfully!!");
 
         } catch (SQLException e) {
@@ -456,7 +502,7 @@ public class DataManager {
      */
     public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
-            connector.getConnector().setAutoCommit(false);
+            //connector.getConnector().setAutoCommit(false);
 
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES(?,?,?,default)");
             p.setString(1,tripTo);
@@ -464,7 +510,7 @@ public class DataManager {
             p.setString(3,hotelId);
             p.executeUpdate();
 
-            connector.getConnector().commit();
+           // connector.getConnector().commit();
         } catch (SQLException e) {
             System.out.println("Rolling back");
             connector.getConnector().rollback();

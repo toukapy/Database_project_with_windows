@@ -649,4 +649,52 @@ public class BlFacadeImplementation implements BlFacade{
         return answer;
     }
 
+    /**
+     * This method gives a raise of 1000 dollars to the employees who are paid less than
+     * the average salary of the company. Also, if they have any dependent they get 100 dollars
+     * per dependent
+     */
+    @Override
+    public void risesForEmployees() {
+        try {
+            dbManager.open();
+
+            dbManager.rises();
+
+            dbManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This query retrieves couples of names and a restaurant of people who frequent the same
+     * restaurant, have at least a liked dish in common and that restaurant serves it
+     * @return
+     */
+    @Override
+    public Vector<String> restaurantDates(){
+        Vector<String> answer = new Vector<>();
+
+        try {
+
+            dbManager.open();
+
+            ResultSet dates = dbManager.resDates();
+
+            while(dates.next()){
+                System.out.println("Name: "+dates.getString("nId")+", Name: "+dates.getString("nameId")+", Restaurant: "+dates.getString("restaurname"));
+
+                answer.add("Name: "+dates.getString("nId")+", Name: "+
+                        dates.getString("nameId")+", Restaurant: "+dates.getString("restaurname"));
+            }
+
+            dbManager.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
 }

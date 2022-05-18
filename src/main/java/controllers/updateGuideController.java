@@ -3,6 +3,7 @@ package controllers;
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -97,7 +98,9 @@ public class updateGuideController implements Controller {
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             } catch (NoChange e) {
-                errorLbl.setText("No information was updated through the transaction.");
+                errorLbl.setText("No trips could be changed in the interval, try different data.");
+            } catch (NotBelong e) {
+                errorLbl.setText("Specify tour-guides that belong to the database.");
             }
         }
     }

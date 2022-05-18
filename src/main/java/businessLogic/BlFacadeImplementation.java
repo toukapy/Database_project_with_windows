@@ -2,6 +2,7 @@ package businessLogic;
 
 import dataAccess.DataManager;
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -28,25 +29,25 @@ public class BlFacadeImplementation implements BlFacade{
      * @param phoneNum String that represents the phone number
      * @param TripTo String that represents to where the trip is
      * @param DepartureDate String that represents the departure
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
+     * @throws UncompletedRequest if transaction fails
+     * @throws NotBelong if the person does not belong to the trip
      */
     @Override
-    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
-
+    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest, NotBelong {
         dbManager.open();
 
+        //get the due customers
         ResultSet customer = dbManager.getCustomer(name,phoneNum);
-
-        if(customer == null){
-            System.out.println("There is no such person in the database!!");
-        }else{
-            while(customer.next()) {
-                if(dbManager.customerExistsInTripWithoutHotel(customer.getString("CustomerId"),TripTo,DepartureDate)){
-                    dbManager.deleteCustomerFromTrip(customer.getString("CustomerId"), TripTo, DepartureDate);
-                }else{
-                    System.out.println("Customer does not exist in trip");
-                }
+        while(customer.next()) {
+            //person exists in trip -> delete
+            if(dbManager.customerExistsInTripWithoutHotel(customer.getString("CustomerId"),TripTo,DepartureDate)){
+                dbManager.deleteCustomerFromTrip(customer.getString("CustomerId"), TripTo, DepartureDate);
+            }else{
+                //person does not exist in trip-> NotBelong
+                System.out.println("Customer does not exist in trip");
+                throw new NotBelong();
             }
         }
 
@@ -106,13 +107,12 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
-
+        //get due customers
         ResultSet customers = dbManager.getCustomersAllCheapestTrips();
         while (customers.next()) {
+            //display and store the due information
             System.out.println("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
             answer.add("Customerid: " + customers.getString("id") + ", Name: " + customers.getString("name"));
         }
@@ -137,14 +137,14 @@ public class BlFacadeImplementation implements BlFacade{
     public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
+        //get the due customers
         ResultSet rs = dbManager.getCustomerTrip(trip,departure);
-
         while(rs.next()){
+            //display and store the due information
+            System.out.println("Customer: "+rs.getString("custname")+ ", Phone: " + rs.getString("custphone"));
             answer.add("Customer: "+rs.getString("custname")+ ", Phone: " + rs.getString("custphone"));
         }
-
         dbManager.close();
-
         return answer;
     }
 
@@ -158,17 +158,17 @@ public class BlFacadeImplementation implements BlFacade{
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
      * @return Vector<String> Vector containing the customer (if it exists)
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
+        //get due customers
         ResultSet rs = dbManager.getCustomerTripHotel(custname,custphone,hotelname,hotelcity,TripTo,DepartureDate);
-        if(rs == null){
-            return null;
-        }
         while(rs.next()){
+            //display and store the due information
+            System.out.println("Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate")+", Hotel name: "+rs.getString("hotelname")+", hotel city: "+rs.getString("hotelcity")+ ", Name: "+rs.getString("custname")+", Phone: "+rs.getString("custphone"));
             answer.add("Destination: "+rs.getString("TripTo")+", Departure date: "+rs.getString("DepartureDate")+", Hotel name: "+rs.getString("hotelname")+", hotel city: "+rs.getString("hotelcity")+ ", Name: "+rs.getString("custname")+", Phone: "+rs.getString("custphone"));
         }
         dbManager.close();
@@ -181,18 +181,17 @@ public class BlFacadeImplementation implements BlFacade{
      * Method to get the information about all customers in a trip and a hotel
      *
      * @return Vector<String> - A vector containing strings with such information
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllCustomers() throws SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
+
+        //get due customers
         ResultSet rs = dbManager.getAllCustomers();
-        if (rs == null) {
-            return null;
-        }
         while (rs.next()) {
+            //display and store the due information
             System.out.println("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
             answer.add("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") + ",  Hotel name: " + rs.getString("hotelname") + ",  Hotel city:" + rs.getString("hotelcity") + ",  Customer name: " + rs.getString("custname") + ",  Customer phone: " + rs.getString("custphone"));
         }
@@ -206,18 +205,16 @@ public class BlFacadeImplementation implements BlFacade{
      * Method to get the information about a customer in a trip
      *
      * @return Vector<String> - Vector containing strings with such information
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllCustomersJustTrip() throws SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
+        //get due customers
         ResultSet rs = dbManager.getAllCustomersJustTrip();
-        if (rs == null) {
-            return null;
-        }
         while (rs.next()) {
+            //display and store the due information
             System.out.println("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate") );
             answer.add("Destination: " + rs.getString("TripTo") + ",  Departure date: " + rs.getString("DepartureDate"));
         }
@@ -237,6 +234,9 @@ public class BlFacadeImplementation implements BlFacade{
      * @param hotelcity String - City where the hotel is
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
+     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
+     * @throws UncompletedRequest if transaction is not successful
+     * @throws SQLException if database management fails
      */
     @Override
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException {
@@ -309,13 +309,13 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
 
+        //get due tour-guides
         ResultSet tourguides = dbManager.getTourguidesAllLanguages();
         while(tourguides.next()) {
+            //display and store the due information
             System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
             answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Language amount: " + tourguides.getString("LangCount"));
         }
@@ -333,13 +333,12 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
-
+        //get due tourguides
         ResultSet tourguides = dbManager.getTourguidesAllTripsYear(year);
         while (tourguides.next()) {
+            //display and store the due information
             System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
             answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name"));
         }
@@ -353,16 +352,17 @@ public class BlFacadeImplementation implements BlFacade{
      * Method to get all guides
      *
      * @return Vector<String> - A vector containing strings with that information
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllTourguideTrips() throws SQLException {
 
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
-
+        //get due tour-guides
         ResultSet tourguides = dbManager.getAllTourguideTrips();
         while (tourguides.next()) {
+            //display and store the due information
             System.out.println("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name") + ", Phone: " + tourguides.getString("phone") + ", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
             answer.add("Guideid: " + tourguides.getString("id") + ", Name: " + tourguides.getString("name")+ ", Phone: " + tourguides.getString("phone") +", Trip to: " + tourguides.getString("TripTo") + ", Departure date: " + tourguides.getString("DepartureDate"));
         }
@@ -375,16 +375,16 @@ public class BlFacadeImplementation implements BlFacade{
      * Method to get the information of guides that are in trips (guides who do not have a trip are not going to appear here)
      *
      * @return Vector<String> - A vector containing strings with that information
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllTourguideTripsNotNull() throws SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
-
+        //get due tour-guides
         ResultSet tourguides = dbManager.getAllTourguideTripsNotNull();
         while (tourguides.next()) {
+            //display and store the due information
             System.out.println("Name: " + tourguides.getString("name") + ", Phone:" + tourguides.getString("phone") + ", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
             answer.add("Name: " + tourguides.getString("name")+ ", Phone:" + tourguides.getString("phone") +", Trip to:" + tourguides.getString("TripTo") + " Departure date:" + tourguides.getString("DepartureDate"));
         }
@@ -400,11 +400,22 @@ public class BlFacadeImplementation implements BlFacade{
      * @param tgnew new tour-guide to be set
      * @param date1 first date of the interval
      * @param date2 second date of the interval
+     * @throws UncompletedRequest if transaction fails
+     * @throws SQLException if database management fails
+     * @throws NoChange if no rows are updated
+     * @throws NotBelong if tour-guides don't belong to the database
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong {
 
         dbManager.open();
+        //check if tour-guides belong to the database
+        ResultSet tourguide1 = dbManager.getGuideById(tgprev);
+        if(!tourguide1.next()) throw new NotBelong();
+        ResultSet tourguide2 = dbManager.getGuideById(tgnew);
+        if(!tourguide2.next()) throw new NotBelong();
+
+        //update tour-guides
         dbManager.updateTourguide(tgprev, tgnew, date1, date2);
         dbManager.close();
     }
@@ -420,12 +431,15 @@ public class BlFacadeImplementation implements BlFacade{
      * @param guidephone2 String - Phone number of the second guide
      * @param TripTo2 String - Destination of the second trip
      * @param DepartureDate2 String - Departure date of the second trip
+     * @throws UncompletedRequest if the transaction was not successful
+     * @throws SQLException if database management fails
      */
     @Override
     public void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException {
 
             dbManager.open();
 
+            //find first tour-guide -> create if must
             System.out.println("Finding the first tourguide");
             ResultSet guide1 = dbManager.getGuide(guidename1,guidephone1);
             if(!guide1.next()){
@@ -433,41 +447,47 @@ public class BlFacadeImplementation implements BlFacade{
                 dbManager.createGuide(guidename1, guidephone1);
             }
 
+            //find first trip -> if not exists  UncompletedRequest
             System.out.println("Finding the first trip");
             ResultSet trip1 = dbManager.getTrip(TripTo1,DepartureDate1);
             if(!trip1.next()){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 dbManager.close();
-                return;
+                throw new UncompletedRequest();
             }
 
+            //check if guide exists in trip -> if not UncompletedRequest
             if(!dbManager.existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
                 System.out.println("This guide is not in this trip!!!");
-                return;
+                throw new UncompletedRequest();
             }
 
-            System.out.println("Finding the second tourguide");
+            // find second tour-guide -> create if not exists
+            System.out.println("Finding the second tour-guide");
             ResultSet guide2 = dbManager.getGuide(guidename2,guidephone2);
             if(!guide2.next()){
                 System.out.println("System creating a guide");
                 dbManager.createGuide(guidename2, guidephone2);
             }
 
+            //find second trip -> if not exists UncompletedRequest
             System.out.println("Finding the second trip");
             ResultSet trip2 = dbManager.getTrip(TripTo2,DepartureDate2);
             if(!trip2.next()){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 dbManager.close();
-                return;
+                throw new UncompletedRequest();
             }
 
+            //check if second guide exists in trip -> if not UncompletedRequest
             if(!dbManager.existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
                 System.out.println("This guide is not in this trip!!!");
-                return;
+                throw new UncompletedRequest();
             }
 
+            //swap guides
             dbManager.swapGuidesBetweenTrips(guide1.getString("GuideId"),guide2.getString("GuideId"),TripTo1,TripTo2,DepartureDate1,DepartureDate2);
             System.out.println("Update done correctly!");
 
@@ -478,6 +498,8 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Retrieve the number of customer each guide is responsible for
      * @return the number of customer each guide is responsible for
+     * @throws UncompletedRequest if there has been a problem with the query
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException {
@@ -505,6 +527,7 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method aims to provide all menu orders
      * @return all menu orders
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllMenuOrders() throws SQLException {
@@ -532,6 +555,9 @@ public class BlFacadeImplementation implements BlFacade{
      * @param menu_id String that represents the menu identifier
      * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
+     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
+     * @throws UncompletedRequest if transaction could not be completed
+     * @throws SQLException if database management failed
      */
     @Override
     public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException {
@@ -580,16 +606,18 @@ public class BlFacadeImplementation implements BlFacade{
      * @param food - The dish the person likes
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
+     * @throws UncompletedRequest if transaction could not be completed
+     * @throws NoChange if the person already existed
      */
     @Override
-    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest {
+    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange {
 
 
         dbManager.open();
         //check person exists -> create if must
         if (dbManager.personExists(name, id)){
             System.out.println("The person already exists!");
-            return;
+            throw new NoChange();
         }
         dbManager.insertPerson(name, age, id);
 
@@ -628,41 +656,40 @@ public class BlFacadeImplementation implements BlFacade{
      * @param name String that represents the name of the person
      * @param id String that represents the id of the person
      * @throws SQLException if rollback could not be done
+     * @throws UncompletedRequest if the transaction could not be completed
+     * @throws NotBelong if the person does not belong to the database
      */
     @Override
-    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
-
+    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest, NotBelong {
         dbManager.open();
-
         ResultSet person = dbManager.getPerson(name,id);
 
-        if(person == null){
-            System.out.println("There is no such person in the database!!");
-        }else{
-            dbManager.deletePerson(name, id);
-        }
+        //the person does not belong to the database
+        if(!person.next()) throw new NotBelong();
+
+        //delete if they belong to the database
+        else dbManager.deletePerson(name, id);
         dbManager.close();
     }
 
     /**
      * This method provides all the people that belong to the restaurants database
      * @return all the people that belong to the restaurants database
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllPeople() throws SQLException {
-
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
+
+        //obtain the due people
         ResultSet people = dbManager.getAllPeople();
-        if (people==null) System.out.println("No person matching the requirements was found.");
-        else {
-            while(people.next()){
-                System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
-                answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
-            }
+        while(people.next()){
+            //display and store the information
+            System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats: " + people.getString("e.dish") + ", frequented restaurant: " + people.getString("f.restaurname"));
+            answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats: " + people.getString("e.dish") + ", frequented restaurant: " + people.getString("f.restaurname"));
         }
+
         dbManager.close();
         return answer;
     }
@@ -676,10 +703,17 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method updates a given dishes' price to its half
      * @param dish provided dish
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the transaction was not successful
+     * @throws NoChange if no changes were made (serves table)
+     * @throws NotBelong if the dish does not belong to the database (dish table)
      */
     @Override
-    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest {
+    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange, NotBelong {
         dbManager.open();
+        //check if dish is registered in the database
+        if(!dbManager.foodExists(dish)) throw new NotBelong();
+        //update the dish price for the restaurants that serve it
         dbManager.updateDishPrice(dish);
         dbManager.close();
     }
@@ -689,21 +723,21 @@ public class BlFacadeImplementation implements BlFacade{
      * Method to retrieve the information about dishes
      *
      * @return Vector<String> - A vector containing that information
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllDishes() throws SQLException {
-
         Vector<String> answer = new Vector<>();
-
         dbManager.open();
+
+        //obtain the due dishes
         ResultSet dishes = dbManager.getAllDishes();
-        if (dishes==null) System.out.println("No dish matching the requirements was found.");
-        else {
-            while(dishes.next()){
-                System.out.println("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
-                answer.add("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
-            }
+        while(dishes.next()){
+            //save and store the due information
+            System.out.println("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
+            answer.add("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
         }
+
         dbManager.close();
         return answer;
 
@@ -723,18 +757,16 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
-
         Vector<String> answer = new Vector<String>();
-
         dbManager.open();
 
+        //Obtain the due restaurants
         ResultSet restaurants = dbManager.getRestaurantLikedManagers();
-        if (restaurants==null) System.out.println("No restaurants matching the requirements were found.");
-        else
-            while (restaurants.next()) {
-                System.out.println("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
-                answer.add("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
-            }
+        while (restaurants.next()) {
+            //display and store the due information
+            System.out.println("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+            answer.add("Restaurant name: " + restaurants.getString("restaurant") + ", dish: " + restaurants.getString("dish"));
+        }
         dbManager.close();
 
         return answer;

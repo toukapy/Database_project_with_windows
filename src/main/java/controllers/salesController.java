@@ -2,6 +2,8 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
+import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -96,6 +98,10 @@ public class salesController implements Controller {
             errorLbl.setText("An error with the database occurred. Please, try again later.");
         } catch (UncompletedRequest e) {
             errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+        } catch (NoChange e) {
+            errorLbl.setText("No restaurant serves the dish, try with another one.");
+        } catch (NotBelong e) {
+            errorLbl.setText("The dish does not belong to the database.");
         }
     }
 

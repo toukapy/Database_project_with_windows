@@ -2,6 +2,7 @@ package main;
 
 import businessLogic.BlFacadeImplementation;
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -214,6 +215,8 @@ public class Main {
             } catch (ObjectNotCreated e) {
                 e.printStackTrace();
             } catch (NoChange e) {
+                e.printStackTrace();
+            } catch (NotBelong e) {
                 e.printStackTrace();
             }
         } /* while */

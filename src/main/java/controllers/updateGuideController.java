@@ -101,6 +101,8 @@ public class updateGuideController implements Controller {
                 errorLbl.setText("No trips could be changed in the interval, try different data.");
             } catch (NotBelong e) {
                 errorLbl.setText("Specify tour-guides that belong to the database.");
+            } catch (ParseException e) {
+                errorLbl.setText("Please, enter a valid date");
             }
         }
     }

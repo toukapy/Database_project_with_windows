@@ -196,7 +196,7 @@ public class Main {
                                 String trip2 = sc.nextLine();
                                 date2 = sc.nextLine();
 
-                                bl.changeGuidesBetweenTrips(name1, phone1, trip1, date1, name2, phone2, trip2, date2);
+                                bl.changeGuidesBetweenTrips("y", name1, phone1, trip1, date1, name2, phone2, trip2, date2);
                                 System.out.println("Successful transaction");
 
                                 break;
@@ -217,6 +217,8 @@ public class Main {
             } catch (NoChange e) {
                 e.printStackTrace();
             } catch (NotBelong e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         } /* while */

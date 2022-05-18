@@ -546,44 +546,12 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange {
-
-
         dbManager.open();
-        //check person exists -> create if must
-        if (dbManager.personExists(name, id)){
-            System.out.println("The person already exists!");
-            throw new NoChange();
-        }
-        dbManager.insertPerson(name, age, id);
-
-        // Check food exists -> create if must
-        if(!dbManager.foodExists(food)){
-            System.out.println("The dish does not exist");
-
-            if (choice.equals("y")) {
-                System.out.println("Creating a new dish...");
-                dbManager.insertDish(food);
-
-                // register food as eaten by the person
-                dbManager.insertEats(name,food);
-            }
-        }else dbManager.insertEats(name,food);
-
-        // Check restaurant exists -> create if must
-        if(!dbManager.restaurantExists(restaurant)){
-            System.out.println("The restaurant does not exist");
-
-            if (choice.equals("y")) {
-                System.out.println("Creating a new restaurant...");
-                dbManager.insertRestaurant(restaurant);
-
-                //  make person frequent the restaurant
-                dbManager.addFrequents(name, restaurant);
-            }
-        } else dbManager.addFrequents(name, restaurant);
-
-            dbManager.close();
+        dbManager.insertPersonRestaurantEats(choice, name, age, id, food, restaurant);
+        dbManager.close();
     }
+
+
 
 
     /**

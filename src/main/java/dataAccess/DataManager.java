@@ -1,7 +1,6 @@
 package dataAccess;
 
 import exceptions.NoChange;
-import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
 import java.sql.*;
@@ -992,6 +991,47 @@ public class DataManager {
 
     }
 
+    public void insertPersonRestaurantEats(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest {
+        try {
+
+            //check person exists -> create if must
+            if (personExists(name, id)) System.out.println("The person already exists!");
+            insertPerson(name, age, id);
+
+            // Check food exists -> create if must
+            if (!foodExists(food)) {
+                System.out.println("The dish does not exist");
+
+                if (choice.equals("y")) {
+                    System.out.println("Creating a new dish...");
+                    insertDish(food);
+
+                    // register food as eaten by the person
+                    insertEats(name, food);
+                }
+            } else insertEats(name, food);
+
+
+            // Check restaurant exists -> create if must
+            if (!restaurantExists(restaurant)) {
+                System.out.println("The restaurant does not exist");
+
+                if (choice.equals("y")) {
+                    System.out.println("Creating a new restaurant...");
+                    insertRestaurant(restaurant);
+
+                    //  make person frequent the restaurant
+                    addFrequents(name, restaurant);
+                }
+            } else addFrequents(name, restaurant);
+
+        } catch (SQLException e){
+            connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
+            throw new UncompletedRequest();
+        }
+    }
+
     /**
      *
      * @param name
@@ -1000,26 +1040,21 @@ public class DataManager {
      * @throws SQLException
      */
     public void insertPerson(String name, String age, String id) throws SQLException, UncompletedRequest {
-        try {
 
-            if(personExists(name, id)){
-                System.out.println("Person already registered !!");
-            }else{
-                connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,NULL,?);");
-                p.setString(1,name);
-                p.setString(2,age);
-                p.setString(3,id);
-                p.executeUpdate();
+        if(personExists(name, id)){
+            System.out.println("Person already registered !!");
+        }else{
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,NULL,?);");
+            p.setString(1,name);
+            p.setString(2,age);
+            p.setString(3,id);
+            p.executeUpdate();
 
-                connector.getConnector().commit();
-                System.out.println("Person registered successfully!!");
-            }
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
+            connector.getConnector().commit();
+            System.out.println("Person registered successfully!!");
         }
+
     }
 
     /**
@@ -1106,7 +1141,7 @@ public class DataManager {
                 }
             }
 
-            // insert
+            // Insert
             PreparedStatement p3 = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (default,?,?,?);");
             p3.setString(1,menu_mtype);
             p3.setString(2,menu_id);

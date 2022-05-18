@@ -6,11 +6,11 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CustomerAllCheapestTripsController">
+<AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.hotelCEOController">
    <children>
       <TableView fx:id="tblCustomer" layoutX="72.0" layoutY="78.0" prefHeight="376.0" prefWidth="676.0">
         <columns>
-          <TableColumn fx:id="customerColumn" prefWidth="675.0" text="Customers that have gone on all cheapest trips" />
+          <TableColumn fx:id="customerColumn" prefWidth="675.0" text="Employees who have been to the same hotels as the company CEO" />
         </columns>
       </TableView>
       <Button fx:id="backBtn" layoutX="562.0" layoutY="487.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="186.0" text="Back" />

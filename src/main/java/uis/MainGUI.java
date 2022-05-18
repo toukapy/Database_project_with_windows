@@ -18,6 +18,7 @@ public class MainGUI {
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
+    private Window hotelCEOWin, riseWin;
 
     private BlFacade businessLogic;
     private Stage stage;
@@ -110,6 +111,8 @@ public class MainGUI {
         salesWin= load("/uis/sales.fxml");
         addPersonWin = load("/uis/addPerson.fxml");
         deletePersonWin = load("/uis/deletePerson.fxml");
+        hotelCEOWin = load("/uis/hotelCEO.fxml");
+        riseWin = load("/uis/rise.fxml");
         showMain();
     }
     /**
@@ -257,6 +260,21 @@ public class MainGUI {
         salesWin.c.initializeInformation();
     }
 
+    /**
+     * Method to show the window that shows the employees who have gone to the same hotels as the CEO
+     */
+    public void showHotelsCEO() {
+        setupScene(hotelCEOWin.ui, "CEO hotels", 814, 575);
+        hotelCEOWin.c.initializeInformation();
+    }
+
+    /**
+     * Method to show the window that will execute the rise
+     */
+    public void showRise() {
+        setupScene(riseWin.ui, "Employee raise", 814, 575);
+        riseWin.c.initializeInformation();
+    }
 
 
     /**

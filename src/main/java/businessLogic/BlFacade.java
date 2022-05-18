@@ -2,6 +2,7 @@ package businessLogic;
 
 
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -160,7 +161,7 @@ public interface BlFacade {
      * @param date1 first date of the interval
      * @param date2 second date of the interval
      */
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange;
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong;
 
     /**
      * Transition 3 -> Method that changes the guides between two trips

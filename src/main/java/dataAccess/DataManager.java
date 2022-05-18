@@ -295,6 +295,26 @@ public class DataManager {
         return rs;
     }
 
+
+
+    /**
+     * Method to get a guide object by id
+     *
+     * @param id String - Guide's id
+     * @return ResultSet - Set containing the guide that matches that conditions
+     */
+    public ResultSet getGuideById(String id) {
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM tourguide WHERE guideid=?; ");
+            p.setString(1,id);
+            rs = p.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
     /**
      * Method to insert a guide in the database by name and phone
      *
@@ -941,8 +961,7 @@ public class DataManager {
 
             connector.getConnector().commit();
 
-            System.out.println("Transaction commited succesfully!!");
-            System.out.println("Person was deleted succesfully!!");
+            System.out.println("Person was deleted successfully!!");
 
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");

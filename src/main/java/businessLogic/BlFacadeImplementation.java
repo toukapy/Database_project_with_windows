@@ -2,6 +2,7 @@ package businessLogic;
 
 import dataAccess.DataManager;
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
@@ -402,9 +403,14 @@ public class BlFacadeImplementation implements BlFacade{
      * @param date2 second date of the interval
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong {
 
         dbManager.open();
+        ResultSet tourguide1 = dbManager.getGuideById(tgprev);
+        if(!tourguide1.next()) throw new NotBelong();
+        ResultSet tourguide2 = dbManager.getGuideById(tgnew);
+        if(!tourguide2.next()) throw new NotBelong();
+
         dbManager.updateTourguide(tgprev, tgnew, date1, date2);
         dbManager.close();
     }
@@ -659,8 +665,8 @@ public class BlFacadeImplementation implements BlFacade{
         if (people==null) System.out.println("No person matching the requirements was found.");
         else {
             while(people.next()){
-                System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
-                answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats:" + people.getString("e.dish") + ", frequented restaurant:" + people.getString("f.restaurname"));
+                System.out.println("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats: " + people.getString("e.dish") + ", frequented restaurant: " + people.getString("f.restaurname"));
+                answer.add("Name: " + people.getString("p.nameid") + ", id: " + people.getString("p.id") + ", eats: " + people.getString("e.dish") + ", frequented restaurant: " + people.getString("f.restaurname"));
             }
         }
         dbManager.close();

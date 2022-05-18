@@ -545,6 +545,7 @@ public class BlFacadeImplementation implements BlFacade{
     @Override
     public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange {
         dbManager.open();
+        //insert person
         dbManager.insertPersonRestaurantEats(choice, name, age, id, food, restaurant);
         dbManager.close();
     }

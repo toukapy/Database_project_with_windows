@@ -1433,4 +1433,165 @@ public class DataManager {
 
     }
 
+    /**
+     * This method returns the employees that have been to the same hotels as the company CEO
+     * @return The result of the query
+     * @throws SQLException
+     */
+    public ResultSet hotelsCEO() throws SQLException {
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT employee.Ssn, employee.Fname, employee.Lname\n" +
+                "FROM employee INNER JOIN employee_customer ON Ssn=Emp_id " +
+                "WHERE NOT EXISTS ( " +
+                "    SELECT * " +
+                "    FROM ( " +
+                "        SELECT htc.HotelId " +
+                "        FROM employee AS e, employee_customer AS ec, hotel_trip_customer AS htc " +
+                "WHERE htc.CustomerId=ec.Cust_Id AND e.Ssn=ec.Emp_id AND e.Super_ssn=\"\" " +
+                "    ) AS e2 " +
+                "    WHERE NOT EXISTS ( " +
+                "        SELECT htc3.HotelId " +
+                "        FROM hotel_trip_customer as htc3 " +
+                "        WHERE htc3.CustomerId=employee_customer.Cust_Id AND htc3.HotelId=e2.HotelId " +
+                "        ) " +
+                "    ) AND employee.Super_ssn<>\"\";");
+
+        rs = p.executeQuery();
+
+        return rs;
+    }
+
+    public void insertHotelTrip(String to, String date, String hotelId) throws SQLException {
+        try {
+
+            if(tripExists(to,date,hotelId)){
+                System.out.println("Trip is already created");
+            }else{
+                connector.getConnector().setAutoCommit(false);
+                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES (?,?,?,default);");
+                p.setString(1,to);
+                p.setString(2,date);
+                p.setString(3,hotelId);
+                p.executeUpdate();
+
+                connector.getConnector().commit();
+                System.out.println("Trip registered successfully!!");
+            }
+        } catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public void insertCustomerToTrip(String to, String date, String hotelId, String custId) throws SQLException {
+        try {
+
+            if(customerAlreadyInTrip(to,date,hotelId,custId)){
+                System.out.println("Trip is already created");
+            }else{
+                connector.getConnector().setAutoCommit(false);
+                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip_customer VALUES (?,?,?,?,?);");
+                p.setString(1,to);
+                p.setString(2,date);
+                p.setString(3,hotelId);
+                p.setString(4,custId);
+                p.setString(5,"2");
+                p.executeUpdate();
+
+                connector.getConnector().commit();
+                System.out.println("Customer registered successfully!!");
+            }
+        } catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public boolean customerAlreadyInTrip(String to, String date, String hotelId, String custId) throws SQLException {
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer AS ht WHERE ht.TripTo=? AND " +
+                    "ht.DepartureDate=? AND ht.hotelId=? AND ht.CustomerId=?");
+            p.setString(1,to);
+            p.setString(2,date);
+            p.setString(3,hotelId);
+            p.setString(4,custId);
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs.next();
+
+    }
+
+    public boolean tripExists(String to, String date, String hotel) throws SQLException {
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip AS ht WHERE ht.TripTo=? AND " +
+                    "ht.DepartureDate=? AND ht.HotelId=?");
+            p.setString(1,to);
+            p.setString(2,date);
+            p.setString(3,hotel);
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return rs.next();
+    }
+
+    public ResultSet employeesNotInTheDepartment(String dno){
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT ec.Cust_Id FROM employee AS e INNER JOIN " +
+                    "employee_customer AS ec ON e.Ssn=ec.Emp_id WHERE e.Dno<>?");
+            p.setString(1,dno);
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public ResultSet hotelsIn (String location){
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
+                    "WHERE h.hotelcity=? ORDER BY h.hotelcapacity DESC");
+            p.setString(1,location);
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+    }
+
+    /**
+     * This method returns all the departments and locations
+     * @return the department numbers and locations
+     */
+    public ResultSet deptAndLocation(){
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT dl.Dnumber, dl.Dlocation FROM dept_locations AS dl ");
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+    }
+
+    public ResultSet getSalaries(){
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT Ssn, Salary FROM employee");
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+    }
+
 }

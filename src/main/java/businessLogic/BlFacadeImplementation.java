@@ -9,6 +9,7 @@ import exceptions.UncompletedRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -655,16 +656,14 @@ public class BlFacadeImplementation implements BlFacade{
      * per dependent
      */
     @Override
-    public void risesForEmployees() {
-        try {
-            dbManager.open();
+    public void risesForEmployees() throws SQLException {
 
-            dbManager.rises();
+        dbManager.open();
 
-            dbManager.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dbManager.rises();
+
+        dbManager.close();
+
     }
 
     /**
@@ -695,6 +694,99 @@ public class BlFacadeImplementation implements BlFacade{
             e.printStackTrace();
         }
         return answer;
+    }
+
+
+    /**
+     * For choosing from dept and locations for "bookTripToDepartment"
+     * @return all the departments and locations
+     */
+    @Override
+    public Vector<String> getDepartmentsAndLocations() {
+        Vector<String> answer = new Vector<>();
+
+        try {
+            dbManager.open();
+            ResultSet rs = dbManager.deptAndLocation();
+
+            while(rs.next()){
+                System.out.println(rs.getString("Dnumber")+","+rs.getString("Dlocation"));
+            }
+
+            dbManager.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return answer;
+
+    }
+
+    public void bookTripToDepartment(String Dno, String location, String date){
+
+        dbManager.open();
+
+        ResultSet custNumbers = dbManager.employeesNotInTheDepartment(Dno);
+
+        ResultSet hotel = dbManager.hotelsIn(location);
+
+        if(hotel==null){
+            System.out.println("No hotels in the location of that department");
+            return;
+        }
+
+        try {
+            dbManager.insertTrip(location,date);
+            hotel.next();
+            String h = hotel.getString("HotelId");
+            System.out.println("Selected hotel: "+ h);
+            dbManager.insertHotelTrip(location,date,h);
+
+            while(custNumbers.next()){
+                dbManager.insertCustomerToTrip(location,date,h,custNumbers.getString("Cust_Id"));
+            }
+
+            System.out.println("Employees inserted successfully into the trip");
+
+            dbManager.close();
+
+        } catch (SQLException | UncompletedRequest | ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public Vector<String> hotelsCEO() throws SQLException {
+
+        Vector<String> asw = new Vector<>();
+
+        dbManager.open();
+
+        ResultSet emp = dbManager.hotelsCEO();
+
+        System.out.println("Employees who have been to the same hotels as the company CEO:");
+        while (emp.next()) {
+            System.out.println("\tEmployee Ssn: " + emp.getString("Ssn") + ", Name: " + emp.getString("Fname")
+                    + ", Last Name: " + emp.getString("Lname"));
+            asw.add("Employee Ssn: " + emp.getString("Ssn") + ", Name: " + emp.getString("Fname")
+                    + ", Last Name: " + emp.getString("Lname"));
+        }
+        dbManager.close();
+
+        return asw;
+    }
+
+    @Override
+    public Vector<String> getAllSalaries() throws SQLException {
+
+        Vector<String> a = new Vector<>();
+        dbManager.open();
+        ResultSet rs = dbManager.getSalaries();
+        while (rs.next())
+            a.add("Ssn: "+rs.getString("Ssn")+", salary: "+rs.getString("Salary"));
+        dbManager.close();
+
+        return a;
     }
 
 }

@@ -219,7 +219,7 @@ public interface BlFacade {
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
      */
-    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest;
+    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange;
 
 
     /**
@@ -228,7 +228,7 @@ public interface BlFacade {
      * @param id String that represents the id of the person
      * @throws SQLException if rollback could not be done
      */
-    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest;
+    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest, NoChange;
 
 
     /**
@@ -246,7 +246,7 @@ public interface BlFacade {
      * This method updates a given dishes' price to its half
      * @param dish provided dish
      */
-    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest;
+    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange;
 
 
     /**

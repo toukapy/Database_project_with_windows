@@ -582,14 +582,14 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if rollback could not be done.
      */
     @Override
-    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest {
+    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange {
 
 
         dbManager.open();
         //check person exists -> create if must
         if (dbManager.personExists(name, id)){
             System.out.println("The person already exists!");
-            return;
+            throw new NoChange();
         }
         dbManager.insertPerson(name, age, id);
 
@@ -630,14 +630,14 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if rollback could not be done
      */
     @Override
-    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
+    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest, NoChange {
 
         dbManager.open();
 
         ResultSet person = dbManager.getPerson(name,id);
 
-        if(person == null){
-            System.out.println("There is no such person in the database!!");
+        if(!person.next()){
+            throw new NoChange();
         }else{
             dbManager.deletePerson(name, id);
         }
@@ -678,7 +678,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @param dish provided dish
      */
     @Override
-    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest {
+    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange {
         dbManager.open();
         dbManager.updateDishPrice(dish);
         dbManager.close();

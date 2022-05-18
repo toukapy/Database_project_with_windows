@@ -17,7 +17,7 @@ public class DatabaseConnector {
 
     /**
      * Constructor of the class
-     * Creates connection with the database
+     * Creates a connection with the database
      */
     public DatabaseConnector() {
         try {

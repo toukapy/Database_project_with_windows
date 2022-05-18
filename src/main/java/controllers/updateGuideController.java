@@ -97,7 +97,7 @@ public class updateGuideController implements Controller {
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
             } catch (NoChange e) {
-                errorLbl.setText("No information was updated through the transaction.");
+                errorLbl.setText("No such dish is served, try another one.");
             }
         }
     }

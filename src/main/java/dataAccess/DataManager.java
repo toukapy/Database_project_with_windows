@@ -317,7 +317,11 @@ public class DataManager {
 
             connector.getConnector().commit();
             System.out.println("Customer added successfully to the trip!!");
-        } catch (SQLException e) {
+        } catch (ParseException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            throw new ParseException("Please, enter a valid date",1);
+        } catch (SQLException g){
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
             throw new UncompletedRequest();

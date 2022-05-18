@@ -34,7 +34,8 @@ public interface BlFacade {
      * @throws UncompletedRequest if transaction fails
      * @throws NotBelong if the person does not belong to the trip
      */
-    void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest, NotBelong;
+    void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate)
+            throws SQLException, ParseException, UncompletedRequest, NotBelong;
 
 
     /**
@@ -87,8 +88,10 @@ public interface BlFacade {
      * @param DepartureDate String - Departure date of the trip
      * @return Vector<String> Vector containing the customer (if it exists)
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
-    Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException, ParseException;
+    Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
+            throws SQLException, ParseException;
     /**
      * Method to get the information about all customers in a trip and a hotel
      *
@@ -120,8 +123,10 @@ public interface BlFacade {
      * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction is not successful
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
-    void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException;
+    void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
+            throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException;
 
 
 
@@ -141,6 +146,7 @@ public interface BlFacade {
      * @param year provided year
      * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
     Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException, ParseException;
 
@@ -172,8 +178,10 @@ public interface BlFacade {
      * @throws SQLException if database management fails
      * @throws NoChange if no rows are updated
      * @throws NotBelong if tour-guides don't belong to the database
+     * @throws ParseException if the date is not valid
      */
-    void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong, ParseException;
+    void updateTourguide(String tgprev, String tgnew, String date1, String date2)
+            throws UncompletedRequest, SQLException, NoChange, NotBelong, ParseException;
 
     /**
      * Transition 3 -> Method that changes the guides between two trips
@@ -190,8 +198,10 @@ public interface BlFacade {
      * @param DepartureDate2 String - Departure date of the second trip
      * @throws UncompletedRequest if the transaction was not successful
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
-    void changeGuidesBetweenTrips(String choice, String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException, ParseException;
+    void changeGuidesBetweenTrips(String choice, String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2)
+            throws UncompletedRequest, SQLException, ParseException;
 
     /**
      * Retrieve the number of customer each guide is responsible for
@@ -223,7 +233,8 @@ public interface BlFacade {
      * @throws UncompletedRequest if transaction could not be completed
      * @throws SQLException if database management failed
      */
-    void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException;
+    void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id)
+            throws ObjectNotCreated, UncompletedRequest, SQLException;
 
 
 
@@ -243,7 +254,8 @@ public interface BlFacade {
      * @throws UncompletedRequest if transaction could not be completed
      * @throws NoChange if the person already existed
      */
-    void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange;
+    void insertPerson(String choice, String name, String age, String id, String food, String restaurant)
+            throws SQLException, UncompletedRequest, NoChange;
 
 
     /**

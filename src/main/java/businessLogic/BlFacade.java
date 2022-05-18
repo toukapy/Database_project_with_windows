@@ -29,10 +29,12 @@ public interface BlFacade {
      * @param phoneNum String that represents the phone number
      * @param TripTo String that represents to where the trip is
      * @param DepartureDate String that represents the departure
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
+     * @throws UncompletedRequest if transaction fails
+     * @throws NotBelong if the person does not belong to the trip
      */
-    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest;
+    void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest, NotBelong;
 
 
     /**
@@ -72,7 +74,7 @@ public interface BlFacade {
      * @throws SQLException if rollback fails
      * @throws ParseException if the provided date is not valid
      */
-    public Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException;
+    Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException;
 
     /**
      * Method that gets a customer that satisfies all the restrictions given
@@ -84,23 +86,25 @@ public interface BlFacade {
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
      * @return Vector<String> Vector containing the customer (if it exists)
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException ;
+    Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException ;
     /**
      * Method to get the information about all customers in a trip and a hotel
      *
      * @return Vector<String> - A vector containing strings with such information
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllCustomers() throws SQLException;
+    Vector<String> getAllCustomers() throws SQLException;
 
 
     /**
      * Method to get the information about a customer in a trip
      *
      * @return Vector<String> - Vector containing strings with such information
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllCustomersJustTrip() throws SQLException;
+    Vector<String> getAllCustomersJustTrip() throws SQLException;
 
 
     /**
@@ -114,8 +118,10 @@ public interface BlFacade {
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
      * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
+     * @throws UncompletedRequest if transaction is not successful
+     * @throws SQLException if database management fails
      */
-    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException;
+    void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException;
 
 
 
@@ -143,15 +149,17 @@ public interface BlFacade {
      * Method to get all guides
      *
      * @return Vector<String> - A vector containing strings with that information
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllTourguideTrips() throws SQLException;
+    Vector<String> getAllTourguideTrips() throws SQLException;
 
     /**
      * Method to get the information of guides that are in trips (guides who do not have a trip are not going to appear here)
      *
      * @return Vector<String> - A vector containing strings with that information
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllTourguideTripsNotNull() throws SQLException;
+     Vector<String> getAllTourguideTripsNotNull() throws SQLException;
 
 
     /**
@@ -160,8 +168,12 @@ public interface BlFacade {
      * @param tgnew new tour-guide to be set
      * @param date1 first date of the interval
      * @param date2 second date of the interval
+     * @throws UncompletedRequest if transaction fails
+     * @throws SQLException if database management fails
+     * @throws NoChange if no rows are updated
+     * @throws NotBelong if tour-guides don't belong to the database
      */
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong;
+    void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong;
 
     /**
      * Transition 3 -> Method that changes the guides between two trips
@@ -174,14 +186,18 @@ public interface BlFacade {
      * @param guidephone2 String - Phone number of the second guide
      * @param TripTo2 String - Destination of the second trip
      * @param DepartureDate2 String - Departure date of the second trip
+     * @throws UncompletedRequest if the transaction was not successful
+     * @throws SQLException if database management fails
      */
-    public void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException;
+    void changeGuidesBetweenTrips(String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException;
 
     /**
-     * Retrieve the number of customer each guide is responsible of
-     * @return the number of customer each guide is responsible of
+     * Retrieve the number of customer each guide is responsible for
+     * @return the number of customer each guide is responsible for
+     * @throws UncompletedRequest if there has been a problem with the query
+     * @throws SQLException if database management fails
      */
-    public Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException;
+    Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException;
 
 
 /* MENU AND MENU-ORDERS RELATED */
@@ -189,8 +205,9 @@ public interface BlFacade {
     /**
      * This method aims to provide all menu orders
      * @return all menu orders
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllMenuOrders() throws SQLException;
+    Vector<String> getAllMenuOrders() throws SQLException;
 
 
     /**
@@ -201,8 +218,10 @@ public interface BlFacade {
      * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
      * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
+     * @throws UncompletedRequest if transaction could not be completed
+     * @throws SQLException if database management failed
      */
-    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException;
+    void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException;
 
 
 
@@ -219,8 +238,10 @@ public interface BlFacade {
      * @param food - The dish the person likes
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
+     * @throws UncompletedRequest if transaction could not be completed
+     * @throws NoChange if the person already existed
      */
-    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange;
+    void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange;
 
 
     /**
@@ -228,15 +249,18 @@ public interface BlFacade {
      * @param name String that represents the name of the person
      * @param id String that represents the id of the person
      * @throws SQLException if rollback could not be done
+     * @throws UncompletedRequest if the transaction could not be completed
+     * @throws NotBelong if the person does not belong to the database
      */
-    public void deletePerson(String name, String id) throws SQLException, UncompletedRequest, NoChange;
+    void deletePerson(String name, String id) throws SQLException, UncompletedRequest, NotBelong;
 
 
     /**
      * This method provides all the people that belong to the restaurants database
      * @return all the people that belong to the restaurants database
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllPeople() throws SQLException;
+    Vector<String> getAllPeople() throws SQLException;
 
 
 
@@ -246,16 +270,21 @@ public interface BlFacade {
     /**
      * This method updates a given dishes' price to its half
      * @param dish provided dish
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the transaction was not successful
+     * @throws NoChange if no changes were made (serves table)
+     * @throws NotBelong if the dish does not belong to the database (dish table)
      */
-    public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange;
+    void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange, NotBelong;
 
 
     /**
      * Method to retrieve the information about dishes
      *
      * @return Vector<String> - A vector containing that information
+     * @throws SQLException if database management fails
      */
-    public Vector<String> getAllDishes() throws SQLException;
+    Vector<String> getAllDishes() throws SQLException;
 
 
 

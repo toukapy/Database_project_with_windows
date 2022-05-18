@@ -3,6 +3,7 @@ package controllers;
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import exceptions.NoChange;
+import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -103,7 +104,7 @@ public class deletePersonController implements Controller {
                 errorLbl.setText("Transaction could not be executed. Please, change the data and try again.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-            } catch (NoChange e) {
+            } catch (NotBelong e) {
                 errorLbl.setText("There is no such person in the database.");
             }
         }

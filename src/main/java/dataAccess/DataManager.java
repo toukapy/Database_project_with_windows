@@ -748,7 +748,7 @@ public class DataManager {
      * @param year provided year
      * @throws SQLException if database management fails
      */
-    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, ParseException {
+    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException {
         String date1 =  year + "-01-01";
         String date2 =  year + "-12-31";
 
@@ -759,10 +759,10 @@ public class DataManager {
                 "SELECT * from trip as t2 " +
                 "where t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
                 "and exists (SELECT * FROM trip as t where  t.departuredate between ? and ?);");
-        stmt.setDate(1, new Date(format.parse(date1).getTime()));
-        stmt.setDate(2,new Date(format.parse(date2).getTime()));
-        stmt.setDate(3,new Date(format.parse(date1).getTime()));
-        stmt.setDate(4,new Date(format.parse(date2).getTime()));
+        stmt.setString(1, date1);
+        stmt.setString(2,date2);
+        stmt.setString(3,date1);
+        stmt.setString(4,date2);
 
         rs = stmt.executeQuery();
         System.out.println("Query executed correctly!!");

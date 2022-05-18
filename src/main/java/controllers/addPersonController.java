@@ -118,8 +118,6 @@ public class addPersonController implements Controller {
                 errorLbl.setText("An error with the database occurred. Please, try again later or change the fields.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-            } catch (NoChange e) {
-                errorLbl.setText("The person already exists!");
             }
         }
 

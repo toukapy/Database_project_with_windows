@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -59,9 +58,7 @@ public class CustomerAllCheapestTripsController implements Controller {
                 tblCustomer.getItems().add("There is no such customer");
             }
         } catch (SQLException e){
-            errorLbl.setText("An error with the database occurred. Please, try again later or change the fields.");
-        } catch (UncompletedRequest e){
-            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
+            errorLbl.setText("An error with the database occurred. Please, try again later.");
         }
 
     }

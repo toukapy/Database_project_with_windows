@@ -2,22 +2,16 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import uis.Controller;
 import uis.MainGUI;
 
-import javax.swing.text.BadLocationException;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles getting the customers that attended all optional excursions
@@ -29,7 +23,7 @@ public class CustomerAllOptExcTripController implements Controller {
 
     private MainGUI allOptExcWin;
     private BlFacade businessLogic = new BlFacadeImplementation();
-    private ObservableList data;
+
 
     @FXML
     private TableView<String> customerTable;
@@ -69,8 +63,6 @@ public class CustomerAllOptExcTripController implements Controller {
             }
         } catch (SQLException e){
             errorLbl.setText("An error with the database occurred. Please, try again later.");
-        } catch (UncompletedRequest e){
-            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
 

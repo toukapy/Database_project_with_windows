@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,7 +12,6 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles getting the guides that have attended all trips in a given year
@@ -67,7 +65,7 @@ public class GuideAllTripYearController implements Controller {
         if(dateField.getText().isEmpty())
             errorLbl.setText("Please fill all fields.");
 
-        else if(!checkDate(dateField.getText()))
+        else if(!checkYear(dateField.getText()))
             errorLbl.setText("The year has to be yyyy");
 
         else{
@@ -83,10 +81,6 @@ public class GuideAllTripYearController implements Controller {
                 }
             } catch (SQLException e){
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
-            } catch (UncompletedRequest e) {
-                errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-            } catch (ParseException e) {
-                errorLbl.setText("Please, enter a valid date");
             }
         }
     }
@@ -104,7 +98,7 @@ public class GuideAllTripYearController implements Controller {
      * @param year String - The year
      * @return boolean - whether it is valid or not
      */
-    public boolean checkDate(String year){
+    public boolean checkYear(String year){
 
         try {
             /* Given year should have 4 digits */

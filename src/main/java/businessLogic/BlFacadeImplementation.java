@@ -328,11 +328,10 @@ public class BlFacadeImplementation implements BlFacade{
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
      * @throws SQLException if database management fails
-     * @throws ParseException if the date is not valid
      *
      */
     @Override
-    public Vector<String> getTourguidesAllTripsYear(String year) throws SQLException, ParseException {
+    public Vector<String> getTourguidesAllTripsYear(String year) throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due tourguides

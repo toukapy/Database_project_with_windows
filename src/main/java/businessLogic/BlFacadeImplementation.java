@@ -159,9 +159,11 @@ public class BlFacadeImplementation implements BlFacade{
      * @param DepartureDate String - Departure date of the trip
      * @return Vector<String> Vector containing the customer (if it exists)
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
     @Override
-    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException, ParseException {
+    public Vector<String> getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
+            throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due customers
@@ -237,9 +239,11 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction is not successful
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
     @Override
-    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException {
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
+            throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException {
 
         dbManager.open();
 
@@ -330,6 +334,8 @@ public class BlFacadeImplementation implements BlFacade{
      * @param year provided year
      * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
+     *
      */
     @Override
     public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException, ParseException {
@@ -404,9 +410,11 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      * @throws NoChange if no rows are updated
      * @throws NotBelong if tour-guides don't belong to the database
+     * @throws ParseException if the date is not valid
      */
     @Override
-    public void updateTourguide(String tgprev, String tgnew, String date1, String date2) throws UncompletedRequest, SQLException, NoChange, NotBelong, ParseException {
+    public void updateTourguide(String tgprev, String tgnew, String date1, String date2)
+            throws UncompletedRequest, SQLException, NoChange, NotBelong, ParseException {
 
         dbManager.open();
         //check if tour-guides belong to the database
@@ -435,10 +443,11 @@ public class BlFacadeImplementation implements BlFacade{
      * @param DepartureDate2 String - Departure date of the second trip
      * @throws UncompletedRequest if the transaction was not successful
      * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
      */
     @Override
-    public void changeGuidesBetweenTrips(String choice, String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2) throws UncompletedRequest, SQLException, ParseException {
-
+    public void changeGuidesBetweenTrips(String choice, String guidename1, String guidephone1, String TripTo1, String DepartureDate1, String guidename2, String guidephone2, String TripTo2, String DepartureDate2)
+            throws UncompletedRequest, SQLException, ParseException {
             dbManager.open();
 
             //swap guides
@@ -457,14 +466,13 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException {
-
-
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
-
+        //retrieve the due information
         ResultSet numCustomers = dbManager.retrieveNumCustomerGuideResponsible();
         while(numCustomers.next()){
+            //display and store the due information
             System.out.println("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
             answer.add("GuideId: "+ numCustomers.getString("GuideId") + ", Number of customers: "+ numCustomers.getString("num"));
         }
@@ -485,18 +493,17 @@ public class BlFacadeImplementation implements BlFacade{
      */
     @Override
     public Vector<String> getAllMenuOrders() throws SQLException {
-
     Vector<String> allorders = new Vector<>();
-
     dbManager.open();
+
+    //obtain the due information
     ResultSet orders = dbManager.getAllMenuOrders();
-    if (orders==null) System.out.println("No menu order was found.");
-    else {
-        while (orders.next()) {
-            System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
-            allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
-        }
+    while (orders.next()) {
+        //display and store the information
+        System.out.println("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
+        allorders.add("Order number: " + orders.getString("numord") + ", menu type: " + orders.getString("menu_mtype") + ", menu id:" + orders.getString("menu_id") + ", customer id:" + orders.getString("customer_id"));
     }
+
     dbManager.close();
 
     return allorders;

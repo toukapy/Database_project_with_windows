@@ -593,23 +593,31 @@ public class DataManager {
             // find second tour-guide -> create if not exists
             System.out.println("Finding the second tour-guide");
             ResultSet guide2 = getGuide(guidename2,guidephone2);
-            if(!guide2.next()){
+            exists = guide2.next();
+            if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename2, guidephone2);
+                insertGuideInTrip(getGuide(guidename2,guidephone2).getString("GuideId"),TripTo2,DepartureDate2);
+            }else if(!exists && choice.equals("n")){
+                System.out.println("Guide does not exist");
+                System.out.println("Try again the transaction");
+                close();
             }
 
             //find second trip -> if not exists UncompletedRequest
             System.out.println("Finding the second trip");
             ResultSet trip2 = getTrip(TripTo2,DepartureDate2);
-            if(!trip2.next()){
+            exists = trip2.next();
+            if(!exists && choice.equals("y")){
+                System.out.println("System creating a trip");
+                insertTrip(TripTo2,DepartureDate2);
+                insertGuideInTrip(guide2.getString("GuideId"),trip2.getString("TripTo"),trip2.getString("DepartureDate"));
+            }else if(!exists && choice.equals("n")){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 close();
                 throw new UncompletedRequest();
-            }
-
-            //check if second guide exists in trip -> if not UncompletedRequest
-            if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
+            }else if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
                 System.out.println("This guide is not in this trip!!!");
                 throw new UncompletedRequest();
             }

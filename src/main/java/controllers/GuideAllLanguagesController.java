@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -57,12 +56,10 @@ public class GuideAllLanguagesController implements Controller {
             if (!rs.isEmpty()) {
                 tblGuide.getItems().addAll(rs);
             } else {
-                tblGuide.getItems().add("There is no such tourguide");
+                tblGuide.getItems().add("There is no such tour-guide");
             }
         } catch (SQLException e){
             errorLbl.setText("An error with the database occurred. Please, try again later.");
-        } catch (UncompletedRequest e) {
-            errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }
 
     }

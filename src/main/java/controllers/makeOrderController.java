@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -112,8 +111,6 @@ public class makeOrderController implements Controller {
                 errorLbl.setText("An error with the database occurred. Please, try again later.");
             } catch (UncompletedRequest e) {
                 errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-            } catch (ObjectNotCreated e) {
-                errorLbl.setText("Transaction not completed. Change choice to 'y' for creating necessary objects.");
             }
         }
     }

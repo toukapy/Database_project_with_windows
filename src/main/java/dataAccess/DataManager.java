@@ -1,7 +1,7 @@
 package dataAccess;
 
 import exceptions.NoChange;
-import exceptions.ObjectNotCreated;
+import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 
 import java.sql.*;
@@ -29,11 +29,28 @@ public class DataManager {
     }
 
     /**
+     * Closes the connection with the database
+     * @throws SQLException
+     */
+    public void close() throws SQLException {
+        connector.close();
+        if(rs != null){
+            rs.close();
+        }
+    }
+
+    /* CUSTOMER-RELATED */
+
+
+
+
+
+    /**
      * Returns a Customer by phone and name
      * @param custname String - The name of the customer
      * @param custphone String - the phone of the customer
      * @return ResultSet - The set of results that matches the information
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public ResultSet getCustomer(String custname, String custphone) throws SQLException {
 
@@ -88,283 +105,115 @@ public class DataManager {
      * @param trip - Destination
      * @param departure - Departure date
      * @return ResultSet - The customers that attend that trip
-     * @throws ParseException
+     * @throws ParseException if the date format is not valid
+     * @throws SQLException if database management fails
      */
-    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException {
-        PreparedStatement stmt = null;
-        try {
-            stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
-            stmt.setString(1,trip);
-            stmt.setDate(2,new Date(format.parse(departure).getTime()));
-            rs = stmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+    public ResultSet getCustomerTrip(String trip, String departure) throws ParseException, SQLException {
+        PreparedStatement  stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
+        stmt.setString(1,trip);
+        stmt.setDate(2,new Date(format.parse(departure).getTime()));
+        rs = stmt.executeQuery();
         return rs;
 
     }
 
-    /* HOTEL-RELATED */
+
     /**
-     * Method to get the hotel object of a given hotel
+     * Method that returns a set that has all customers in trips with optional excursions
      *
-     * @param hotelname - The name of the hotel
-     * @param hotelcity - The city where the hotel is
-     * @return ResultSet - The hotels matching that information
-     * @throws SQLException
+     * @return ResultSet - A set with customer's in all trips with optional excursions
+     * @throws SQLException if database management fails
      */
-    public ResultSet getHotel(String hotelname, String hotelcity) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel WHERE hotelname=? and hotelcity=?;");
-            p.setString(1,hotelname);
-            p.setString(2,hotelcity);
-            rs =  p.executeQuery();
-        } catch (SQLException e) {
-            System.out.println("System is rolling back");
-            connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
-        }
+    public ResultSet retrieveCustomerEveryTripExc() throws SQLException {
+
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.custname, c.custphone, c.CustomerId FROM customer as c WHERE NOT EXISTS(" +
+                "SELECT * FROM trip as t WHERE NOT EXISTS(" +
+                "SELECT * FROM excur_opt_customer as eoc WHERE eoc.CustomerId = c.CustomerId AND eoc.TripTo = t.TripTo AND eoc.DepartureDate = t.DepartureDate));");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!");
 
         return rs;
     }
 
+
     /**
-     * Method to insert a hotel in the hotel table
      *
-     * @param hotelname - The name of the hotel
-     * @param hotelcity - The city where the hotel is
+     * @param custname
+     * @param custphone
+     * @param hotelname
+     * @param hotelcity
+     * @param tripTo
+     * @param departureDate
+     * @return
+     * @throws SQLException if database management fails
+     * @throws ParseException if date is not valid
      */
-    public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            ResultSet hotels = connector.getStatement().executeQuery("SELECT HotelId FROM hotel WHERE HotelId LIKE 'h%';");
-            while(hotels.next()){
-                if(hotels.isLast()){
-                    break;
-                }
+    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate)
+            throws SQLException, ParseException {
+
+            ResultSet customer = getCustomer(custname, custphone);
+            ResultSet hotel = getHotel(hotelname,hotelcity);
+
+            if(customer.next() && hotel.next()){
+                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM (hotel_trip_customer as htc INNER JOIN customer as c on htc.CustomerId=c.CustomerId) INNER JOIN hotel as h ON htc.HotelId=h.HotelId  WHERE htc.CustomerId=? AND htc.HotelId=? AND htc.TripTo=? AND htc.DepartureDate=?;");
+                stmt.setString(1,customer.getString("CustomerId"));
+                stmt.setString(2,hotel.getString("HotelId"));
+                stmt.setString(3,tripTo);
+                stmt.setDate(4,new Date(format.parse(departureDate).getTime()));
+                rs = stmt.executeQuery();
+                return rs;
             }
-            currentHotelId = Integer.parseInt(hotels.getString("HotelId").substring(1)) + 1;
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel VALUES (?,?,?,default);");
-            p.setString(1,"h"+ currentHotelId);
-            p.setString(2,hotelname);
-            p.setString(3,hotelcity);
-
-
-            p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Hotel added successfully!!");
-
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
-    }
-
-
-    /* TRIP-RELATED */
-
-    /**
-     * Method to get the trips that match that conditions
-     *
-     * @param tripTo - The destination of the trip
-     * @param departureDate - The date of the trip
-     * @return ResultSet - The trips that match that condition
-     * @throws SQLException
-     */
-    public ResultSet getTrip(String tripTo, String departureDate) throws SQLException, ParseException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE TripTo=? and DepartureDate=?;");
-            p.setString(1,tripTo);
-            p.setDate(2,new Date(format.parse(departureDate).getTime()));
-            rs =  p.executeQuery();
-        } catch (SQLException e) {
-            System.out.println("System is rolling back");
-            connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
-        }
-
-        return rs;
-    }
-
-    /**
-     * Method to insert a trip into the trip table
-     *
-     * @param tripTo - Destination of the trip
-     * @param departureDate - Date of the trip
-     */
-    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
-        try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
-            p.setString(1,tripTo);
-            p.setDate(2, new Date(format.parse(departureDate).getTime()));
-            p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Trip added successfully!!");
-
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
-    }
-
-    /**
-     * Method to create the relationship between the hotel and the trip associated with it
-     *
-     * @param tripTo - The destination of the trip
-     * @param departureDate - The date of the trip
-     * @param hotelId - The id of the hotel
-     * @throws SQLException
-     */
-    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES(?,?,?,default)");
-            p.setString(1,tripTo);
-            p.setDate(2,new Date(format.parse(departureDate).getTime()));
-            p.setString(3,hotelId);
-            p.executeUpdate();
-
-            connector.getConnector().commit();
-        } catch (SQLException e) {
-            System.out.println("Rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
-
-    }
-
-    /**
-     * Method to get the hotel trip relation that matches the information
-     *
-     * @param tripTo - The destination of the trip
-     * @param departureDate - The date of the trip
-     * @param hotelId - The id of the hotel
-     * @return ResultSet - The Relation between the hotel and the trip
-     * @throws SQLException
-     */
-    public ResultSet getHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip WHERE TripTo=? and DepartureDate=? and HotelId=?;");
-            p.setString(1,tripTo);
-            p.setDate(2,new Date(format.parse(departureDate).getTime()));
-            p.setString(3,hotelId);
-            rs =  p.executeQuery();
-        } catch (SQLException e) {
-            System.out.println("System is rolling back");
-            connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
-        }
-
-        return rs;
-    }
-
-    public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement p = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
-            p.setString(1,guideId);
-            p.setString(2,tripTo1);
-            p.setDate(3,new Date(format.parse(departureDate1).getTime()));
-            p.executeUpdate();
-
-            connector.getConnector().commit();
-
-        } catch (SQLException e) {
-            System.out.println("System rolling back");
-            connector.getConnector().rollback();
-            e.printStackTrace();
-        }
-    }
-
-
-    /* TOUR-GUIDE RELATED */
-
-    /**
-     * Method to get a guide object by name and phone
-     *
-     * @param guidename String - Guide's name
-     * @param guidephone String - Guide's phone
-     * @return ResultSet - Set containing the guide that matches that conditions
-     * @throws SQLException
-     */
-    public ResultSet getGuide(String guidename, String guidephone) throws SQLException {
-
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM tourguide WHERE guidename=? and guidephone=?; ");
-            p.setString(1,guidename);
-            p.setString(2,guidephone);
-            rs = p.executeQuery();
-        } catch (SQLException e) {
-            System.out.println("System is rolling back!");
-            connector.getConnector().rollback();
-            rs = null;
-            e.printStackTrace();
-        }
-        return rs;
-    }
-
-
-
-    /**
-     * Method to get a guide object by id
-     *
-     * @param id String - Guide's id
-     * @return ResultSet - Set containing the guide that matches that conditions
-     */
-    public ResultSet getGuideById(String id) {
-
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM tourguide WHERE guideid=?; ");
-            p.setString(1,id);
-            rs = p.executeQuery();
-            return rs;
-        } catch (SQLException e) {
             return null;
-        }
     }
 
     /**
-     * Method to insert a guide in the database by name and phone
-     *
-     * @param guidename String - Guide's name
-     * @param guidephone String - Guide's phone
+     * This method gets the customers who have attended at least all cheapest trips attended by customers
+     * @return the customers who have attended at least all cheapest trips attended by customers
+     * @throws SQLException if database management fails
      */
-    public void createGuide(String guidename, String guidephone) throws UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
-            ResultSet ids = guidesNumber.executeQuery();
-            while(ids.next()){
-                if(ids.isLast()){
-                    break;
-                }
-            }
-            currentGuideId = Integer.parseInt(ids.getString("GuideId"))+1;
+    public ResultSet getCustomersAllCheapestTrips() throws SQLException {
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.customerid as id, c.custname as name " +
+                "FROM customer as c WHERE not exists ( " +
+                "SELECT * FROM trip as t where  (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2) and not exists ( " +
+                "SELECT * from hotel_trip_customer as htc " +
+                "where htc.tripto=t.tripto and htc.departuredate=t.departuredate and htc.customerid=c.customerid)) " +
+                "and exists (SELECT * FROM trip as t where (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2));");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+        return rs;
+    }
 
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO tourguide VALUES(?,?,?);");
-            p.setString(1, String.valueOf(currentGuideId));
-            p.setString(2,guidename);
-            p.setString(3,guidephone);
-            p.executeUpdate();
 
-            connector.getConnector().commit();
-            System.out.println("Database updated and guide added succesfully!!");
+    /**
+     * This method provides all customers
+     * @return all customers
+     * @throws SQLException if database management fails
+     */
+    public ResultSet getAllCustomers() throws SQLException {
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT htc.TripTo, htc.DepartureDate, h.hotelname, h.hotelcity, c.custname, c.custphone " +
+                "FROM hotel_trip_customer AS htc INNER JOIN hotel AS h ON htc.HotelId=h.HotelId " +
+                "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
 
-        } catch (SQLException e) {
-            throw new UncompletedRequest();
-        }
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+        return rs;
+    }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
+    public ResultSet getAllCustomersJustTrip() throws SQLException {
+
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT DISTINCT htc.TripTo, htc.DepartureDate " +
+                "FROM hotel_trip_customer AS htc " +
+                "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
+
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
+        return rs;
     }
 
     /**
@@ -376,20 +225,18 @@ public class DataManager {
      * @throws SQLException
      */
     public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try{
+          try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=?;");
 
             deleteStmt.setString(1,CustomerId);
             deleteStmt.setString(2,TripTo);
-            deleteStmt.setDate(3,new Date(dateFormat.parse(DepartureDate).getTime()));
+            deleteStmt.setDate(3,new Date(format.parse(DepartureDate).getTime()));
             deleteStmt.executeUpdate();
 
             connector.getConnector().commit();
 
-            System.out.println("Transaction commited succesfully!!");
-            System.out.println("Customer was deleted from trip succesfully!!");
+            System.out.println("Customer was deleted from trip successfully!!");
 
         }catch(SQLException e){
             System.out.println("Transaction is being rolled back!");
@@ -438,22 +285,19 @@ public class DataManager {
      * @param tripTo String - Trip's destination
      * @param departureDate String - trip's date
      * @param hotelId String - Hotel's id
-     * @return boolean - Whether or not the customer is in the trip
-     * @throws SQLException if rollback fails
+     * @return boolean - Whether the customer is in the trip or not
+     * @throws SQLException if database management fails
+     * @throws ParseException if date is not valid
      */
     private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=? and HotelId=?;");
-            p.setString(1,customerId);
-            p.setString(2,tripTo);
-            p.setDate(3,new Date(format.parse(departureDate).getTime()));
-            p.setString(4,hotelId);
-            rs = p.executeQuery();
 
-        } catch (SQLException e) {
-            rs = null;
-            e.printStackTrace();
-        }
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=? and HotelId=?;");
+        p.setString(1,customerId);
+        p.setString(2,tripTo);
+        p.setDate(3,new Date(format.parse(departureDate).getTime()));
+        p.setString(4,hotelId);
+        rs = p.executeQuery();
+
         return rs.next();
     }
 
@@ -464,31 +308,119 @@ public class DataManager {
      * @param TripTo String - Trip's destination
      * @param DepartureDate String - Trip's date
      * @return boolean- Whether the customer exists in the trip or not
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
+     * @throws ParseException if date is not valid
      */
-    public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate) throws SQLException, ParseException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=?;");
-            p.setString(1,customerId);
-            p.setString(2,TripTo);
-            p.setDate(3,new Date(format.parse(DepartureDate).getTime()));
-            rs = p.executeQuery();
+    public boolean customerExistsInTripWithoutHotel(String customerId, String TripTo, String DepartureDate)
+            throws SQLException, ParseException {
 
-        } catch (SQLException e) {
-            rs = null;
-            e.printStackTrace();
-        }
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=?;");
+        p.setString(1,customerId);
+        p.setString(2,TripTo);
+        p.setDate(3,new Date(format.parse(DepartureDate).getTime()));
+        rs = p.executeQuery();
+
         return rs.next();
     }
 
+
+
+    /* HOTEL-RELATED */
     /**
-     * Closes the connection with the database
-     * @throws SQLException
+     * Method to get the hotel object of a given hotel
+     *
+     * @param hotelname - The name of the hotel
+     * @param hotelcity - The city where the hotel is
+     * @return ResultSet - The hotels matching that information
+     * @throws SQLException if database management fails
      */
-    public void close() throws SQLException {
-        connector.close();
-        if(rs != null){
-            rs.close();
+    public ResultSet getHotel(String hotelname, String hotelcity) throws SQLException {
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel WHERE hotelname=? and hotelcity=?;");
+        p.setString(1,hotelname);
+        p.setString(2,hotelcity);
+        rs =  p.executeQuery();
+        return rs;
+    }
+
+    /**
+     * Method to insert a hotel in the hotel table
+     *
+     * @param hotelname - The name of the hotel
+     * @param hotelcity - The city where the hotel is
+     * @throws SQLException if rollback fails
+     */
+    public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            ResultSet hotels = connector.getStatement().executeQuery("SELECT HotelId FROM hotel WHERE HotelId LIKE 'h%';");
+            while(hotels.next()){
+                if(hotels.isLast()){
+                    break;
+                }
+            }
+            currentHotelId = Integer.parseInt(hotels.getString("HotelId").substring(1)) + 1;
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel VALUES (?,?,?,default);");
+            p.setString(1,"h"+ currentHotelId);
+            p.setString(2,hotelname);
+            p.setString(3,hotelcity);
+
+
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Hotel added successfully!!");
+
+        } catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            throw new UncompletedRequest();
+        }
+    }
+
+
+    /* TRIP-RELATED */
+
+    /**
+     * Method to get the trips that match that conditions
+     *
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @return ResultSet - The trips that match that condition
+     * @throws SQLException if database management fails
+     * @throws ParseException if the date is not valid
+     */
+    public ResultSet getTrip(String tripTo, String departureDate) throws SQLException, ParseException {
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE TripTo=? and DepartureDate=?;");
+        p.setString(1,tripTo);
+        p.setDate(2,new Date(format.parse(departureDate).getTime()));
+        rs =  p.executeQuery();
+        return rs;
+    }
+
+    /**
+     * Method to insert a trip into the trip table
+     *
+     * @param tripTo - Destination of the trip
+     * @param departureDate - Date of the trip
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction has not been executed properly
+     * @throws ParseException if date is not valid
+     */
+    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
+            p.setString(1,tripTo);
+            p.setDate(2, new Date(format.parse(departureDate).getTime()));
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Trip added successfully!!");
+
+        } catch (SQLException e) {
+            System.out.println("Database rolling back");
+            connector.getConnector().rollback();
+            throw new UncompletedRequest();
         }
     }
 
@@ -496,48 +428,188 @@ public class DataManager {
      * Method that retrieves the trip (TripTo, DepartureDate) that has gained the maximum amount of money
      *
      * @return ResultSet - The set that has the object specified in the objectives
-     * @throws SQLException if rollback fails
-     * @throws UncompletedRequest if there has been a problem during the execution of the query
+     * @throws SQLException if database management fails
      */
-    public ResultSet getMaximumGainedTrip() throws SQLException, UncompletedRequest {
+    public ResultSet getMaximumGainedTrip() throws SQLException {
+
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
+                "GROUP BY t.TripTo, t.DepartureDate " +
+                "HAVING (cost * count(*))  >= all (" +
+                "   SELECT (t2.NumDays * t2.Ppday) * count(*)" +
+                "   FROM trip as t2 inner join hotel_trip_customer as htc2 on t2.TripTo = htc2.TripTo and t2.DepartureDate = htc2.DepartureDate" +
+                "   WHERE (t2.NumDays * t2.Ppday) > 0" +
+                "   GROUP BY t2.TripTo, t2.DepartureDate);");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
+        return rs;
+    }
+
+    /* HOTEL-TRIP RELATED */
+    /**
+     * Method to create the relationship between the hotel and the trip associated with it
+     *
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @param hotelId - The id of the hotel
+     * @throws SQLException
+     */
+    public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
-                    "GROUP BY t.TripTo, t.DepartureDate " +
-                    "HAVING (cost * count(*))  >= all (" +
-                    "   SELECT (t2.NumDays * t2.Ppday) * count(*)" +
-                    "   FROM trip as t2 inner join hotel_trip_customer as htc2 on t2.TripTo = htc2.TripTo and t2.DepartureDate = htc2.DepartureDate" +
-                    "   WHERE (t2.NumDays * t2.Ppday) > 0" +
-                    "   GROUP BY t2.TripTo, t2.DepartureDate);");
-            rs = stmt.executeQuery();
-            connector.getConnector().commit();
-            System.out.println("Query executed correctly!!");
 
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES(?,?,?,default)");
+            p.setString(1,tripTo);
+            p.setDate(2,new Date(format.parse(departureDate).getTime()));
+            p.setString(3,hotelId);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
         } catch (SQLException e) {
+            System.out.println("Rolling back");
+            connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
+
+    }
+
+    /**
+     * Method to get the hotel trip relation that matches the information
+     *
+     * @param tripTo - The destination of the trip
+     * @param departureDate - The date of the trip
+     * @param hotelId - The id of the hotel
+     * @return ResultSet - The Relation between the hotel and the trip
+     * @throws SQLException if database management fails
+     * @throws ParseException if date is not valid
+     */
+    public ResultSet getHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
+
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip WHERE TripTo=? and DepartureDate=? and HotelId=?;");
+        p.setString(1,tripTo);
+        p.setDate(2,new Date(format.parse(departureDate).getTime()));
+        p.setString(3,hotelId);
+        rs =  p.executeQuery();
+        return rs;
+    }
+
+
+
+    /* TOUR-GUIDE RELATED */
+
+    /**
+     * Method to get a guide object by name and phone
+     *
+     * @param guidename String - Guide's name
+     * @param guidephone String - Guide's phone
+     * @return ResultSet - Set containing the guide that matches that conditions
+     * @throws SQLException if database management fails
+     */
+    public ResultSet getGuide(String guidename, String guidephone) throws SQLException {
+
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM tourguide WHERE guidename=? and guidephone=?; ");
+        p.setString(1,guidename);
+        p.setString(2,guidephone);
+        rs = p.executeQuery();
+
+        return rs;
+    }
+
+
+
+    /**
+     * Method to get a guide object by id
+     *
+     * @param id String - Guide's id
+     * @return ResultSet - Set containing the guide that matches that conditions
+     * @throws SQLException if database management fails
+     */
+    public ResultSet getGuideById(String id) throws SQLException {
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM tourguide WHERE guideid=?; ");
+        p.setString(1,id);
+        rs = p.executeQuery();
         return rs;
     }
 
     /**
-     * Method that returns a set that has all customers in trips with optional excursions
      *
-     * @return ResultSet - A set with customer's in all trips with optional excursions
-     * @throws UncompletedRequest if there has been a problem during the execution of the query
+     * @param guideId
+     * @param tripTo1
+     * @param departureDate1
+     * @throws SQLException
+     * @throws ParseException
      */
-    public ResultSet retrieveCustomerEveryTripExc() throws UncompletedRequest {
+    public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
         try {
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.custname, c.custphone, c.CustomerId FROM customer as c WHERE NOT EXISTS(" +
-                    "SELECT * FROM trip as t WHERE NOT EXISTS(" +
-                    "SELECT * FROM excur_opt_customer as eoc WHERE eoc.CustomerId = c.CustomerId AND eoc.TripTo = t.TripTo AND eoc.DepartureDate = t.DepartureDate));");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!");
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement p = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
+            p.setString(1,guideId);
+            p.setString(2,tripTo1);
+            p.setDate(3,new Date(format.parse(departureDate1).getTime()));
+            p.executeUpdate();
+
+            connector.getConnector().commit();
 
         } catch (SQLException e) {
+            System.out.println("System rolling back");
+            connector.getConnector().rollback();
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Method to insert a guide in the database by name and phone
+     *
+     * @param guidename String - Guide's name
+     * @param guidephone String - Guide's phone
+     * @throws UncompletedRequest if transaction could not be executed
+     * @throws SQLException if database management fails
+     */
+    public void createGuide(String guidename, String guidephone) throws UncompletedRequest, SQLException {
+        try {
+            connector.getConnector().setAutoCommit(false);
+            PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
+            ResultSet ids = guidesNumber.executeQuery();
+            while(ids.next()){
+                if(ids.isLast()){
+                    break;
+                }
+            }
+            currentGuideId = Integer.parseInt(ids.getString("GuideId"))+1;
+
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO tourguide VALUES(?,?,?);");
+            p.setString(1, String.valueOf(currentGuideId));
+            p.setString(2,guidename);
+            p.setString(3,guidephone);
+            p.executeUpdate();
+
+            connector.getConnector().commit();
+            System.out.println("Database updated and guide added succesfully!!");
+
+        } catch (SQLException e) {
+            connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
 
-        return rs;
+    }
+
+
+
+    /**
+     * Method that says whether a guide is in a given trip or not
+     * @return boolean - Whether the guide is in the trip or not
+     * @throws ParseException if date format is not valid
+     * @throws SQLException if database management fails
+     */
+    public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) throws ParseException, SQLException {
+
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
+        stmt.setString(1,GuideId);
+        stmt.setString(2,TripTo);
+        stmt.setDate(3, new Date(format.parse(DepartureDate).getTime()));
+        ResultSet rs = stmt.executeQuery();
+        return rs.next();
     }
 
     /**
@@ -654,169 +726,117 @@ public class DataManager {
      * Method that returns the number of customers a guide is responsible for
      *
      * @return ResultSet - A set with all guides, with each's number of customers they are responsible for
-     * @throws SQLException
+     * @throws SQLException if database mangement fails
      */
-    public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
-                    "FROM (trip AS t RIGHT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
-                    "GROUP BY tg.GuideId " +
-                    "ORDER BY tg.GuideId;");
-            rs = stmt.executeQuery();
-            connector.getConnector().commit();
-            System.out.println("Query executed correctly!!");
-        } catch (SQLException e) {
-            System.out.println("System rolling back!!");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
+    public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException {
+
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
+                "FROM (trip AS t RIGHT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
+                "GROUP BY tg.GuideId " +
+                "ORDER BY tg.GuideId;");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
 
         return rs;
 
     }
 
-    /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     * @return the customers who have attended at least all cheapest trips attended by customers
-     * @throws UncompletedRequest if query could not be executed
-     * @throws SQLException if rollback fails
-     */
-    public ResultSet getCustomersAllCheapestTrips() throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.customerid as id, c.custname as name " +
-                    "FROM customer as c WHERE not exists ( " +
-                    "SELECT * FROM trip as t where  (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2) and not exists ( " +
-                    "SELECT * from hotel_trip_customer as htc " +
-                    "where htc.tripto=t.tripto and htc.departuredate=t.departuredate and htc.customerid=c.customerid)) " +
-                    "and exists (SELECT * FROM trip as t where (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2));");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-            throw new UncompletedRequest();
-        }
-        return rs;
-    }
 
     /**
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
-     * @throws UncompletedRequest if query could not be executed
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      */
-    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException, UncompletedRequest, ParseException {
-        try {
-            String date1 =  year + "-01-01";
-            String date2 =  year + "-12-31";
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.guideid as id, g.guidename as name " +
-                    "FROM tourguide as g WHERE not exists ( " +
+    public ResultSet getTourguidesAllTripsYear(String year) throws SQLException {
+        String date1 =  year + "-01-01";
+        String date2 =  year + "-12-31";
 
-                    "SELECT * FROM trip as t where  t.departuredate between ? and ? and not exists ( " +
-                    "SELECT * from trip as t2 " +
-                    "where t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
-                    "and exists (SELECT * FROM trip as t where  t.departuredate between ? and ?);");
-            stmt.setDate(1, new Date(format.parse(date1).getTime()));
-            stmt.setDate(2,new Date(format.parse(date2).getTime()));
-            stmt.setDate(3,new Date(format.parse(date1).getTime()));
-            stmt.setDate(4,new Date(format.parse(date2).getTime()));
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.guideid as id, g.guidename as name " +
+                "FROM tourguide as g WHERE not exists ( " +
 
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
+                "SELECT * FROM trip as t where  t.departuredate between ? and ? and not exists ( " +
+                "SELECT * from trip as t2 " +
+                "where t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
+                "and exists (SELECT * FROM trip as t where  t.departuredate between ? and ?);");
+        stmt.setString(1, date1);
+        stmt.setString(2,date2);
+        stmt.setString(3,date1);
+        stmt.setString(4,date2);
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-            throw new UncompletedRequest();
-        }
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
         return rs;
     }
 
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if rollback fails
      */
-    public ResultSet getTourguidesAllLanguages() throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, COUNT(DISTINCT l.Lang) AS LangCount " +
-                    "FROM tourguide AS g INNER JOIN languages AS l ON g.GuideId=l.GuideId " +
-                    "GROUP BY g.GuideId " +
-                    "HAVING COUNT(DISTINCT l.Lang) = ( " +
-                    "SELECT COUNT(DISTINCT l2.Lang) FROM languages AS l2);");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
+    public ResultSet getTourguidesAllLanguages() throws SQLException {
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-            throw new UncompletedRequest();
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, COUNT(DISTINCT l.Lang) AS LangCount " +
+                "FROM tourguide AS g INNER JOIN languages AS l ON g.GuideId=l.GuideId " +
+                "GROUP BY g.GuideId " +
+                "HAVING COUNT(DISTINCT l.Lang) = ( " +
+                "SELECT COUNT(DISTINCT l2.Lang) FROM languages AS l2);");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
         return rs;
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides all tour-guides and their corresponding trips
+     * @return all tour-guides and their corresponding trips
+     * @throws SQLException if database management fails
      */
     public ResultSet getAllTourguideTrips() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
-                    "FROM tourguide AS g LEFT JOIN trip AS t ON g.GuideId=t.GuideId " +
-                    "ORDER BY t.DepartureDate ASC ");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
+                "FROM tourguide AS g LEFT JOIN trip AS t ON g.GuideId=t.GuideId " +
+                "ORDER BY t.DepartureDate ASC ");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
         return rs;
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides all tour-guides that have gone on trips and their corresponding trips
+     * @return all tour-guides that have gone on trips and their corresponding trips
+     * @throws SQLException if database management fails
      */
     public ResultSet getAllTourguideTripsNotNull() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
-                    "FROM tourguide AS g INNER JOIN trip AS t ON g.GuideId=t.GuideId " +
-                    "ORDER BY t.DepartureDate ASC ");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
+                "FROM tourguide AS g INNER JOIN trip AS t ON g.GuideId=t.GuideId " +
+                "ORDER BY t.DepartureDate ASC ");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
+
         return rs;
     }
 
 
     /**
-     *
-     * @param Guideidprev
-     * @param Guideidnew
-     * @param departuredate
-     * @param departuredate2
-     * @throws SQLException
+     * This method updates a tourguide on the trips of a given interval of time
+     * @param Guideidprev original tourguide id
+     * @param Guideidnew new tourguide id
+     * @param departuredate first date of interval
+     * @param departuredate2 second date of interval
+     * @throws SQLException if database management fails
      */
-    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2) throws SQLException, UncompletedRequest, NoChange, ParseException {
+    public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2)
+            throws SQLException, UncompletedRequest, NoChange, ParseException {
 
         try{
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("UPDATE trip SET guideid=? WHERE guideid=? AND departuredate BETWEEN ? AND ?;");
+            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("UPDATE trip SET guideid=? " +
+                    "WHERE guideid=? AND departuredate BETWEEN ? AND ?;");
 
             deleteStmt.setString(1,Guideidnew);
             deleteStmt.setString(2,Guideidprev);
@@ -837,86 +857,7 @@ public class DataManager {
 
     }
 
-    /**
-     *
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param tripTo
-     * @param departureDate
-     * @return
-     * @throws SQLException
-     */
-    public ResultSet getCustomerTripHotel(String custname, String custphone, String hotelname, String hotelcity, String tripTo, String departureDate) throws SQLException, ParseException {
-        try {
 
-            ResultSet customer = getCustomer(custname, custphone);
-            ResultSet hotel = getHotel(hotelname,hotelcity);
-
-            if(customer.next() && hotel.next()){
-                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM (hotel_trip_customer as htc INNER JOIN customer as c on htc.CustomerId=c.CustomerId) INNER JOIN hotel as h ON htc.HotelId=h.HotelId  WHERE htc.CustomerId=? AND htc.HotelId=? AND htc.TripTo=? AND htc.DepartureDate=?;");
-                stmt.setString(1,customer.getString("CustomerId"));
-                stmt.setString(2,hotel.getString("HotelId"));
-                stmt.setString(3,tripTo);
-                stmt.setDate(4,new Date(format.parse(departureDate).getTime()));
-                rs = stmt.executeQuery();
-                return rs;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("System rolling back");
-            connector.getConnector().rollback();
-        }
-        return null;
-    }
-
-
-    /**
-     *
-     * @return
-     * @throws SQLException
-     */
-    public ResultSet getAllCustomers() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT htc.TripTo, htc.DepartureDate, h.hotelname, h.hotelcity, c.custname, c.custphone " +
-                    "FROM hotel_trip_customer AS htc INNER JOIN hotel AS h ON htc.HotelId=h.HotelId " +
-                    "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
-
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
-        return rs;
-
-    }
-
-    /**
-     *
-     * @return
-     * @throws SQLException
-     */
-    public ResultSet getAllCustomersJustTrip() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT DISTINCT htc.TripTo, htc.DepartureDate " +
-                    "FROM hotel_trip_customer AS htc " +
-                    "INNER JOIN customer AS c ON htc.CustomerId=c.CustomerId;");
-
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
-        return rs;
-
-    }
 
 
 
@@ -925,125 +866,157 @@ public class DataManager {
 /*   PERSON RELATED */
 
     /**
-     *
-     * @param nameid
-     * @param id
-     * @return
-     * @throws SQLException
+     * This method provides whether a person exists
+     * @param nameid name of the person
+     * @param id id of the person
+     * @return whether a person exists
+     * @throws SQLException if the database management fails
      */
     public boolean personExists(String nameid, String id) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=? AND id=?;");
-            p.setString(1,nameid);
-            p.setString(2,id);
-            rs = p.executeQuery();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=? AND id=?;");
+        p.setString(1,nameid);
+        p.setString(2,id);
+        rs = p.executeQuery();
+
         return rs.next();
     }
 
 
     /**
-     *
-     * @param name
-     * @param id
-     * @return
-     * @throws SQLException
+     * This method provides the name, age, id, liked dish and frequented restaurant of a person of a person
+     * @param name name of the person
+     * @param id id of the person
+     * @return the due data of a person to be found
+     * @throws SQLException if the database management fails
      */
     public ResultSet getPerson(String name, String id) throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
-                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid WHERE p.nameid=? and p.id=?;");
-            stmt.setString(1, name);
-            stmt.setString(2, id);
-            rs = stmt.executeQuery();
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
+                "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid WHERE p.nameid=? and p.id=?;");
+        stmt.setString(1, name);
+        stmt.setString(2, id);
+        rs = stmt.executeQuery();
+
         return rs;
 
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides all people
+     * @return all people
+     * @throws SQLException if database management fails
      */
     public ResultSet getAllPeople() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
-                    "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid;");
 
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-            if(rs==null)  System.out.println("No matchings");
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.nameid, p.age, p.id, e.dish, f.restaurname FROM person as p LEFT JOIN eats as e " +
+                "on e.nameid=p.nameid LEFT JOIN frequents as f on f.nameid=p.nameid;");
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
         return rs;
 
     }
 
     /**
-     *
-     * @param name
-     * @param age
-     * @param id
-     * @throws SQLException
+     * This method aims to insert a person with their likings regarding food and restaurants
+     * @param choice whether to create objects if they don't exist
+     * @param name name of the person
+     * @param age age of the person
+     * @param id id of the person
+     * @param food food liked by the person
+     * @param restaurant restaurant liked by the person
+     * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if transaction has not been successful
      */
-    public void insertPerson(String name, String age, String id) throws SQLException, UncompletedRequest {
+    public void insertPersonRestaurantEats(String choice, String name, String age, String id, String food, String restaurant)
+            throws SQLException, UncompletedRequest {
         try {
+            connector.getConnector().setAutoCommit(false);
 
-            if(personExists(name, id)){
-                System.out.println("Person already registered !!");
-            }else{
-                connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,NULL,?);");
-                p.setString(1,name);
-                p.setString(2,age);
-                p.setString(3,id);
-                p.executeUpdate();
+            //check person exists -> create if must
+            if (personExists(name, id)) System.out.println("The person already exists!");
+            insertPerson(name, age, id);
 
-                connector.getConnector().commit();
-                System.out.println("Person registered successfully!!");
-            }
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
+            // Check food exists -> create if must
+            if (!foodExists(food)) {
+                System.out.println("The dish does not exist");
+
+                if (choice.equals("y")) {
+                    System.out.println("Creating a new dish...");
+                    insertDish(food);
+
+                    // register food as eaten by the person
+                    insertEats(name, food);
+                }
+            } else insertEats(name, food);
+
+
+            // Check restaurant exists -> create if must
+            if (!restaurantExists(restaurant)) {
+                System.out.println("The restaurant does not exist");
+
+                if (choice.equals("y")) {
+                    System.out.println("Creating a new restaurant...");
+                    insertRestaurant(restaurant);
+
+                    //  make person frequent the restaurant
+                    addFrequents(name, restaurant);
+                }
+            } else addFrequents(name, restaurant);
+
+            connector.getConnector().commit();
+        } catch (SQLException e){
             connector.getConnector().rollback();
+            System.out.println("Couldn't execute query.");
             throw new UncompletedRequest();
         }
     }
 
     /**
-     *
-     * @param name
-     * @param id
-     * @throws SQLException
+     * This method inserts a person in the restaurant database
+     * @param name name of the person
+     * @param age age of the person
+     * @param id id of the person
+     * @throws SQLException if database management fails
+     */
+    public void insertPerson(String name, String age, String id) throws SQLException {
+        PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO person VALUES (?,?,NULL,?);");
+        p.setString(1,name);
+        p.setString(2,age);
+        p.setString(3,id);
+        p.executeUpdate();
+    }
+
+    /**
+     * This method deletes a person from the restaurants database
+     * @param name String that represents the name of the person
+     * @param id String that represents the id of the person
+     * @throws SQLException if rollback could not be done
+     * @throws UncompletedRequest if the transaction could not be completed
+     * @throws NotBelong if the person does not belong to the database
      */
     public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
         try{
             connector.getConnector().setAutoCommit(false);
 
+            //delete the person's data of frequented restaurants
             PreparedStatement deleteStmt0 = connector.getConnector().prepareStatement("DELETE FROM frequents as f WHERE f.nameid=?;");
             deleteStmt0.setString(1, name);
             deleteStmt0.executeUpdate();
 
+            //delete the person's data of liked food
             PreparedStatement deleteStmt1 = connector.getConnector().prepareStatement("DELETE FROM eats as e WHERE e.nameid=?;");
             deleteStmt1.setString(1, name);
             deleteStmt1.executeUpdate();
 
+            //delete the person's data of menu orders
             PreparedStatement deleteStmt3 = connector.getConnector().prepareStatement("DELETE FROM menu_order as m WHERE m.customer_id=?;");
             deleteStmt3.setString(1, id);
             deleteStmt3.executeUpdate();
 
+            //delete the person's personal data
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
             deleteStmt.setString(1, name);
             deleteStmt.setString(2, id);
@@ -1066,11 +1039,11 @@ public class DataManager {
 
 
     /**
-     *
-     * @param menu_mtype
-     * @param menu_id
-     * @param customer_id
-     * @throws SQLException
+     * Method that adds a menu order
+     * @param menu_mtype menu type
+     * @param menu_id menu identifier
+     * @param customer_id customer id
+     * @throws SQLException if database management fails
      */
     public void addMenuOrder(String choice, String menu_mtype, String menu_id, String name, String customer_id) throws SQLException, UncompletedRequest {
         try {
@@ -1106,7 +1079,7 @@ public class DataManager {
                 }
             }
 
-            // insert
+            // Insert menu order
             PreparedStatement p3 = connector.getConnector().prepareStatement("INSERT INTO menu_order VALUES (default,?,?,?);");
             p3.setString(1,menu_mtype);
             p3.setString(2,menu_id);
@@ -1124,28 +1097,17 @@ public class DataManager {
     }
 
     /**
-     *
-     * @param menu_mtype
-     * @param menu_id
-     * @throws SQLException
+     * This method aims to insert a menu
+     * @param menu_mtype menu type
+     * @param menu_id menu identifier
+     * @throws SQLException if database management fails
      */
-    public void insertMenu(String menu_mtype, String menu_id) throws SQLException, UncompletedRequest {
-        try {
-
-            connector.getConnector().setAutoCommit(false);
+    public void insertMenu(String menu_mtype, String menu_id) throws SQLException {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO menu VALUES (?,?,default);");
             p.setString(1, menu_mtype);
             p.setString(2, menu_id);
             p.executeUpdate();
 
-            connector.getConnector().commit();
-            System.out.println("Menu registered!!");
-
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
     }
 
     /**
@@ -1157,22 +1119,12 @@ public class DataManager {
      * @throws SQLException if rollback fails
      */
         public ResultSet getMenu(String menu_mtype, String menu_id) throws SQLException {
-            try {
 
-                connector.getConnector().setAutoCommit(false);
-                PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu WHERE mtype=? AND mid=?;");
-                stmt.setString(1,menu_mtype);
-                stmt.setString(2,menu_id);
-                rs = stmt.executeQuery();
-
-                connector.getConnector().commit();
-
-            } catch (SQLException e) {
-                System.out.println("Database rolling back");
-                connector.getConnector().rollback();
-                e.printStackTrace();
-            }
-            return rs;
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu WHERE mtype=? AND mid=?;");
+        stmt.setString(1,menu_mtype);
+        stmt.setString(2,menu_id);
+        rs = stmt.executeQuery();
+        return rs;
     }
 
     /**
@@ -1182,16 +1134,9 @@ public class DataManager {
      * @throws SQLException if rollback fails
      */
     public ResultSet getAllMenuOrders() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu_order;");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM menu_order;");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
         return rs;
     }
 
@@ -1203,21 +1148,10 @@ public class DataManager {
      * @param food String that represents a certain dish
      * @throws SQLException if rollback fails
      */
-    public void insertDish(String food) throws SQLException, UncompletedRequest {
-        try {
-
-            connector.getConnector().setAutoCommit(false);
+    public void insertDish(String food) throws SQLException {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO dishes VALUES (?, default, default, default);");
             p.setString(1,food);
             p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Person registered successfully!!");
-        }  catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
     }
 
     /**
@@ -1225,17 +1159,12 @@ public class DataManager {
      *
      * @param food String that represents a certain dish
      * @return whether a certain dish exists.
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      */
     public boolean foodExists(String food) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM dishes as d WHERE d.dish=?;");
-            p.setString(1,food);
-            rs = p.executeQuery();
-
-        } catch (SQLException e) {
-            System.out.println("Error executing query");
-        }
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM dishes as d WHERE d.dish=?;");
+        p.setString(1,food);
+        rs = p.executeQuery();
         return rs.next();
     }
 
@@ -1247,16 +1176,15 @@ public class DataManager {
      */
     public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange {
         try{
+            //execute transaction
             connector.getConnector().setAutoCommit(false);
             PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
-
             updateStmt.setString(1,dish);
             int changed = updateStmt.executeUpdate();
-
             connector.getConnector().commit();
 
+            //final checks
             System.out.println("Transaction committed successfully!!");
-
             if(changed==0) throw new NoChange();
             System.out.println("Prices were updated successfully!!");
 
@@ -1268,67 +1196,44 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides all dishes
+     * @return all dishes
+     * @throws SQLException if database management fails
      */
     public ResultSet getAllDishes() throws SQLException {
-        try {
-            connector.getConnector().setAutoCommit(false);
+
             PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT s.dish, s.restaurname, s.price FROM serves as s;");
             rs = stmt.executeQuery();
             System.out.println("Query executed correctly!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-        }
-        return rs;
+            return rs;
     }
 
 
 /* RESTAURANT RELATED */
 
     /**
-     *
-     * @param restaurant
-     * @return
-     * @throws SQLException
+     * This method provides whether a restaurant exists
+     * @param restaurant given restaurant
+     * @return whether a restaurant exists
+     * @throws SQLException if database management fails
      */
     public boolean restaurantExists(String restaurant) throws SQLException {
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM restaurant as r WHERE r.restaurname=?;");
-            p.setString(1,restaurant);
-            rs = p.executeQuery();
-
-        } catch (SQLException e) {
-            System.out.println("Error executing query");
-        }
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM restaurant as r WHERE r.restaurname=?;");
+        p.setString(1,restaurant);
+        rs = p.executeQuery();
         return rs.next();
     }
 
 
     /**
-     *
-     * @param restaurant
-     * @throws SQLException
+     * This method creates a restaurant
+     * @param restaurant given restaurant
+     * @throws SQLException if database management fails
      */
-    public void insertRestaurant(String restaurant) throws SQLException, UncompletedRequest {
-        try {
-
-            connector.getConnector().setAutoCommit(false);
+    public void insertRestaurant(String restaurant) throws SQLException {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO restaurant VALUES (?,default, default, default, default);");
             p.setString(1,restaurant);
             p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Restaurant registered successfully!!");
-
-        }  catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
     }
 
 
@@ -1336,20 +1241,14 @@ public class DataManager {
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
      * @throws SQLException if rollback fails
-     * @throws UncompletedRequest if the query could not be executed
      */
-    public ResultSet getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
+    public ResultSet getRestaurantLikedManagers() throws SQLException {
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-            throw new UncompletedRequest();
-        }
+        connector.getConnector().setAutoCommit(false);
+        PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
+
         return rs;
     }
 
@@ -1359,29 +1258,21 @@ public class DataManager {
 
     /**
      * This method provides the employees that frequent a single restaurant in the given city
-     * @param city Strig - the given city
+     * @param city String - the given city
      * @return the employees that frequent a single restaurant in the given city
-     * @throws SQLException if rollback fails
-     * @throws UncompletedRequest if the query could not be executed
+     * @throws SQLException if database management fails
      */
-    public ResultSet getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
-        try {
-            connector.getConnector().setAutoCommit(false);
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.id, e.fname , e.lname  " +
-                    "FROM frequents as f inner join (person as p inner join employee as e on e.ssn=p.id) ON f.nameid=p.nameid " +
-                    "inner join restaurant as r on r.restaurname=f.restaurname " +
-                    " WHERE  r.city=? " +
-                    " GROUP BY f.nameid " +
-                    " HAVING count(distinct f.restaurname)=1; ");
-            stmt.setString(1,city);
-            rs = stmt.executeQuery();
-            System.out.println("Query executed correctly!!");
+    public ResultSet getEmployee1RestCity(String city) throws SQLException {
 
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            System.out.println("Couldn't execute query.");
-            throw new UncompletedRequest();
-        }
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT p.id, e.fname , e.lname  " +
+                "FROM frequents as f inner join (person as p inner join employee as e on e.ssn=p.id) ON f.nameid=p.nameid " +
+                "inner join restaurant as r on r.restaurname=f.restaurname " +
+                " WHERE  r.city=? " +
+                " GROUP BY f.nameid " +
+                " HAVING count(distinct f.restaurname)=1; ");
+        stmt.setString(1,city);
+        rs = stmt.executeQuery();
+        System.out.println("Query executed correctly!!");
         return rs;
     }
 
@@ -1390,78 +1281,32 @@ public class DataManager {
     /* PREFERENCES RELATED */
 
     /**
-     *
-     * @param name
-     * @param food
-     * @throws SQLException
+     * This method inserts a person's eating preference
+     * @param name person's name
+     * @param food food to set as liked
+     * @throws SQLException if database management fails
      */
-    public void insertEats(String name, String food) throws SQLException, UncompletedRequest {
-        try {
-
-            connector.getConnector().setAutoCommit(false);
+    public void insertEats(String name, String food) throws SQLException {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO eats VALUES (?,?);");
             p.setString(1,name);
             p.setString(2,food);
             p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Person registered successfully!!");
-        }  catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
     }
 
     /**
-     *
-     * @param name
-     * @param restaurant
-     * @throws SQLException
+     * This method registers a person's frequented restaurant as such
+     * @param name person's name
+     * @param restaurant due restaurant
+     * @throws SQLException if database management fails
      */
-    public void addFrequents(String name, String restaurant) throws SQLException, UncompletedRequest {
-        try {
-
-            connector.getConnector().setAutoCommit(false);
+    public void addFrequents(String name, String restaurant) throws SQLException {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO frequents VALUES (?,?);");
             p.setString(1,name);
             p.setString(2,restaurant);
             p.executeUpdate();
-
-            connector.getConnector().commit();
-            System.out.println("Transaction executed successfully!!");
-        }  catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
     }
 
 
-    /**
-     * Method that says whether a guide is in a given trip or not
-     * @return boolean - Whether the guide is in the trip or not
-     */
-    public boolean existGuideInTrip(String GuideId, String TripTo, String DepartureDate) throws ParseException {
-        try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT * FROM trip WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
-            stmt.setString(1,GuideId);
-            stmt.setString(2,TripTo);
-            stmt.setDate(3, new Date(format.parse(DepartureDate).getTime()));
-            ResultSet rs = stmt.executeQuery();
-
-            if(!rs.next()){
-                return false;
-            }
-
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
 
 
 }

@@ -59,7 +59,7 @@ public class CustomerAllCheapestTripsController implements Controller {
                 tblCustomer.getItems().add("There is no such customer");
             }
         } catch (SQLException e){
-            errorLbl.setText("An error with the database occurred. Please, try again later.");
+            errorLbl.setText("An error with the database occurred. Please, try again later or change the fields.");
         } catch (UncompletedRequest e){
             errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         }

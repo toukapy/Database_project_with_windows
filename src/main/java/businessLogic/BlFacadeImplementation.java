@@ -35,7 +35,8 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws NotBelong if the person does not belong to the trip
      */
     @Override
-    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest, NotBelong {
+    public void deleteCustomerFromTrip(String name, String phoneNum, String TripTo, String DepartureDate)
+            throws SQLException, ParseException, UncompletedRequest, NotBelong {
         dbManager.open();
 
         //get the due customers
@@ -59,10 +60,9 @@ public class BlFacadeImplementation implements BlFacade{
      * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
      * @return the trip that has obtained the highest amount of gains
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be completed
      */
     @Override
-    public Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest {
+    public Vector<String> getMaximumGainedTrip() throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
 
@@ -83,10 +83,9 @@ public class BlFacadeImplementation implements BlFacade{
      * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      * @return the customers that have gone to every trip with optional excursion
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be carried out
      */
     @Override
-    public Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest {
+    public Vector<String> retrieveCustomerEveryTripExc() throws SQLException {
         Vector<String> answer = new Vector<String>();
         dbManager.open();
         //Get the due customers
@@ -102,11 +101,10 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      * @return the customers who have attended at least all cheapest trips attended by customers
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      */
     @Override
-    public Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException {
+    public Vector<String> getCustomersAllCheapestTrips() throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due customers
@@ -306,11 +304,10 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      */
     @Override
-    public Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException {
+    public Vector<String> getTourguidesAllLanguages() throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
 
@@ -330,13 +327,12 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
      *
      */
     @Override
-    public Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException, ParseException {
+    public Vector<String> getTourguidesAllTripsYear(String year) throws SQLException, ParseException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
         //get due tourguides
@@ -459,11 +455,10 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Retrieve the number of customer each guide is responsible for
      * @return the number of customer each guide is responsible for
-     * @throws UncompletedRequest if there has been a problem with the query
      * @throws SQLException if database management fails
      */
     @Override
-    public Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException {
+    public Vector<String> retrieveNumCustomerGuideResponsible() throws SQLException {
         Vector<String> answer = new Vector<>();
 
         dbManager.open();
@@ -514,12 +509,12 @@ public class BlFacadeImplementation implements BlFacade{
      * @param menu_id String that represents the menu identifier
      * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
-     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction could not be completed
      * @throws SQLException if database management failed
      */
     @Override
-    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id) throws ObjectNotCreated, UncompletedRequest, SQLException {
+    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id)
+            throws UncompletedRequest, SQLException {
         dbManager.open();
         //Add menu-order
         dbManager.addMenuOrder(choice, menu_mtype, menu_id, name, customer_id);
@@ -540,10 +535,10 @@ public class BlFacadeImplementation implements BlFacade{
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
      * @throws UncompletedRequest if transaction could not be completed
-     * @throws NoChange if the person already existed
      */
     @Override
-    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant) throws SQLException, UncompletedRequest, NoChange {
+    public void insertPerson(String choice, String name, String age, String id, String food, String restaurant)
+            throws SQLException, UncompletedRequest {
         dbManager.open();
         //insert person
         dbManager.insertPersonRestaurantEats(choice, name, age, id, food, restaurant);
@@ -655,10 +650,9 @@ public class BlFacadeImplementation implements BlFacade{
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be executed
      */
     @Override
-    public Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest {
+    public Vector<String> getRestaurantLikedManagers() throws SQLException {
         Vector<String> answer = new Vector<String>();
         dbManager.open();
 
@@ -681,10 +675,9 @@ public class BlFacadeImplementation implements BlFacade{
      * @param city provided city
      * @return the employees who have attended a single restaurant of a given city
      * @throws SQLException if an error occurred when managing the database
-     * @throws UncompletedRequest if the query could not be carried out
      */
     @Override
-    public Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest {
+    public Vector<String> getEmployee1RestCity(String city) throws SQLException {
         Vector<String> answer = new Vector<>();
         dbManager.open();
 

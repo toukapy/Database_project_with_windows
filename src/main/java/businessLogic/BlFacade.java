@@ -24,7 +24,7 @@ public interface BlFacade {
 /* CUSTOMERS-RELATED */
 
     /**
-     * Trasaction 1 -> Delete a customer by phone and name from a trip
+     * Transaction 1 -> Delete a customer by phone and name from a trip
      * @param name String that represents the name
      * @param phoneNum String that represents the phone number
      * @param TripTo String that represents to where the trip is
@@ -42,9 +42,8 @@ public interface BlFacade {
      * Query 1 -> Retrieves the trip that has obtained the highest amount of gains
      * @return the trip that has obtained the highest amount of gains
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be completed
      */
-    Vector<String> getMaximumGainedTrip() throws SQLException, UncompletedRequest;
+    Vector<String> getMaximumGainedTrip() throws SQLException;
 
 
 
@@ -52,18 +51,16 @@ public interface BlFacade {
      * Query 2 -> Retrieves the customers that have gone to every trip with optional excursion
      * @return the customers that have gone to every trip with optional excursion
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be carried out
      */
-    Vector<String> retrieveCustomerEveryTripExc() throws SQLException, UncompletedRequest;
+    Vector<String> retrieveCustomerEveryTripExc() throws SQLException;
 
 
     /**
      * This method gets the customers who have attended at least all cheapest trips attended by customers
      * @return the customers who have attended at least all cheapest trips attended by customers
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      */
-    Vector<String> getCustomersAllCheapestTrips() throws UncompletedRequest, SQLException;
+    Vector<String> getCustomersAllCheapestTrips() throws  SQLException;
 
 
     /**
@@ -135,20 +132,18 @@ public interface BlFacade {
     /**
      * This method provides the tour-guides who speak all languages registered in the database
      * @return the tour-guides who speak all languages registered in the database
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      */
-    Vector<String> getTourguidesAllLanguages() throws UncompletedRequest, SQLException;
+    Vector<String> getTourguidesAllLanguages() throws SQLException;
 
 
     /**
      * This method provides the tour-guides who have attended all trips of a given year.
      * @param year provided year
-     * @throws UncompletedRequest if query could not be executed
      * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
      */
-    Vector<String> getTourguidesAllTripsYear(String year) throws UncompletedRequest, SQLException, ParseException;
+    Vector<String> getTourguidesAllTripsYear(String year) throws SQLException, ParseException;
 
 
     /**
@@ -206,10 +201,9 @@ public interface BlFacade {
     /**
      * Retrieve the number of customer each guide is responsible for
      * @return the number of customer each guide is responsible for
-     * @throws UncompletedRequest if there has been a problem with the query
      * @throws SQLException if database management fails
      */
-    Vector<String> retrieveNumCustomerGuideResponsible() throws UncompletedRequest, SQLException;
+    Vector<String> retrieveNumCustomerGuideResponsible() throws SQLException;
 
 
 /* MENU AND MENU-ORDERS RELATED */
@@ -229,12 +223,11 @@ public interface BlFacade {
      * @param menu_id String that represents the menu identifier
      * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
-     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction could not be completed
      * @throws SQLException if database management failed
      */
     void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id)
-            throws ObjectNotCreated, UncompletedRequest, SQLException;
+            throws UncompletedRequest, SQLException;
 
 
 
@@ -252,10 +245,9 @@ public interface BlFacade {
      * @param restaurant - The restaurant the person attends
      * @throws SQLException if rollback could not be done.
      * @throws UncompletedRequest if transaction could not be completed
-     * @throws NoChange if the person already existed
      */
     void insertPerson(String choice, String name, String age, String id, String food, String restaurant)
-            throws SQLException, UncompletedRequest, NoChange;
+            throws SQLException, UncompletedRequest;
 
 
     /**
@@ -309,9 +301,8 @@ public interface BlFacade {
      * This method gets the restaurants that provide food liked by all managers
      * @return the restaurants that provide food liked by all managers
      * @throws SQLException if database management fails
-     * @throws UncompletedRequest if the query could not be executed
      */
-    Vector<String> getRestaurantLikedManagers() throws SQLException, UncompletedRequest;
+    Vector<String> getRestaurantLikedManagers() throws SQLException;
 
 
     /* EMPLOYEES-RELATED*/
@@ -321,8 +312,7 @@ public interface BlFacade {
      * @param city provided city
      * @return the employees who have attended a single restaurant of a given city
      * @throws SQLException if an error occurred when managing the database
-     * @throws UncompletedRequest if the query could not be carried out
      */
-    Vector<String> getEmployee1RestCity(String city) throws SQLException, UncompletedRequest;
+    Vector<String> getEmployee1RestCity(String city) throws SQLException;
 
 }

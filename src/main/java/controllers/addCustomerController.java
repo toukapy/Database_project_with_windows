@@ -129,13 +129,13 @@ public class addCustomerController implements Controller {
 
             }
         }catch (SQLException e){
-            errorLbl.setText("An error with the database occurred. Please, try again later.");
+            errorLbl.setText("An error with the database occurred. Please, try again later or change the fields.");
         } catch (UncompletedRequest e) {
             errorLbl.setText("Transaction could not be done. Please change the fields' information.");
         } catch (ObjectNotCreated e) {
             errorLbl.setText("Transaction not completed. Change choice to 'y' for creating necessary intermediate objects.");
         } catch (ParseException e) {
-            errorLbl.setText("Please, enter a valid date");
+            errorLbl.setText("Please, enter a valid date: yyyy-mm-dd");
         }
     }
 

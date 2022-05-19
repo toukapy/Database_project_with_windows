@@ -681,6 +681,7 @@ public class DataManager {
         try {
             connector.getConnector().setAutoCommit(false);
 
+            //find first tourguide -> if not exists
             System.out.println("Finding the first tourguide");
             ResultSet guide1 = getGuide(guidename1,guidephone1);
             boolean exists = guide1.next();
@@ -694,19 +695,23 @@ public class DataManager {
                 throw new UncompletedRequest();
             }
 
-            //find first trip -> if not exists  UncompletedRequest
+            //find first trip
             System.out.println("Finding the first trip");
             ResultSet trip1 = getTrip(TripTo1,DepartureDate1);
             exists = trip1.next();
+            //create trip if must
             if(!exists && choice.equals("y")) {
                 System.out.println("System creating a trip");
                 insertTrip(TripTo1,DepartureDate1);
                 insertGuideInTrip(guide1.getString("GuideId"),trip1.getString("TripTo"),trip1.getString("DepartureDate"));
+            //stop if trip does not exist and should not create it
             } else if(!exists && choice.equals("n")){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 close();
                 throw new UncompletedRequest();
+
+            //stop if guide not in trip
             }else if(!existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
                 System.out.println("This guide is not in this trip!!!");
                 throw new UncompletedRequest();
@@ -716,28 +721,34 @@ public class DataManager {
             System.out.println("Finding the second tour-guide");
             ResultSet guide2 = getGuide(guidename2,guidephone2);
             exists = guide2.next();
+            //create guide if must
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename2, guidephone2);
+
+            //stop if guide not exists
             }else if(!exists && choice.equals("n")){
                 System.out.println("Guide does not exist");
                 System.out.println("Try again the transaction");
                 close();
             }
 
-            //find second trip -> if not exists UncompletedRequest
+            //find second trip
             System.out.println("Finding the second trip");
             ResultSet trip2 = getTrip(TripTo2,DepartureDate2);
             exists = trip2.next();
+            // create trip if must
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a trip");
                 insertTrip(TripTo2,DepartureDate2);
                 insertGuideInTrip(guide2.getString("GuideId"),trip2.getString("TripTo"),trip2.getString("DepartureDate"));
+            //stop if trip does not exist and should not create it
             }else if(!exists && choice.equals("n")){
                 System.out.println("Trip does not exist in the database");
                 System.out.println("Try again the transaction");
                 close();
                 throw new UncompletedRequest();
+            //stop if due guide is not in the trip
             }else if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
                 System.out.println("This guide is not in this trip!!!");
                 throw new UncompletedRequest();
@@ -746,6 +757,7 @@ public class DataManager {
             String guideId = guide1.getString("GuideId");
             String guideId1 = guide2.getString("GuideId");
 
+            //swap guides
             PreparedStatement stmt1 = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE GuideId=? AND TripTo=? AND DepartureDate=?;");
             stmt1.setString(1,guideId1);
             stmt1.setString(2,guideId);

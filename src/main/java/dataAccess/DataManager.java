@@ -177,12 +177,24 @@ public class DataManager {
      * @throws SQLException if database management fails
      */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException {
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.customerid as id, c.custname as name " +
+        PreparedStatement stmt = connector.getConnector().prepareStatement(
+            "SELECT c.customerid as id, c.custname as name " +
                 "FROM customer as c WHERE not exists ( " +
-                "SELECT * FROM trip as t where  (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2) and not exists ( " +
-                "SELECT * from hotel_trip_customer as htc " +
-                "where htc.tripto=t.tripto and htc.departuredate=t.departuredate and htc.customerid=c.customerid)) " +
-                "and exists (SELECT * FROM trip as t where (t.Ppday*t.numdays)=(SELECT min(t2.ppday*t2.numdays) from trip as t2));");
+                    "SELECT * " +
+                    "FROM trip as t " +
+                    "WHERE  (t.Ppday*t.numdays)=" +
+                        "(SELECT min(t2.ppday*t2.numdays) " +
+                        "FROM trip as t2) " +
+                    "and not exists ( " +
+                        "SELECT * " +
+                        "FROM hotel_trip_customer as htc " +
+                        "WHERE htc.tripto=t.tripto and htc.departuredate=t.departuredate and htc.customerid=c.customerid)) " +
+                "and exists " +
+                    "(SELECT * " +
+                    "FROM trip as t " +
+                    "WHERE (t.Ppday*t.numdays)=" +
+                        "(SELECT min(t2.ppday*t2.numdays) " +
+                        "FROM trip as t2));");
         rs = stmt.executeQuery();
         System.out.println("Query executed correctly!!");
         return rs;
@@ -820,13 +832,20 @@ public class DataManager {
         String date1 =  year + "-01-01";
         String date2 =  year + "-12-31";
 
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.guideid as id, g.guidename as name " +
-                "FROM tourguide as g WHERE not exists ( " +
-
-                "SELECT * FROM trip as t where  t.departuredate between ? and ? and not exists ( " +
-                "SELECT * from trip as t2 " +
-                "where t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
-                "and exists (SELECT * FROM trip as t where  t.departuredate between ? and ?);");
+        PreparedStatement stmt = connector.getConnector().prepareStatement(
+                "SELECT g.guideid as id, g.guidename as name " +
+                "FROM tourguide as g " +
+                "WHERE not exists ( " +
+                "   SELECT * " +
+                "   FROM trip as t " +
+                "   WHERE  t.departuredate between ? and ? and not exists ( " +
+                "       SELECT * " +
+                "       FROM trip as t2 " +
+                "       WHERE t2.tripto=t.tripto and t2.departuredate=t.departuredate and t.guideid=g.guideid)) " +
+                "and exists " +
+                "   (SELECT * " +
+                "   FROM trip as t " +
+                "   WHERE  t.departuredate between ? and ?);");
         stmt.setString(1, date1);
         stmt.setString(2,date2);
         stmt.setString(3,date1);
@@ -845,11 +864,13 @@ public class DataManager {
      */
     public ResultSet getTourguidesAllLanguages() throws SQLException {
 
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, COUNT(DISTINCT l.Lang) AS LangCount " +
+        PreparedStatement stmt = connector.getConnector().prepareStatement(
+            "SELECT g.GuideId AS id, g.guidename AS name, COUNT(DISTINCT l.Lang) AS LangCount " +
                 "FROM tourguide AS g INNER JOIN languages AS l ON g.GuideId=l.GuideId " +
                 "GROUP BY g.GuideId " +
                 "HAVING COUNT(DISTINCT l.Lang) = ( " +
-                "SELECT COUNT(DISTINCT l2.Lang) FROM languages AS l2);");
+                "   SELECT COUNT(DISTINCT l2.Lang) " +
+                "   FROM languages AS l2);");
         rs = stmt.executeQuery();
         System.out.println("Query executed correctly!!");
 
@@ -903,18 +924,19 @@ public class DataManager {
 
         try{
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("UPDATE trip SET guideid=? " +
-                    "WHERE guideid=? AND departuredate BETWEEN ? AND ?;");
+            PreparedStatement updateStmt = connector.getConnector().prepareStatement(
+                    "UPDATE trip SET guideid=? WHERE guideid=? AND departuredate BETWEEN ? AND ?;");
 
-            deleteStmt.setString(1,Guideidnew);
-            deleteStmt.setString(2,Guideidprev);
-            deleteStmt.setDate(3,new Date(format.parse(departuredate).getTime()));
-            deleteStmt.setDate(4, new Date(format.parse(departuredate2).getTime()));
-            int changed = deleteStmt.executeUpdate();
+            updateStmt.setString(1,Guideidnew);
+            updateStmt.setString(2,Guideidprev);
+            updateStmt.setDate(3,new Date(format.parse(departuredate).getTime()));
+            updateStmt.setDate(4, new Date(format.parse(departuredate2).getTime()));
+            int changed = updateStmt.executeUpdate();
             connector.getConnector().commit();
 
-            if (changed==0) throw new NoChange();
+            //final checks. If no change -> NoChange to inform user
             System.out.println("Transaction committed successfully!!");
+            if (changed==0) throw new NoChange();
             System.out.println("Guideid was changed successfully between the given dates!!");
 
         }catch(SQLException e){
@@ -1003,7 +1025,7 @@ public class DataManager {
         try {
             connector.getConnector().setAutoCommit(false);
 
-            //check person exists -> create if must
+            //try creating the person
             System.out.println("Try to add person...");
             insertPerson(name, age, id);
 
@@ -1072,22 +1094,26 @@ public class DataManager {
             connector.getConnector().setAutoCommit(false);
 
             //delete the person's data of frequented restaurants
-            PreparedStatement deleteStmt0 = connector.getConnector().prepareStatement("DELETE FROM frequents as f WHERE f.nameid=?;");
+            PreparedStatement deleteStmt0 = connector.getConnector().prepareStatement(
+                    "DELETE FROM frequents as f WHERE f.nameid=?;");
             deleteStmt0.setString(1, name);
             deleteStmt0.executeUpdate();
 
             //delete the person's data of liked food
-            PreparedStatement deleteStmt1 = connector.getConnector().prepareStatement("DELETE FROM eats as e WHERE e.nameid=?;");
+            PreparedStatement deleteStmt1 = connector.getConnector().prepareStatement(
+                    "DELETE FROM eats as e WHERE e.nameid=?;");
             deleteStmt1.setString(1, name);
             deleteStmt1.executeUpdate();
 
             //delete the person's data of menu orders
-            PreparedStatement deleteStmt3 = connector.getConnector().prepareStatement("DELETE FROM menu_order as m WHERE m.customer_id=?;");
+            PreparedStatement deleteStmt3 = connector.getConnector().prepareStatement(
+                    "DELETE FROM menu_order as m WHERE m.customer_id=?;");
             deleteStmt3.setString(1, id);
             deleteStmt3.executeUpdate();
 
             //delete the person's personal data
-            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
+            PreparedStatement deleteStmt = connector.getConnector().prepareStatement(
+                    "DELETE FROM person as p WHERE p.nameid=? and p.id=?;");
             deleteStmt.setString(1, name);
             deleteStmt.setString(2, id);
             deleteStmt.executeUpdate();
@@ -1114,8 +1140,10 @@ public class DataManager {
      * @param menu_id menu identifier
      * @param customer_id customer id
      * @throws SQLException if database management fails
+     * @throws UncompletedRequest if the transaction fails
      */
-    public void addMenuOrder(String choice, String menu_mtype, String menu_id, String customer_id) throws SQLException, UncompletedRequest {
+    public void addMenuOrder(String choice, String menu_mtype, String menu_id, String customer_id)
+            throws SQLException, UncompletedRequest {
         try {
             connector.getConnector().setAutoCommit(false);
 
@@ -1235,17 +1263,20 @@ public class DataManager {
      *
      * @param dish provided dish
      * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if transaction fails
+     * @throws NoChange if no change is done
      */
     public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange {
         try{
             //execute transaction
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement updateStmt = connector.getConnector().prepareStatement("UPDATE serves SET price=(0.5*price) WHERE dish=?;");
+            PreparedStatement updateStmt = connector.getConnector().prepareStatement(
+                    "UPDATE serves SET price=(0.5*price) WHERE dish=?;");
             updateStmt.setString(1,dish);
             int changed = updateStmt.executeUpdate();
             connector.getConnector().commit();
 
-            //final checks
+            //final checks. if no change is done -> throw NoChange
             System.out.println("Transaction committed successfully!!");
             if(changed==0) throw new NoChange();
             System.out.println("Prices were updated successfully!!");
@@ -1307,7 +1338,23 @@ public class DataManager {
     public ResultSet getRestaurantLikedManagers() throws SQLException {
 
         connector.getConnector().setAutoCommit(false);
-        PreparedStatement stmt = connector.getConnector().prepareStatement("select distinct r.restaurname as restaurant, s.dish as dish from serves as s inner join restaurant as r on r.restaurname=s.restaurname inner join (select distinct e.dish from eats as e  where not exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn where not exists (select * from eats as e2 where e2.nameid=p.nameid and e2.dish=e.dish )) and exists (select * from person as p inner join department as d on p.id=d.Mgr_ssn)) as t2 on t2.dish=s.dish where  (r.capacity>=(select count(distinct d2.Mgr_ssn) from department as d2));");
+        PreparedStatement stmt = connector.getConnector().prepareStatement(
+                "SELECT distinct r.restaurname as restaurant, s.dish as dish " +
+                    "FROM serves as s inner join restaurant as r on r.restaurname=s.restaurname " +
+                    "inner join " +
+                        "(SELECT distinct e.dish " +
+                        "FROM eats as e  " +
+                        "WHERE not exists " +
+                            "(SELECT * " +
+                            "FROM person as p inner join department as d on p.id=d.Mgr_ssn " +
+                            "WHERE not exists " +
+                                "(SELECT * " +
+                                "FROM eats as e2 WHERE e2.nameid=p.nameid and e2.dish=e.dish )) " +
+                        "and EXISTS " +
+                            "(SELECT * " +
+                            "FROM person as p inner join department as d on p.id=d.Mgr_ssn)) " +
+                    "as t2 on t2.dish=s.dish " +
+                    "WHERE  (r.capacity>=(SELECT count(distinct d2.Mgr_ssn) FROM department as d2));");
         rs = stmt.executeQuery();
         System.out.println("Query executed correctly!!");
 

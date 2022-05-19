@@ -9,7 +9,6 @@ import exceptions.UncompletedRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -464,17 +463,16 @@ public class BlFacadeImplementation implements BlFacade{
      * @param choice String that represents whether additional objects should be created (y) or not (!=y)
      * @param menu_mtype String that represents the type of menu
      * @param menu_id String that represents the menu identifier
-     * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
      * @throws UncompletedRequest if transaction could not be completed
      * @throws SQLException if database management failed
      */
     @Override
-    public void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id)
+    public void insertMenuOrder(String choice, String menu_mtype, String menu_id, String customer_id)
             throws UncompletedRequest, SQLException {
         dbManager.open();
         //Add menu-order
-        dbManager.addMenuOrder(choice, menu_mtype, menu_id, name, customer_id);
+        dbManager.addMenuOrder(choice, menu_mtype, menu_id, customer_id);
         dbManager.close();
     }
 
@@ -588,8 +586,8 @@ public class BlFacadeImplementation implements BlFacade{
         ResultSet dishes = dbManager.getAllDishes();
         while(dishes.next()){
             //save and store the due information
-            System.out.println("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
-            answer.add("Dish: " + dishes.getString("dish") + ",    restaurant:" + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
+            System.out.println("Dish: " + dishes.getString("dish") + ",    restaurant: " + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
+            answer.add("Dish: " + dishes.getString("dish") + ",    restaurant: " + dishes.getString("restaurname")+ ",    price: " + dishes.getString("price") );
         }
 
         dbManager.close();
@@ -707,6 +705,7 @@ public class BlFacadeImplementation implements BlFacade{
 
             while(rs.next()){
                 System.out.println(rs.getString("Dnumber")+","+rs.getString("Dlocation"));
+                answer.add("Dnumber: " + rs.getString("Dnumber")+", Dlocation: "+rs.getString("Dlocation"));
             }
 
             dbManager.close();

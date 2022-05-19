@@ -220,18 +220,18 @@ public interface BlFacade {
      * @param choice String that represents whether additional objects should be created (y) or not (!=y)
      * @param menu_mtype String that represents the type of menu
      * @param menu_id String that represents the menu identifier
-     * @param name String that represents the name of the customer
      * @param customer_id String that represents the id of the customer
      * @throws UncompletedRequest if transaction could not be completed
      * @throws SQLException if database management failed
      */
-    void insertMenuOrder(String choice, String menu_mtype, String menu_id,  String name, String customer_id)
+    void insertMenuOrder(String choice, String menu_mtype, String menu_id, String customer_id)
             throws UncompletedRequest, SQLException;
 
 
 
 
     /* PEOPLE RELATED (restaurant db) */
+
 
     /**
      * Method to insert a person (in the restaurant database)

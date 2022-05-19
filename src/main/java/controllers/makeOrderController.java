@@ -31,8 +31,7 @@ public class makeOrderController implements Controller {
     private TableColumn<String, String> col;
 
 
-    @FXML
-    private TextField name;
+
     @FXML
     private TextField menu_mtype;
     @FXML
@@ -75,7 +74,6 @@ public class makeOrderController implements Controller {
     private void resetFields(){
         errorLbl.setText("");
         correctLbl.setText("");
-        name.setText("");
         menu_mtype.setText("");
         menu_id.setText("");
         customer_id.setText("");
@@ -100,11 +98,11 @@ public class makeOrderController implements Controller {
         correctLbl.setText("");
         if(choice.equals(""))
             errorLbl.setText("Please, enter your choice");
-        else if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() || name.getText().isEmpty() || customer_id.getText().isEmpty()))
+        else if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() ||  customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else {
             try {
-                businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), name.getText(), customer_id.getText());
+                businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), customer_id.getText());
                 fillTable();
                 correctLbl.setText("Transaction executed!!");
             } catch (SQLException e){

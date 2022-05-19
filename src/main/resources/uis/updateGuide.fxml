@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="555.0" prefWidth="814.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.updateGuideController">
     <TableView fx:id="tourguideTable" layoutX="72.0" layoutY="207.0" prefHeight="232.0" prefWidth="670.0">
       <columns>
-          <TableColumn fx:id="col" prefWidth="669.0" text="Update a tourguide in an interval of time" />
+          <TableColumn fx:id="col" prefWidth="669.0" text="Tour-guides and their trips" />
       </columns>
     </TableView>
     <Button layoutX="593.0" layoutY="481.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />

@@ -217,7 +217,7 @@ public class MainGUI {
      * Method to show the window that allows us to swap two guides between trips
      */
     public void showSwapGuides() {
-        setupScene(swapGuidesWin.ui, "Swap guides", 814, 637);
+        setupScene(swapGuidesWin.ui, "Swap guides", 814, 730);
         swapGuidesWin.c.initializeInformation();
     }
 

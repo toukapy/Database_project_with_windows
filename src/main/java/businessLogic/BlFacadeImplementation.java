@@ -6,9 +6,11 @@ import exceptions.NotBelong;
 import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 /**
@@ -41,7 +43,13 @@ public class BlFacadeImplementation implements BlFacade{
 
         //get the due customers
         ResultSet customer = dbManager.getCustomer(name,phoneNum);
-        while(customer.next()) {
+        boolean exists = customer.next();
+        if(!exists){
+            //person does not exist in trip-> NotBelong
+            System.out.println("Customer does not exist");
+            throw new UncompletedRequest();
+        }
+        while(exists) {
             //person exists in trip -> delete
             if(dbManager.customerExistsInTripWithoutHotel(customer.getString("CustomerId"),TripTo,DepartureDate)){
                 dbManager.deleteCustomerFromTrip(customer.getString("CustomerId"), TripTo, DepartureDate);
@@ -50,6 +58,7 @@ public class BlFacadeImplementation implements BlFacade{
                 System.out.println("Customer does not exist in trip");
                 throw new NotBelong();
             }
+            exists = customer.next();
         }
 
         dbManager.close();
@@ -170,7 +179,7 @@ public class BlFacadeImplementation implements BlFacade{
             while (rs.next()) {
                 //display and store the due information
                 System.out.println("Destination: " + rs.getString("TripTo") + ", Departure date: " + rs.getString("DepartureDate") + ", Hotel name: " + rs.getString("hotelname") + ", hotel city: " + rs.getString("hotelcity") + ", Name: " + rs.getString("custname") + ", Phone: " + rs.getString("custphone"));
-                answer.add("Destination: " + rs.getString("TripTo") + ", Departure date: " + rs.getString("DepartureDate") + ", Hotel name: " + rs.getString("hotelname") + ", hotel city: " + rs.getString("hotelcity") + ", Name: " + rs.getString("custname") + ", Phone: " + rs.getString("custphone"));
+                answer.add("Destination: " + rs.getString("TripTo") + ", Departure date: " + new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate("DepartureDate")) + ", Hotel name: " + rs.getString("hotelname") + ", hotel city: " + rs.getString("hotelcity") + ", Name: " + rs.getString("custname") + ", Phone: " + rs.getString("custphone"));
             }
         }
         dbManager.close();

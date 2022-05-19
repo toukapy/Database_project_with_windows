@@ -43,7 +43,13 @@ public class BlFacadeImplementation implements BlFacade{
 
         //get the due customers
         ResultSet customer = dbManager.getCustomer(name,phoneNum);
-        while(customer.next()) {
+        boolean exists = customer.next();
+        if(!exists){
+            //person does not exist in trip-> NotBelong
+            System.out.println("Customer does not exist");
+            throw new UncompletedRequest();
+        }
+        while(exists) {
             //person exists in trip -> delete
             if(dbManager.customerExistsInTripWithoutHotel(customer.getString("CustomerId"),TripTo,DepartureDate)){
                 dbManager.deleteCustomerFromTrip(customer.getString("CustomerId"), TripTo, DepartureDate);
@@ -52,6 +58,7 @@ public class BlFacadeImplementation implements BlFacade{
                 System.out.println("Customer does not exist in trip");
                 throw new NotBelong();
             }
+            exists = customer.next();
         }
 
         dbManager.close();

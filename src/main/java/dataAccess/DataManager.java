@@ -132,7 +132,7 @@ public class DataManager {
     public ResultSet retrieveCustomerEveryTripExc() throws SQLException {
 
         PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT c.custname, c.custphone, c.CustomerId FROM customer as c WHERE NOT EXISTS(" +
-                "SELECT * FROM trip as t WHERE NOT EXISTS(" +
+                "SELECT * FROM (optional_excursion as oe inner join trip as t on oe.TripTo = t.TripTo AND oe.DepartureDate = t.DepartureDate) WHERE NOT EXISTS(" +
                 "SELECT * FROM excur_opt_customer as eoc WHERE eoc.CustomerId = c.CustomerId AND eoc.TripTo = t.TripTo AND eoc.DepartureDate = t.DepartureDate));");
         rs = stmt.executeQuery();
         System.out.println("Query executed correctly!");

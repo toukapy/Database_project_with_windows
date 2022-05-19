@@ -183,7 +183,7 @@ public class deleteCustomerController implements Controller {
             customerTable.getItems().clear();
 
 
-            // fill table with current customers in the database
+            // fill table with current trips in the database
             Vector<String> rs = businessLogic.getAllCustomersJustTrip();
             if (rs != null) {
                 customerTable.getItems().addAll(rs);

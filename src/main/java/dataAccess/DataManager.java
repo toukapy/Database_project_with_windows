@@ -8,6 +8,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
+/**
+ * This class implements the Data Access utility to the database
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class DataManager {
 
     private DatabaseConnector connector;

@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.util.Vector;
 
 /**
- * This interface represents the business logic
+ * This interface specifies the business logic
  *
  * @author Miren, Leire and Amanda
  * @version 1

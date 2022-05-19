@@ -755,6 +755,13 @@ public class BlFacadeImplementation implements BlFacade{
 
     }
 
+    /**
+     * Get all the hotel customer trips that are to and in the date recieved, and the people going are employees
+     * @param location where the trip is to
+     * @param date the trip date
+     * @return the ssn and full name of the employee, the trip location and date and the hotel id
+     * @throws SQLException
+     */
     @Override
     public Vector<String> getTrips(String location, String date) throws SQLException {
         dbManager.open();
@@ -810,6 +817,26 @@ public class BlFacadeImplementation implements BlFacade{
         dbManager.close();
 
         return a;
+    }
+
+    /**
+     * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
+     * @return The employee name, last name, project name, the hours worked and the department managers full name
+     * @throws SQLException
+     */
+    @Override
+    public Vector<String> getSpeakers() throws SQLException {
+        Vector<String> speakers = new Vector<>();
+        dbManager.open();
+        ResultSet spk = dbManager.getSpeakers();
+
+        while (spk.next())
+            speakers.add("Speaker: "+spk.getString("Fname")+" "+spk.getString("Lname")+
+                    "\t Project: "+spk.getString("Pname")+"\t Hours worked: "+spk.getString("Hours")+
+                    "\t Department manager: "+ spk.getString("Fn")+" "+spk.getString("Ln"));
+
+        dbManager.close();
+        return  speakers;
     }
 
 }

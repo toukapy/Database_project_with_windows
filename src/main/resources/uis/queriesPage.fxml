@@ -23,5 +23,6 @@
       <Button layoutX="417.0" layoutY="484.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="133.0" text="Back" />
       <Button layoutX="636.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickHotelCEO" prefHeight="62.0" prefWidth="258.0" text="Which employees have been to the same hotels as the company CEO?" textAlignment="CENTER" wrapText="true" />
       <Button layoutX="636.0" layoutY="224.0" mnemonicParsing="false" onAction="#onClickDates" prefHeight="62.0" prefWidth="258.0" text="Restaurant dates" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="636.0" layoutY="315.0" mnemonicParsing="false" onAction="#onClickSpeakers" prefHeight="62.0" prefWidth="258.0" text="Show the employee who has worked the most hours in each project and the manager of the department of the project" textAlignment="CENTER" wrapText="true" />
    </children>
 </AnchorPane>

@@ -109,6 +109,12 @@ public class QueriesPageController implements Controller {
     void onClickDates() { queryPageWin.showDates(); }
 
     /**
+     * Method to go to the window that shows the speakers for each project
+     */
+    @FXML
+    void onClickSpeakers() { queryPageWin.showSpeakers(); }
+
+    /**
      * Method to return to the parent window
      */
     @FXML

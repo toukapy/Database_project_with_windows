@@ -1333,35 +1333,6 @@ public class DataManager {
     }
 
 
-
-    /* PREFERENCES RELATED */
-
-    /**
-     * This method inserts a person's eating preference
-     * @param name person's name
-     * @param food food to set as liked
-     * @throws SQLException if database management fails
-     */
-    public void insertEats(String name, String food) throws SQLException {
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO eats VALUES (?,?);");
-            p.setString(1,name);
-            p.setString(2,food);
-            p.executeUpdate();
-    }
-
-    /**
-     * This method registers a person's frequented restaurant as such
-     * @param name person's name
-     * @param restaurant due restaurant
-     * @throws SQLException if database management fails
-     */
-    public void addFrequents(String name, String restaurant) throws SQLException {
-            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO frequents VALUES (?,?);");
-            p.setString(1,name);
-            p.setString(2,restaurant);
-            p.executeUpdate();
-    }
-
     /**
      * This method gives a raise of 1000 dollars to the employees who are paid less than
      * the average salary of the company. Also, if they have any dependent they get 100 dollars
@@ -1415,28 +1386,6 @@ public class DataManager {
 
     }
 
-
-    /**
-     * This query retrieves couples of names and a restaurant of people who frequent the same
-     * restaurant, have at least a liked dish in common and that restaurant serves it
-     */
-    public ResultSet resDates(){
-
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT f1.nameId as nId, f2.nameId, f1.restaurname " +
-                    "FROM frequents as f1, frequents as f2 " +
-                    "WHERE f1.restaurname=f2.restaurname AND f1.nameId<>f2.nameId AND " +
-                    "EXISTS (SELECT * FROM eats as e1, eats as e2 WHERE e1.dish=e2.dish AND f1.nameId=e1.nameId AND f2.nameId=e2.nameId AND " +
-                    "EXISTS (SELECT * FROM serves as s WHERE s.restaurname=f1.restaurname AND s.dish=e1.dish))");
-            rs = p.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return rs;
-
-    }
-
     /**
      * This method returns the employees that have been to the same hotels as the company CEO
      * @return The result of the query
@@ -1464,6 +1413,101 @@ public class DataManager {
         return rs;
     }
 
+    /**
+     * Get all the employees in the database and their salaries
+     * @return the ssn and salary of all employees
+     */
+    public ResultSet getSalaries(){
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT Ssn, Salary FROM employee");
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+    }
+
+    /**
+     * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
+     * @return The query result with the employee name, last name, project name, the hours worked and the department managers full name
+     * @throws SQLException
+     */
+    public ResultSet getSpeakers() throws SQLException {
+
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Fname, e.Lname, p.Pname, w.Hours, e2.Fname as Fn, e2.Lname as Ln " +
+                "FROM employee as e, works_on as w, project as p, department as d, employee as e2 " +
+                "WHERE e.Ssn=w.Essn AND w.Pno=p.Pnumber AND d.Dnumber=p.Dnum AND e2.Ssn=d.Mgr_ssn " +
+                "AND w.Hours > ALL (" +
+                "SELECT w2.Hours FROM works_on as w2 WHERE w2.Pno=w.Pno AND w.Essn<>w2.Essn )");
+        rs = p.executeQuery();
+
+        return rs;
+    }
+
+
+    /* PREFERENCES RELATED */
+
+    /**
+     * This method inserts a person's eating preference
+     * @param name person's name
+     * @param food food to set as liked
+     * @throws SQLException if database management fails
+     */
+    public void insertEats(String name, String food) throws SQLException {
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO eats VALUES (?,?);");
+            p.setString(1,name);
+            p.setString(2,food);
+            p.executeUpdate();
+    }
+
+    /**
+     * This method registers a person's frequented restaurant as such
+     * @param name person's name
+     * @param restaurant due restaurant
+     * @throws SQLException if database management fails
+     */
+    public void addFrequents(String name, String restaurant) throws SQLException {
+            PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO frequents VALUES (?,?);");
+            p.setString(1,name);
+            p.setString(2,restaurant);
+            p.executeUpdate();
+    }
+
+
+    /**
+     * This query retrieves couples of names and a restaurant of people who frequent the same
+     * restaurant, have at least a liked dish in common and that restaurant serves it
+     */
+    public ResultSet resDates(){
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT f1.nameId as nId, f2.nameId, f1.restaurname " +
+                    "FROM frequents as f1, frequents as f2 " +
+                    "WHERE f1.restaurname=f2.restaurname AND f1.nameId<>f2.nameId AND " +
+                    "EXISTS (SELECT * FROM eats as e1, eats as e2 WHERE e1.dish=e2.dish AND f1.nameId=e1.nameId AND f2.nameId=e2.nameId AND " +
+                    "EXISTS (SELECT * FROM serves as s WHERE s.restaurname=f1.restaurname AND s.dish=e1.dish))");
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
+    }
+
+    /* HOTELS TRIPS AND CUSTOMER/EMPLOYEES RELATED*/
+
+    /**
+     * Insert a new trip with the parameters recieved and then insert a hotel trip to the hotel with most
+     * capacity in the trip location
+     * @param to where the trip is to
+     * @param date the trip date
+     * @return the hotel id
+     * @throws SQLException
+     * @throws NoHotel
+     * @throws UncompletedRequest
+     */
     public String insertHotelTrip(String to, String date) throws SQLException, NoHotel, UncompletedRequest {
 
         Vector<String> trips = new Vector<>();
@@ -1506,6 +1550,13 @@ public class DataManager {
 
     }
 
+    /**
+     * Get all the hotel customer trips that are to and in the date recieved, and the people going are employees
+     * @param to where the trip is to
+     * @param date the trip date
+     * @return the ssn and full name of the employee, the trip location and date and the hotel id
+     * @throws SQLException
+     */
     public ResultSet insertedTrips(String to, String date) throws SQLException {
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Ssn, e.Fname, e.Lname, ht.TripTo, ht.DepartureDate, ht.HotelId " +
                 "FROM hotel_trip_customer AS ht, employee_customer as ec, employee as e WHERE ht.TripTo=? AND ht.DepartureDate=? AND " +
@@ -1516,6 +1567,14 @@ public class DataManager {
         return rs;
     }
 
+    /**
+     * Insert a customer to a hotel_trip_customer
+     * @param to where the trip is to
+     * @param date the date of the trip
+     * @param hotelId the hotel where they are staying
+     * @param custId the customer
+     * @throws SQLException
+     */
     public void insertCustomerToTrip(String to, String date, String hotelId, String custId) throws SQLException {
         try {
 
@@ -1541,6 +1600,15 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method resturns whether a hotel_trip_customer is already in the database
+     * @param to where the trip is to
+     * @param date the date of the trip
+     * @param hotelId the hotel where they are staying
+     * @param custId the customer
+     * @return true if the customer trip is in the database, false otherwise
+     * @throws SQLException
+     */
     public boolean customerAlreadyInTrip(String to, String date, String hotelId, String custId) throws SQLException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer AS ht WHERE ht.TripTo=? AND " +
@@ -1558,6 +1626,14 @@ public class DataManager {
 
     }
 
+    /**
+     * This method says whether a specific hotel_trip is already in the database
+     * @param to where the trip is to
+     * @param date the date of the trip
+     * @param hotel the hotel where they are staying
+     * @return true if the hotel trip is in the database, false otherwise
+     * @throws SQLException
+     */
     public boolean tripExists(String to, String date, String hotel) throws SQLException {
 
         try {
@@ -1575,6 +1651,11 @@ public class DataManager {
         return rs.next();
     }
 
+    /**
+     * Method that gets the customer if of the employees who aren't in the given department
+     * @param dno the department number
+     * @return the employees curtomer id
+     */
     public ResultSet employeesNotInTheDepartment(String dno){
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT ec.Cust_Id FROM employee AS e INNER JOIN " +
@@ -1587,19 +1668,6 @@ public class DataManager {
         return rs;
     }
 
-    public ResultSet hotelsIn (String location){
-
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
-                    "WHERE h.hotelcity=? ORDER BY h.hotelcapacity DESC");
-            p.setString(1,location);
-            rs = p.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return rs;
-    }
 
     /**
      * This method returns all the departments and locations
@@ -1616,19 +1684,6 @@ public class DataManager {
         return rs;
     }
 
-    /**
-     * Get all the employees in the database and their salaries
-     * @return the ssn and salary of all employees
-     */
-    public ResultSet getSalaries(){
-        try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT Ssn, Salary FROM employee");
-            rs = p.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        return rs;
-    }
 
 }

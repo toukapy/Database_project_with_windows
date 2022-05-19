@@ -299,6 +299,12 @@ public interface BlFacade {
      */
     Vector<String> getRestaurantLikedManagers() throws SQLException;
 
+    /**
+     * This query retrieves couples of names and a restaurant of people who frequent the same
+     * restaurant, have at least a liked dish in common and that restaurant serves it
+     * @return the vestor with the pairings and restaurant
+     */
+    Vector<String> restaurantDates() throws SQLException;
 
     /* EMPLOYEES-RELATED*/
 
@@ -317,12 +323,7 @@ public interface BlFacade {
      */
     void risesForEmployees() throws SQLException;
 
-    /**
-     * This query retrieves couples of names and a restaurant of people who frequent the same
-     * restaurant, have at least a liked dish in common and that restaurant serves it
-     * @return the vestor with the pairings and restaurant
-     */
-    Vector<String> restaurantDates() throws SQLException;
+
 
     /**
      * For choosing from dept and locations for "bookTripToDepartment"
@@ -345,6 +346,13 @@ public interface BlFacade {
     Vector<String> getAllSalaries() throws SQLException;
 
     /**
+     * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
+     * @return The employee name, last name, project name, the hours worked and the department managers full name
+     * @throws SQLException
+     */
+    Vector<String> getSpeakers() throws SQLException;
+
+    /**
      * Book a trip to the employees not in the given department to the location of that department
      * in the given date
      * @param Dno the department the trip is to
@@ -354,6 +362,15 @@ public interface BlFacade {
      */
     void bookTripToDepartment(String Dno, String location, String date) throws SQLException, UncompletedRequest, NoHotel, ParseException;
 
+    /**
+     * Get all the hotel customer trips that are to and in the date recieved, and the people going are employees
+     * @param location where the trip is to
+     * @param date the trip date
+     * @return the ssn and full name of the employee, the trip location and date and the hotel id
+     * @throws SQLException
+     */
     Vector<String> getTrips(String location, String date) throws SQLException;
+
+
 
 }

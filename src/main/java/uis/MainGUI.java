@@ -22,7 +22,7 @@ public class MainGUI {
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
-    private Window hotelCEOWin, riseWin, datesWin, tripDepWin;
+    private Window hotelCEOWin, riseWin, datesWin, tripDepWin, speakerWin;
 
     private BlFacade businessLogic;
     private Stage stage;
@@ -123,6 +123,7 @@ public class MainGUI {
         riseWin = load("/uis/rise.fxml");
         datesWin = load("/uis/restDates.fxml");
         tripDepWin = load("/uis/tripToDepartment.fxml");
+        speakerWin = load("/uis/projectSpeakers.fxml");
         showMain();
     }
     /**
@@ -276,6 +277,14 @@ public class MainGUI {
     public void showHotelsCEO() {
         setupScene(hotelCEOWin.ui, "CEO hotels", 814, 575);
         hotelCEOWin.c.initializeInformation();
+    }
+
+    /**
+     * Method to show the window that shows the speakers for each project
+     */
+    public void showSpeakers() {
+        setupScene(speakerWin.ui, "Project speakers", 814, 575);
+        speakerWin.c.initializeInformation();
     }
 
     /**

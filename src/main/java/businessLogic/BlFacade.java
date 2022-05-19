@@ -1,11 +1,7 @@
 package businessLogic;
 
 
-import exceptions.NoChange;
-import exceptions.NotBelong;
-import exceptions.ObjectNotCreated;
-import exceptions.UncompletedRequest;
-
+import exceptions.*;
 
 
 import java.sql.SQLException;
@@ -356,5 +352,8 @@ public interface BlFacade {
      * @param date what date the trip is
      * @return
      */
-    Vector<String> bookTripToDepartment(String Dno, String location, String date);
+    void bookTripToDepartment(String Dno, String location, String date) throws SQLException, UncompletedRequest, NoHotel, ParseException;
+
+    Vector<String> getTrips(String location, String date) throws SQLException;
+
 }

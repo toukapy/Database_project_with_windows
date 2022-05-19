@@ -1,14 +1,12 @@
 package dataAccess;
 
-import exceptions.NoChange;
-import exceptions.NotBelong;
-import exceptions.ObjectNotCreated;
-import exceptions.UncompletedRequest;
+import exceptions.*;
 
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 public class DataManager {
 
@@ -1466,27 +1464,56 @@ public class DataManager {
         return rs;
     }
 
-    public void insertHotelTrip(String to, String date, String hotelId) throws SQLException {
+    public String insertHotelTrip(String to, String date) throws SQLException, NoHotel, UncompletedRequest {
+
+        Vector<String> trips = new Vector<>();
+
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
+                "WHERE h.hotelcity=? ORDER BY h.hotelcapacity DESC");
+        p.setString(1, to);
+        rs = p.executeQuery();
+        String hotelId;
+        if (rs.next())
+            hotelId = rs.getString("HotelId");
+        else
+            throw new NoHotel();
+
+        System.out.println("Selected hotel: "+hotelId);
+
         try {
 
-            if(tripExists(to,date,hotelId)){
+            if (tripExists(to, date, hotelId)) {
                 System.out.println("Trip is already created");
-            }else{
+            } else {
                 connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES (?,?,?,default);");
-                p.setString(1,to);
-                p.setString(2,date);
-                p.setString(3,hotelId);
-                p.executeUpdate();
+                PreparedStatement p2 = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES (?,?,?,default);");
+                p2.setString(1, to);
+                p2.setString(2, date);
+                p2.setString(3, hotelId);
+                p2.executeUpdate();
+
+                System.out.println("Trip registered");
 
                 connector.getConnector().commit();
-                System.out.println("Trip registered successfully!!");
             }
         } catch (SQLException e) {
             System.out.println("Database rolling back");
             connector.getConnector().rollback();
-            e.printStackTrace();
+            throw new UncompletedRequest();
         }
+
+        return hotelId;
+
+    }
+
+    public ResultSet insertedTrips(String to, String date) throws SQLException {
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Ssn, e.Fname, e.Lname, ht.TripTo, ht.DepartureDate, ht.HotelId " +
+                "FROM hotel_trip_customer AS ht, employee_customer as ec, employee as e WHERE ht.TripTo=? AND ht.DepartureDate=? AND " +
+                "e.Ssn=ec.Emp_id AND ec.Cust_Id=ht.CustomerId");
+        p.setString(1,to);
+        p.setString(2,date);
+        rs = p.executeQuery();
+        return rs;
     }
 
     public void insertCustomerToTrip(String to, String date, String hotelId, String custId) throws SQLException {
@@ -1589,6 +1616,10 @@ public class DataManager {
         return rs;
     }
 
+    /**
+     * Get all the employees in the database and their salaries
+     * @return the ssn and salary of all employees
+     */
     public ResultSet getSalaries(){
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("SELECT Ssn, Salary FROM employee");

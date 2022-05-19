@@ -93,6 +93,12 @@ public class TransactionPageController implements Controller {
     void onClickRise() {tranPageWin.showRise(); }
 
     /**
+     * Method to go to the window to execute the trip to a department
+     */
+    @FXML
+    void onClickTrip() {tranPageWin.showTripToDep(); }
+
+    /**
      * Method to return to the parent window
      */
     @FXML

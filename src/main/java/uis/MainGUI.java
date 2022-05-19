@@ -18,7 +18,7 @@ public class MainGUI {
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
     private Window restaurantFoodWin, addCustomerWin, deleteCustomerWin, swapGuidesWin, updateGuideWin, makeOrderWin, salesWin;
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
-    private Window hotelCEOWin, riseWin, datesWin;
+    private Window hotelCEOWin, riseWin, datesWin, tripDepWin;
 
     private BlFacade businessLogic;
     private Stage stage;
@@ -114,6 +114,7 @@ public class MainGUI {
         hotelCEOWin = load("/uis/hotelCEO.fxml");
         riseWin = load("/uis/rise.fxml");
         datesWin = load("/uis/restDates.fxml");
+        tripDepWin = load("/uis/tripToDepartment.fxml");
         showMain();
     }
     /**
@@ -283,6 +284,14 @@ public class MainGUI {
     public void showDates() {
         setupScene(datesWin.ui, "Restaurant dates", 814, 575);
         datesWin.c.initializeInformation();
+    }
+
+    /**
+     * Method to execute the trip to department transaction
+     */
+    public void showTripToDep() {
+        setupScene(tripDepWin.ui, "Trip to department", 952, 630);
+        tripDepWin.c.initializeInformation();
     }
 
     /**

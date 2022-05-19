@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="952.0" style="-fx-background-color: lavender;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.tripToDepartmentController">
+    <TableView fx:id="customerTable" editable="true" layoutX="38.0" layoutY="215.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="256.0" prefWidth="824.0" AnchorPane.rightAnchor="61.0">
+      <columns>
+          <TableColumn fx:id="col" maxWidth="2000.0" prefWidth="1200.0" text="Trips that have been added" />
+      </columns>
+    </TableView>
+    <Button layoutX="663.0" layoutY="538.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="149.0" text="Back" />
+   <Button layoutX="139.0" layoutY="538.0" mnemonicParsing="false" onAction="#onClickExecute" prefHeight="35.0" prefWidth="149.0" text="Execute" />
+   <Label fx:id="TripToLbl" layoutX="233.0" layoutY="125.0" text="Choose a department:" />
+   <Label fx:id="DepartureDateLbl" layoutX="235.0" layoutY="167.0" text="Departure date:" />
+   <TextField fx:id="DepartureDate" layoutX="473.0" layoutY="163.0" prefHeight="26.0" prefWidth="255.0" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="40.0" layoutY="454.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="69.0" layoutY="473.0" prefHeight="18.0" prefWidth="824.0" textFill="#8e1c1c" />
+   <ComboBox fx:id="combBox" layoutX="473.0" layoutY="121.0" prefHeight="26.0" prefWidth="255.0" />
+</AnchorPane>

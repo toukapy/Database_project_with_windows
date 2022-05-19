@@ -21,7 +21,7 @@
       <Button layoutX="396.0" layoutY="564.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="133.0" text="Back" />
       <Button layoutX="642.0" layoutY="255.0" mnemonicParsing="false" onAction="#onClickDeletePerson" prefHeight="62.0" prefWidth="258.0" text="Delete person" />
       <Button layoutX="642.0" layoutY="138.0" mnemonicParsing="false" onAction="#onClickAddPerson" prefHeight="62.0" prefWidth="258.0" text="Add person" />
-      <Button layoutX="642.0" layoutY="376.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="258.0" text="..." />
+      <Button layoutX="642.0" layoutY="376.0" mnemonicParsing="false" onAction="#onClickTrip" prefHeight="62.0" prefWidth="258.0" text="Trip to a department" />
       <Button layoutX="362.0" layoutY="376.0" mnemonicParsing="false" onAction="#onClickRise" prefHeight="62.0" prefWidth="258.0" text="Rise for the employees" />
    </children>
 </AnchorPane>

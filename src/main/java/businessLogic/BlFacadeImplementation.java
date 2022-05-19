@@ -1,12 +1,8 @@
 package businessLogic;
 
 import dataAccess.DataManager;
-import exceptions.NoChange;
-import exceptions.NotBelong;
-import exceptions.ObjectNotCreated;
-import exceptions.UncompletedRequest;
+import exceptions.*;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -714,7 +710,7 @@ public class BlFacadeImplementation implements BlFacade{
 
             while(rs.next()){
                 System.out.println(rs.getString("Dnumber")+","+rs.getString("Dlocation"));
-                answer.add("Dnumber: " + rs.getString("Dnumber")+", Dlocation: "+rs.getString("Dlocation"));
+                answer.add("Number: " + rs.getString("Dnumber")+",Location: "+rs.getString("Dlocation"));
             }
 
             dbManager.close();
@@ -734,35 +730,42 @@ public class BlFacadeImplementation implements BlFacade{
      * @return
      */
     @Override
-    public Vector<String> bookTripToDepartment(String Dno, String location, String date){
+    public void bookTripToDepartment(String Dno, String location, String date) throws SQLException, UncompletedRequest, NoHotel, ParseException {
 
         dbManager.open();
 
+        Vector<String> ans = new Vector<>();
+
+        dbManager.insertTrip(location,date);
+
+        String h = dbManager.insertHotelTrip(location,date);
+
         ResultSet custNumbers = dbManager.employeesNotInTheDepartment(Dno);
 
-        ResultSet hotel = dbManager.hotelsIn(location);
-
-
-        try {
-            dbManager.insertTrip(location,date);
-            hotel.next();
-            String h = hotel.getString("HotelId");
-            System.out.println("Selected hotel: "+ h);
-            dbManager.insertHotelTrip(location,date,h);
-
-            while(custNumbers.next()){
-                dbManager.insertCustomerToTrip(location,date,h,custNumbers.getString("Cust_Id"));
-            }
-
-            System.out.println("Employees inserted successfully into the trip");
-
-            dbManager.close();
-
-        } catch (SQLException | UncompletedRequest | ParseException e) {
-            e.printStackTrace();
+        while(custNumbers.next()){
+            dbManager.insertCustomerToTrip(location,date,h,custNumbers.getString("Cust_Id"));
         }
-        return null;
 
+        System.out.println("Employees inserted successfully into the trip");
+
+
+
+        dbManager.close();
+
+
+    }
+
+    @Override
+    public Vector<String> getTrips(String location, String date) throws SQLException {
+        dbManager.open();
+        Vector<String> ans = new Vector<>();
+        ResultSet rs = dbManager.insertedTrips(location,date);
+        while (rs.next())
+            ans.add("Ssn: "+rs.getString("Ssn")+", Name: "+rs.getString("Fname")+" "+rs.getString("Lname")+
+                ", Trip to: "+rs.getString("TripTo")+", Date: "+rs.getString("DepartureDate")+", Hotel: "+rs.getString("HotelId"));
+
+        dbManager.close();
+        return ans;
     }
 
     /**

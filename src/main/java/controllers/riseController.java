@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * This class aims to deal with the window that handles setting a dish to half its price
+ * This class aims to deal with the window that handles rises in employee salary
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -71,7 +71,7 @@ public class riseController implements Controller {
     }
 
     /**
-     * This method updates the price of a given dish to its half
+     * This method updates the employees' salary
      */
     @FXML
     void onClickExecute() {

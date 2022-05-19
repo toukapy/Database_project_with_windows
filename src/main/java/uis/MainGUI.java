@@ -1,7 +1,6 @@
 package uis;
 
 import businessLogic.BlFacade;
-import businessLogic.BlFacadeImplementation;
 import controllers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +10,13 @@ import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
+/**
+ * This class manages the GUI
+ *
+ * @author Miren, Leire and Amanda
+ * @version 1
+ */
 public class MainGUI {
 
     private Window mainPageWin, queryPageWin,tranPageWin, allOptExcTripWin,maximumGainedWin,quantityCustomerWin;
@@ -27,7 +31,7 @@ public class MainGUI {
     private String locale = "";
 
     /**
-     * Contructor of the class
+     * Constructor of the class
      */
     public MainGUI() {
         Platform.startup(() -> {
@@ -39,6 +43,10 @@ public class MainGUI {
         });
     }
 
+    /**
+     * This method sets the visibility of the window
+     * @param b Boolean - sets the visibility
+     */
     public void setVisibility(boolean b) {
         stage.close();
     }
@@ -52,7 +60,7 @@ public class MainGUI {
     }
 
     /**
-     * A method that loads the fxmlfile that corresponds to the current window to be shown
+     * A method that loads the fxml file that corresponds to the current window to be shown
      *
      * @param fxmlfile String - the path to the fxml file
      * @return Window - the window that corresponds to the already loaded fxml file
@@ -279,7 +287,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window the restaurant dates
+     * Method to show the window with the restaurant dates
      */
     public void showDates() {
         setupScene(datesWin.ui, "Restaurant dates", 814, 575);

@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 /**
- * This class represents the implementation of the business logic interface
+ * This class represents the implementation of the BlFacade interface
  *
  * @author Miren, Leire and Amanda
  * @version 1

@@ -88,6 +88,8 @@ public class swapGuidesController implements Controller {
         phone2.setText("");
         trip1.setText("");
         trip2.setText("");
+        answerField.setText("");
+        choice="";
     }
 
     /**

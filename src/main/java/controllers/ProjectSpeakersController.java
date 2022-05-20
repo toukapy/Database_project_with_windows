@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * This class aims to deal with the window that handles getting the customers that attended all the cheapest trips
+ * This class aims to deal with the window that handles getting the project speakers
  *
  * @author Miren, Leire and Amanda
  * @version 1

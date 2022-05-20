@@ -33,14 +33,14 @@ public class TransactionPageController implements Controller {
     }
 
     /**
-     * Method to go to the window where a customer can be added (to the trip database)
+     * Method to go to the window where a customer can be added (to the travel database)
      */
     @FXML
     void onClickAddCustomer() {
         tranPageWin.showAddCustomer();
     }
     /**
-     * Method to go to the window where a customer can be deleted (from the trip database)
+     * Method to go to the window where a customer can be deleted (from the travel database)
      */
     @FXML
     void onClickDeleteCustomer() {tranPageWin.showDeleteCustomer(); }
@@ -66,7 +66,7 @@ public class TransactionPageController implements Controller {
         tranPageWin.showMakeOrder();
     }
     /**
-     * Method to go to the window where a person can be deleted (from the restaurant database)
+     * Method to go to the window where a person can be deleted (from the restaurants database)
      */
     @FXML
     void onClickDeletePerson()  {
@@ -74,7 +74,7 @@ public class TransactionPageController implements Controller {
     }
 
     /**
-     * Method to go to the window where a person can be added (to the restaurant database)
+     * Method to go to the window where a person can be added (to the restaurants database)
      */
     @FXML
     void onClickAddPerson()  {

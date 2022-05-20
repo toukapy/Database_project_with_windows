@@ -107,9 +107,11 @@ public class swapGuidesController implements Controller {
     void onClickExecute() {
         errorLbl.setText("");
         correctLbl.setText("");
+        //warnings
         if ((name1.getText().isEmpty() || phone1.getText().isEmpty() || date1.getText().isEmpty() || trip1.getText().isEmpty() || name2.getText().isEmpty() || phone2.getText().isEmpty() || trip2.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else if (choice.equals("")){ errorLbl.setText("Please, first answer the question");}
+        //execute transaction
         else{
             try {
                 businessLogic.changeGuidesBetweenTrips(choice,name1.getText(), phone1.getText(), trip1.getText(), date1.getText(), name2.getText(), phone2.getText(), trip2.getText(), date2.getText());
@@ -125,6 +127,9 @@ public class swapGuidesController implements Controller {
         }
     }
 
+    /**
+     * This method registers the answer of the user
+     */
     @FXML
     void onClickAnswer(){
         if(answerField.getText().isEmpty() ){

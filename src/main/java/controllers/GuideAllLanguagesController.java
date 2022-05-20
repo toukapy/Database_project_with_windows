@@ -13,7 +13,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles getting guides who speak all languages registered in the trip database
+ * This class aims to deal with the window that handles getting guides who speak all languages registered in the travel database
  *
  * @author Miren, Leire and Amanda
  * @version 1

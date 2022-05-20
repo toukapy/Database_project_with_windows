@@ -49,7 +49,7 @@ public class MainPageController implements Controller {
     }
 
     /**
-     * Method to return to the parent window
+     * Method to exit the application
      */
     @FXML
     void onClickBack(){

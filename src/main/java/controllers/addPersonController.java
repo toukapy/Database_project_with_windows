@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.NoChange;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -17,7 +16,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * This class aims to deal with the window that handles adding people to the restaurant database
+ * This class aims to deal with the window that handles adding people to the restaurants database
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -98,17 +97,19 @@ public class addPersonController implements Controller {
 
 
     /**
-     * This method adds a person to the restaurant database.
+     * This method adds a person to the restaurants database.
      */
     @FXML
     void onClickAddPerson(){
         errorLbl.setText("");
         correctLbl.setText("");
 
+        //warnings
         if(choice.equals(""))
             errorLbl.setText("Please, enter your choice");
         else if ((name.getText().isEmpty() || age.getText().isEmpty()|| id.getText().isEmpty() || food.getText().isEmpty()|| restaurant.getText().isEmpty() ))
             errorLbl.setText("Please, fill all fields");
+        //execute
         else {
             try {
                 businessLogic.insertPerson(choice, name.getText(), age.getText(), id.getText(), food.getText(), restaurant.getText());
@@ -150,7 +151,7 @@ public class addPersonController implements Controller {
         personTable.getItems().clear();
 
         try {
-            // fill table with current people in the restaurant database
+            // fill table with current people in the restaurants database
             Vector<String> rs = businessLogic.getAllPeople();
             if (!rs.isEmpty()) {
                 personTable.getItems().addAll(rs);

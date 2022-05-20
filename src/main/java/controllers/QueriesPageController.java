@@ -41,7 +41,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves all customers in trips with optional excursions
+     * Method to go to the window that retrieves all customers gone in all trips with optional excursions
      */
     @FXML
     void onClickCustomerOptExcursion()  {
@@ -74,6 +74,7 @@ public class QueriesPageController implements Controller {
 
     /**
      * Method to go to the window that retrieves the restaurants that offer food liked by all managers
+     * and that have enough capacity for all of them
      */
     @FXML
     void onClickLikedAllManagers()  {
@@ -89,7 +90,7 @@ public class QueriesPageController implements Controller {
     }
 
     /**
-     * Method to go to the window that retrieves guides that speak all languages registered in the trip database
+     * Method to go to the window that retrieves guides that speak all languages registered in the travel database
      */
     @FXML
     void onClickSpeakAllLanguages()  {
@@ -103,7 +104,7 @@ public class QueriesPageController implements Controller {
     void onClickHotelCEO() { queryPageWin.showHotelsCEO();}
 
     /**
-     * Method to go to the window that shows the employees who have gone to the same hotels as the CEO
+     * Method to go to the window that shows the dates of restaurants
      */
     @FXML
     void onClickDates() { queryPageWin.showDates(); }

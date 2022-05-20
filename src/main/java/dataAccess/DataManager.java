@@ -26,7 +26,7 @@ public class DataManager {
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
-     * MEthod that opens a connection with the Database connector
+     * Method that opens a connection with the Database connector
      */
     public void open(){
         connector = new DatabaseConnector();
@@ -45,10 +45,6 @@ public class DataManager {
     }
 
     /* CUSTOMER-RELATED */
-
-
-
-
 
     /**
      * Returns a Customer by phone and name
@@ -72,6 +68,8 @@ public class DataManager {
      *
      * @param custname - Customer's name
      * @param custphone - Customer's phone
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction is not completed successfully
      */
     public void insertCustomer(String custname, String custphone) throws SQLException, UncompletedRequest {
         try {
@@ -166,8 +164,8 @@ public class DataManager {
     }
 
     /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     * @return the customers who have attended at least all cheapest trips attended by customers
+     * This method gets the customers who have attended at least all cheapest trips
+     * @return the customers who have attended at least all cheapest trips
      * @throws SQLException if database management fails
      */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException {
@@ -196,8 +194,8 @@ public class DataManager {
 
 
     /**
-     * This method provides all customers
-     * @return all customers
+     * This method provides all customers in a trip and a hotel
+     * @return all customers in a trip and a hotel
      * @throws SQLException if database management fails
      */
     public ResultSet getAllCustomers() throws SQLException {
@@ -211,9 +209,9 @@ public class DataManager {
     }
 
     /**
-     *
-     * @return
-     * @throws SQLException
+     * This method provides all customers in a trip
+     * @return all customers in a trip
+     * @throws SQLException if database management fails
      */
     public ResultSet getAllCustomersJustTrip() throws SQLException {
 
@@ -233,9 +231,12 @@ public class DataManager {
      * @param CustomerId String - The id of the customer
      * @param TripTo String - The destination of the trip
      * @param DepartureDate String - The departure date of the trip
-     * @throws SQLException
+     * @throws SQLException if database management fails
+     * @throws ParseException if date format is not valid
+     * @throws UncompletedRequest if transaction is not completed successfully
      */
-    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
+    public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate)
+            throws SQLException, ParseException, UncompletedRequest {
           try{
             connector.getConnector().setAutoCommit(false);
             PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM hotel_trip_customer WHERE " +
@@ -267,11 +268,12 @@ public class DataManager {
      * @param hotelcity
      * @param TripTo
      * @param DepartureDate
-     * @throws SQLException
-     * @throws UncompletedRequest
-     * @throws ParseException
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction is not completed successgully
+     * @throws ParseException if date is not valid
      */
-    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate) throws SQLException, UncompletedRequest, ParseException {
+    public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
+            throws SQLException, UncompletedRequest, ParseException {
         try {
             connector.getConnector().setAutoCommit(false);
             // check if customer exists -> create if must
@@ -350,7 +352,8 @@ public class DataManager {
      * @throws SQLException if database management fails
      * @throws ParseException if date is not valid
      */
-    private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId) throws SQLException, ParseException {
+    private boolean customerExistsInTrip(String customerId, String tripTo, String departureDate, String hotelId)
+            throws SQLException, ParseException {
 
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=? and HotelId=?;");
         p.setString(1,customerId);
@@ -409,6 +412,7 @@ public class DataManager {
      * @param hotelname - The name of the hotel
      * @param hotelcity - The city where the hotel is
      * @throws SQLException if rollback fails
+     * @throws UncompletedRequest if transaction is not completed successfully
      */
     public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
         try {
@@ -463,7 +467,8 @@ public class DataManager {
      * @throws UncompletedRequest if transaction has not been executed properly
      * @throws ParseException if date is not valid
      */
-    public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
+    public void insertTrip(String tripTo, String departureDate)
+            throws SQLException, UncompletedRequest, ParseException {
         try {
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
             p.setString(1,tripTo);
@@ -508,7 +513,9 @@ public class DataManager {
      * @param tripTo - The destination of the trip
      * @param departureDate - The date of the trip
      * @param hotelId - The id of the hotel
-     * @throws SQLException
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction is not completed successfully
+     * @throws ParseException if date is not valid
      */
     public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
@@ -585,12 +592,12 @@ public class DataManager {
     }
 
     /**
-     *
-     * @param guideId
-     * @param tripTo1
-     * @param departureDate1
-     * @throws SQLException
-     * @throws ParseException
+     * Insert a guide in a trip
+     * @param guideId String - id of the guide
+     * @param tripTo1 String - destination
+     * @param departureDate1 String - date of departure
+     * @throws SQLException if database management fails
+     * @throws ParseException if date is not valid
      */
     public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
         try {
@@ -613,10 +620,9 @@ public class DataManager {
      *
      * @param guidename String - Guide's name
      * @param guidephone String - Guide's phone
-     * @throws UncompletedRequest if transaction could not be executed
      * @throws SQLException if database management fails
      */
-    public void createGuide(String guidename, String guidephone) throws UncompletedRequest, SQLException {
+    public void createGuide(String guidename, String guidephone) throws SQLException {
 
             PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
             ResultSet ids = guidesNumber.executeQuery();
@@ -665,11 +671,12 @@ public class DataManager {
      * @param TripTo2
      * @param DepartureDate1
      * @param DepartureDate2
-     * @throws SQLException
-     * @throws UncompletedRequest
-     * @throws ParseException
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction is not successful
+     * @throws ParseException if date is not valid
      */
-    public void swapGuidesBetweenTrips(String choice, String guidename1, String guidename2, String guidephone1, String guidephone2, String TripTo1, String TripTo2, String DepartureDate1, String DepartureDate2) throws SQLException, UncompletedRequest, ParseException {
+    public void swapGuidesBetweenTrips(String choice, String guidename1, String guidename2, String guidephone1, String guidephone2, String TripTo1, String TripTo2, String DepartureDate1, String DepartureDate2)
+            throws SQLException, UncompletedRequest, ParseException {
         try {
             connector.getConnector().setAutoCommit(false);
 
@@ -803,7 +810,7 @@ public class DataManager {
      * Method that returns the number of customers a guide is responsible for
      *
      * @return ResultSet - A set with all guides, with each's number of customers they are responsible for
-     * @throws SQLException if database mangement fails
+     * @throws SQLException if database management fails
      */
     public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException {
 
@@ -911,12 +918,15 @@ public class DataManager {
 
 
     /**
-     * This method updates a tourguide on the trips of a given interval of time
-     * @param Guideidprev original tourguide id
-     * @param Guideidnew new tourguide id
+     * This method updates a tour-guide on the trips of a given interval of time
+     * @param Guideidprev original tour-guide id
+     * @param Guideidnew new tour-guide id
      * @param departuredate first date of interval
      * @param departuredate2 second date of interval
      * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction is not successful
+     * @throws NoChange if no change is applied
+     * @throws ParseException if date is not valid
      */
     public void updateTourguide(String Guideidprev, String Guideidnew, String departuredate, String departuredate2)
             throws SQLException, UncompletedRequest, NoChange, ParseException {
@@ -953,23 +963,6 @@ public class DataManager {
 
 
 /*   PERSON RELATED */
-
-    /**
-     * This method provides whether a person exists
-     * @param nameid name of the person
-     * @param id id of the person
-     * @return whether a person exists
-     * @throws SQLException if the database management fails
-     */
-    public boolean personExists(String nameid, String id) throws SQLException {
-
-        PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM person WHERE nameid=? AND id=?;");
-        p.setString(1,nameid);
-        p.setString(2,id);
-        rs = p.executeQuery();
-
-        return rs.next();
-    }
 
 
     /**
@@ -1086,7 +1079,6 @@ public class DataManager {
      * @param id String that represents the id of the person
      * @throws SQLException if rollback could not be done
      * @throws UncompletedRequest if the transaction could not be completed
-     * @throws NotBelong if the person does not belong to the database
      */
     public void deletePerson(String name, String id) throws SQLException, UncompletedRequest {
         try{
@@ -1442,7 +1434,7 @@ public class DataManager {
     /**
      * This method returns the employees that have been to the same hotels as the company CEO
      * @return The result of the query
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public ResultSet hotelsCEO() throws SQLException {
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT employee.Ssn, employee.Fname, employee.Lname\n" +
@@ -1484,7 +1476,7 @@ public class DataManager {
     /**
      * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
      * @return The query result with the employee name, last name, project name, the hours worked and the department managers full name
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public ResultSet getSpeakers() throws SQLException {
 
@@ -1532,6 +1524,8 @@ public class DataManager {
     /**
      * This query retrieves couples of names and a restaurant of people who frequent the same
      * restaurant, have at least a liked dish in common and that restaurant serves it
+     * @return couples of names and a restaurant of people who frequent the same
+     *   restaurant, have at least a liked dish in common and that restaurant serves it
      */
     public ResultSet resDates(){
 
@@ -1560,12 +1554,13 @@ public class DataManager {
      * @param to where the trip is to
      * @param date the trip date
      * @param cust the list with the customers that have to be in the trip
-     * @return the hotel id
-     * @throws SQLException
-     * @throws NoHotel
-     * @throws UncompletedRequest
+     * @throws SQLException if database management fails
+     * @throws NoHotel if no hotel is found
+     * @throws UncompletedRequest if transaction is not completed successfully
+     * @throws ParseException if date is not valid
      */
-    public void insertHotelTrip(String to, String date, Vector<String> cust) throws SQLException, NoHotel, UncompletedRequest, ParseException {
+    public void insertHotelTrip(String to, String date, Vector<String> cust)
+            throws SQLException, NoHotel, UncompletedRequest, ParseException {
 
         //Get the hotel in the city the department is in
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
@@ -1638,7 +1633,7 @@ public class DataManager {
      * @param to where the trip is to
      * @param date the trip date
      * @return the ssn and full name of the employee, the trip location and date and the hotel id
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public ResultSet insertedTrips(String to, String date) throws SQLException {
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Ssn, e.Fname, e.Lname, ht.TripTo, ht.DepartureDate, ht.HotelId " +
@@ -1652,13 +1647,13 @@ public class DataManager {
 
 
     /**
-     * This method resturns whether a hotel_trip_customer is already in the database
+     * This method returns whether a hotel_trip_customer is already in the database
      * @param to where the trip is to
      * @param date the date of the trip
      * @param hotelId the hotel where they are staying
      * @param custId the customer
      * @return true if the customer trip is in the database, false otherwise
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public boolean customerAlreadyInTrip(String to, String date, String hotelId, String custId) throws SQLException {
         try {
@@ -1683,7 +1678,7 @@ public class DataManager {
      * @param date the date of the trip
      * @param hotel the hotel where they are staying
      * @return true if the hotel trip is in the database, false otherwise
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public boolean tripExists(String to, String date, String hotel) throws SQLException {
 
@@ -1707,7 +1702,7 @@ public class DataManager {
      * @param to where the trip is to
      * @param date the date of the trip
      * @return true if the hotel trip is in the database, false otherwise
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     public boolean isThereATrip(String to, String date) throws SQLException {
 
@@ -1726,7 +1721,7 @@ public class DataManager {
     /**
      * Method that gets the customer if of the employees who aren't in the given department
      * @param dno the department number
-     * @return the employees curtomer id
+     * @return the employees customer id
      */
     public ResultSet employeesNotInTheDepartment(String dno){
         try {

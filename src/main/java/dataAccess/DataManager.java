@@ -74,9 +74,7 @@ public class DataManager {
      * @param custphone - Customer's phone
      */
     public void insertCustomer(String custname, String custphone) throws SQLException, UncompletedRequest {
-
         try {
-           // connector.getConnector().setAutoCommit(false);
             ResultSet customers = connector.getStatement().executeQuery("SELECT CustomerId FROM customer WHERE CustomerId LIKE '100%';");
             while(customers.next()){
                 if(customers.isLast()){
@@ -88,11 +86,8 @@ public class DataManager {
             p.setString(1,String.valueOf(currentCustomerId));
             p.setString(2,custname);
             p.setString(3,custphone);
-
-
             p.executeUpdate();
 
-         //   connector.getConnector().commit();
             System.out.println("Customer added successfully!!");
 
         } catch (SQLException e) {
@@ -100,8 +95,6 @@ public class DataManager {
             connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
-
-
     }
 
     /**
@@ -114,7 +107,8 @@ public class DataManager {
      * @throws SQLException if database management fails
      */
     public ResultSet getCustomerTrip(String trip, String departure) throws ParseException, SQLException {
-        PreparedStatement  stmt = connector.getConnector().prepareStatement("SELECT * FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
+        PreparedStatement  stmt = connector.getConnector().prepareStatement("SELECT * " +
+                "FROM hotel_trip_customer as htc INNER JOIN customer as c ON htc.CustomerId = c.CustomerId WHERE TripTo=? AND DepartureDate=?;");
         stmt.setString(1,trip);
         stmt.setDate(2,new Date(format.parse(departure).getTime()));
         rs = stmt.executeQuery();
@@ -244,7 +238,8 @@ public class DataManager {
     public void deleteCustomerFromTrip(String CustomerId, String TripTo, String DepartureDate) throws SQLException, ParseException, UncompletedRequest {
           try{
             connector.getConnector().setAutoCommit(false);
-            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM hotel_trip_customer WHERE CustomerId=? and TripTo=? and DepartureDate=?;");
+            PreparedStatement deleteStmt = connector.getConnector().prepareStatement("DELETE FROM hotel_trip_customer WHERE " +
+                    "CustomerId=? and TripTo=? and DepartureDate=?;");
 
             deleteStmt.setString(1,CustomerId);
             deleteStmt.setString(2,TripTo);
@@ -417,7 +412,6 @@ public class DataManager {
      */
     public void insertHotel(String hotelname, String hotelcity) throws SQLException, UncompletedRequest {
         try {
-          //  connector.getConnector().setAutoCommit(false);
             ResultSet hotels = connector.getStatement().executeQuery("SELECT HotelId FROM hotel WHERE HotelId LIKE 'h%';");
             while(hotels.next()){
                 if(hotels.isLast()){
@@ -429,11 +423,8 @@ public class DataManager {
             p.setString(1,"h"+ currentHotelId);
             p.setString(2,hotelname);
             p.setString(3,hotelcity);
-
-
             p.executeUpdate();
 
-          //  connector.getConnector().commit();
             System.out.println("Hotel added successfully!!");
 
         } catch (SQLException e) {
@@ -474,13 +465,11 @@ public class DataManager {
      */
     public void insertTrip(String tripTo, String departureDate) throws SQLException, UncompletedRequest, ParseException {
         try {
-            //connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO trip VALUES (?,?,default,default,default,default);");
             p.setString(1,tripTo);
             p.setDate(2, new Date(format.parse(departureDate).getTime()));
             p.executeUpdate();
 
-            //connector.getConnector().commit();
             System.out.println("Trip added successfully!!");
 
         } catch (SQLException e) {
@@ -498,7 +487,8 @@ public class DataManager {
      */
     public ResultSet getMaximumGainedTrip() throws SQLException {
 
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday)*count(*) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday)*count(*) as cost " +
+                "FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
                 "GROUP BY t.TripTo, t.DepartureDate " +
                 "HAVING (cost * count(*))  >= all (" +
                 "   SELECT (t2.NumDays * t2.Ppday) * count(*)" +
@@ -522,15 +512,12 @@ public class DataManager {
      */
     public void createHotelTrip(String tripTo, String departureDate, String hotelId) throws SQLException, UncompletedRequest, ParseException {
         try {
-            //connector.getConnector().setAutoCommit(false);
-
             PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES(?,?,?,default)");
             p.setString(1,tripTo);
             p.setDate(2,new Date(format.parse(departureDate).getTime()));
             p.setString(3,hotelId);
             p.executeUpdate();
 
-           // connector.getConnector().commit();
         } catch (SQLException e) {
             System.out.println("Rolling back");
             connector.getConnector().rollback();
@@ -607,14 +594,11 @@ public class DataManager {
      */
     public void insertGuideInTrip(String guideId, String tripTo1, String departureDate1) throws SQLException, ParseException {
         try {
-           // connector.getConnector().setAutoCommit(false);
             PreparedStatement p = connector.getConnector().prepareStatement("UPDATE trip SET GuideId=? WHERE TripTo=? AND DepartureDate=?;");
             p.setString(1,guideId);
             p.setString(2,tripTo1);
             p.setDate(3,new Date(format.parse(departureDate1).getTime()));
             p.executeUpdate();
-
-           // connector.getConnector().commit();
 
         } catch (SQLException e) {
             System.out.println("System rolling back");
@@ -633,7 +617,7 @@ public class DataManager {
      * @throws SQLException if database management fails
      */
     public void createGuide(String guidename, String guidephone) throws UncompletedRequest, SQLException {
-            //connector.getConnector().setAutoCommit(false);
+
             PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
             ResultSet ids = guidesNumber.executeQuery();
             while(ids.next()){
@@ -649,7 +633,6 @@ public class DataManager {
             p.setString(3,guidephone);
             p.executeUpdate();
 
-            //connector.getConnector().commit();
             System.out.println("Database updated and guide added succesfully!!");
     }
 
@@ -825,7 +808,8 @@ public class DataManager {
     public ResultSet retrieveNumCustomerGuideResponsible() throws SQLException {
 
         PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT tg.GuideId, count(*) as num " +
-                "FROM (trip AS t RIGHT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND t.DepartureDate = htc.DepartureDate " +
+                "FROM (trip AS t RIGHT JOIN tourguide AS tg ON t.GuideId = tg.GuideId) INNER JOIN hotel_trip_customer AS htc ON t.TripTo = htc.TripTo AND" +
+                " t.DepartureDate = htc.DepartureDate " +
                 "GROUP BY tg.GuideId " +
                 "ORDER BY tg.GuideId;");
         rs = stmt.executeQuery();
@@ -914,7 +898,8 @@ public class DataManager {
      */
     public ResultSet getAllTourguideTripsNotNull() throws SQLException {
 
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, t.TripTo, t.DepartureDate " +
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT g.GuideId AS id, g.guidename AS name, g.guidephone as phone, " +
+                "t.TripTo, t.DepartureDate " +
                 "FROM tourguide AS g INNER JOIN trip AS t ON g.GuideId=t.GuideId " +
                 "ORDER BY t.DepartureDate ASC ");
         rs = stmt.executeQuery();

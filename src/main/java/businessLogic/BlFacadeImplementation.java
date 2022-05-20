@@ -73,7 +73,7 @@ public class BlFacadeImplementation implements BlFacade{
 
         // Get the due trips
         ResultSet trip = dbManager.getMaximumGainedTrip();
-        if(trip.next()){
+        while(trip.next()){
             //Display and store the information
             answer.add("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));
             System.out.println("Destination: "+ trip.getString("TripTo") +", Departure date: "+ trip.getString("DepartureDate"));

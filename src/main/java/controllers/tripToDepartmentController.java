@@ -3,7 +3,6 @@ package controllers;
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import exceptions.NoHotel;
-import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;

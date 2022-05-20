@@ -24,7 +24,6 @@ public class MainGUI {
     private Window oneRestaurantCityWin,allCheapestTripsWin, allTripYear,guideAllLang, addPersonWin, deletePersonWin;
     private Window hotelCEOWin, riseWin, datesWin, tripDepWin, speakerWin;
 
-    private BlFacade businessLogic;
     private Stage stage;
     private Scene scene;
     private FXMLLoader loader;
@@ -144,7 +143,7 @@ public class MainGUI {
     public void showTransaction(){ setupScene(tranPageWin.ui, "Transactions",964,653);}
 
     /**
-     * Method to show the window that displays the customers that have been in all optional excursions
+     * Method to show the window that displays the customers that have been in all trips with optional excursions
      */
     public void showCustomerAllOptExc(){
         setupScene(allOptExcTripWin.ui, "Customers in all trips with optional excursions",814,595);
@@ -169,6 +168,7 @@ public class MainGUI {
 
     /**
      * Method to show the window that displays the restaurants that offer food liked by all managers
+     * and that have enough capacity for all of them
      */
     public void showRestaurantFoodManager()  {
         setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 595);
@@ -240,7 +240,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows the user to add a person to the restaurant database
+     * Method to show the window that allows the user to add a person to the restaurants database
      */
     public void showAddPerson()  {
         setupScene(addPersonWin.ui, "Add Person", 814, 585);
@@ -248,7 +248,7 @@ public class MainGUI {
     }
 
     /**
-     * Method to show the window that allows the user to delete a person from the restaurant database
+     * Method to show the window that allows the user to delete a person from the restaurants database
      */
     public void showDeletePerson() {
         setupScene(deletePersonWin.ui, "Delete Person", 814, 585);

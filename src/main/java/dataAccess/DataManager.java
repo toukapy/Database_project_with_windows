@@ -172,8 +172,8 @@ public class DataManager {
     }
 
     /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     * @return the customers who have attended at least all cheapest trips attended by customers
+     * This method gets the customers who have attended at least all cheapest trips
+     * @return the customers who have attended at least all cheapest trips
      * @throws SQLException if database management fails
      */
     public ResultSet getCustomersAllCheapestTrips() throws SQLException {

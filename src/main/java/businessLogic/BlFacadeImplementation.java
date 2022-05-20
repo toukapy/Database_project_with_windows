@@ -22,7 +22,7 @@ public class BlFacadeImplementation implements BlFacade{
 /* CUSTOMERS-RELATED */
 
     /**
-     * Trasaction 1 -> Delete a customer by phone and name from a trip
+     * Transaction 1 -> Delete a customer by phone and name from a trip
      * @param name String that represents the name
      * @param phoneNum String that represents the phone number
      * @param TripTo String that represents to where the trip is
@@ -104,8 +104,8 @@ public class BlFacadeImplementation implements BlFacade{
         return answer;
     }
     /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     * @return the customers who have attended at least all cheapest trips attended by customers
+     * This method gets the customers who have attended at least all cheapest trips
+     * @return the customers who have attended at least all cheapest trips
      * @throws SQLException if database management fails
      */
     @Override
@@ -133,7 +133,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @param trip String - The destination
      * @param departure String - The departure date
      * @return Vector<String> - The customers information
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      * @throws ParseException if the provided date is not valid
      */
     @Override
@@ -241,14 +241,13 @@ public class BlFacadeImplementation implements BlFacade{
      * @param hotelcity String - City where the hotel is
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
-     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction is not successful
      * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
      */
     @Override
     public void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
-            throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException {
+            throws UncompletedRequest, SQLException, ParseException {
 
         dbManager.open();
 
@@ -464,7 +463,7 @@ public class BlFacadeImplementation implements BlFacade{
 }
 
     /**
-     * This method adds a menu-order (to the restaurant database)
+     * This method adds a menu-order (to the restaurants database)
      * @param choice String that represents whether additional objects should be created (y) or not (!=y)
      * @param menu_mtype String that represents the type of menu
      * @param menu_id String that represents the menu identifier
@@ -563,7 +562,7 @@ public class BlFacadeImplementation implements BlFacade{
      * @throws SQLException if database management fails
      * @throws UncompletedRequest if the transaction was not successful
      * @throws NoChange if no changes were made (serves table)
-     * @throws NotBelong if the dish does not belong to the database (dish table)
+     * @throws NotBelong if the dish does not belong to the database (dishes table)
      */
     @Override
     public void updateDishPrice(String dish) throws SQLException, UncompletedRequest, NoChange, NotBelong {
@@ -657,6 +656,7 @@ public class BlFacadeImplementation implements BlFacade{
      * This method gives a raise of 1000 dollars to the employees who are paid less than
      * the average salary of the company. Also, if they have any dependent they get 100 dollars
      * per dependent
+     * @throws SQLException if database management fails
      */
     @Override
     public void risesForEmployees() throws SQLException {
@@ -672,7 +672,9 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This query retrieves couples of names and a restaurant of people who frequent the same
      * restaurant, have at least a liked dish in common and that restaurant serves it
-     * @return
+     * @return couples of names and a restaurant of people who frequent the same
+     *   restaurant, have at least a liked dish in common and that restaurant serves it
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> restaurantDates() throws SQLException {
@@ -727,10 +729,14 @@ public class BlFacadeImplementation implements BlFacade{
      * @param Dno the department the trip is to
      * @param location where the trip is to
      * @param date what date the trip is
-     * @return
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction was not successful
+     * @throws NoHotel if there is no hotel in the location
+     * @throws ParseException if date is not valid
      */
     @Override
-    public void bookTripToDepartment(String Dno, String location, String date) throws SQLException, UncompletedRequest, NoHotel, ParseException {
+    public void bookTripToDepartment(String Dno, String location, String date)
+            throws SQLException, UncompletedRequest, NoHotel, ParseException {
 
         dbManager.open();
 
@@ -750,11 +756,11 @@ public class BlFacadeImplementation implements BlFacade{
     }
 
     /**
-     * Get all the hotel customer trips that are to and in the date recieved, and the people going are employees
+     * Get all the hotel customer trips that are to and in the date received, and the people going are employees
      * @param location where the trip is to
      * @param date the trip date
      * @return the ssn and full name of the employee, the trip location and date and the hotel id
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getTrips(String location, String date) throws SQLException {
@@ -772,7 +778,7 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * This method retrieves the employees that have been to the same hotels as the CEO
      * @return the info about the employees
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> hotelsCEO() throws SQLException {
@@ -798,7 +804,7 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Method to get the ssn-s and salaries of all employees in the database
      * @return the ssn and salary of all employees
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getAllSalaries() throws SQLException {
@@ -816,7 +822,7 @@ public class BlFacadeImplementation implements BlFacade{
     /**
      * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
      * @return The employee name, last name, project name, the hours worked and the department managers full name
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     @Override
     public Vector<String> getSpeakers() throws SQLException {

@@ -52,8 +52,8 @@ public interface BlFacade {
 
 
     /**
-     * This method gets the customers who have attended at least all cheapest trips attended by customers
-     * @return the customers who have attended at least all cheapest trips attended by customers
+     * This method gets the customers who have attended at least all cheapest trips
+     * @return the customers who have attended at least all cheapest trips
      * @throws SQLException if database management fails
      */
     Vector<String> getCustomersAllCheapestTrips() throws  SQLException;
@@ -65,7 +65,7 @@ public interface BlFacade {
      * @param trip String - The destination
      * @param departure String - The departure date
      * @return Vector<String> - The customers information
-     * @throws SQLException if rollback fails
+     * @throws SQLException if database management fails
      * @throws ParseException if the provided date is not valid
      */
     Vector<String> getCustomerTrip(String trip, String departure) throws SQLException, ParseException;
@@ -113,13 +113,12 @@ public interface BlFacade {
      * @param hotelcity String - City where the hotel is
      * @param TripTo String - Destination of the trip
      * @param DepartureDate String - Departure date of the trip
-     * @throws ObjectNotCreated if transaction cannot be completed because of non-created objects
      * @throws UncompletedRequest if transaction is not successful
      * @throws SQLException if database management fails
      * @throws ParseException if the date is not valid
      */
     void addCustomerToTrip(String choice, String custname, String custphone, String hotelname, String hotelcity, String TripTo, String DepartureDate)
-            throws ObjectNotCreated, UncompletedRequest, SQLException, ParseException;
+            throws UncompletedRequest, SQLException, ParseException;
 
 
 
@@ -230,7 +229,7 @@ public interface BlFacade {
 
 
     /**
-     * Method to insert a person (in the restaurant database)
+     * Method to insert a person (in the restaurants database)
      *
      * @param choice - Whether we want to create the objects if they do not exist
      * @param name - The name of the person
@@ -302,7 +301,8 @@ public interface BlFacade {
     /**
      * This query retrieves couples of names and a restaurant of people who frequent the same
      * restaurant, have at least a liked dish in common and that restaurant serves it
-     * @return the vestor with the pairings and restaurant
+     * @return the vector with the pairings and restaurant
+     * @throws SQLException if database management fails
      */
     Vector<String> restaurantDates() throws SQLException;
 
@@ -320,6 +320,7 @@ public interface BlFacade {
      * This method gives a raise of 1000 dollars to the employees who are paid less than
      * the average salary of the company. Also, if they have any dependent they get 100 dollars
      * per dependent
+     * @throws SQLException if database management fails
      */
     void risesForEmployees() throws SQLException;
 
@@ -329,26 +330,26 @@ public interface BlFacade {
      * For choosing from dept and locations for "bookTripToDepartment"
      * @return all the departments and locations
      */
-    public Vector<String> getDepartmentsAndLocations();
+    Vector<String> getDepartmentsAndLocations();
 
     /**
      * This method retrieves the employees that have been to the same hotels as the CEO
      * @return the info about the employees
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     Vector<String> hotelsCEO() throws SQLException;
 
     /**
      * Method to get the ssn-s and salaries of all employees in the database
      * @return the ssn and salary of all employees
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     Vector<String> getAllSalaries() throws SQLException;
 
     /**
      * Get the employees who have worked the most hours in each project and the manager of the department responsible for the project
      * @return The employee name, last name, project name, the hours worked and the department managers full name
-     * @throws SQLException
+     * @throws SQLException if database management fails
      */
     Vector<String> getSpeakers() throws SQLException;
 
@@ -358,16 +359,20 @@ public interface BlFacade {
      * @param Dno the department the trip is to
      * @param location where the trip is to
      * @param date what date the trip is
-     * @return
+     * @throws SQLException if database management fails
+     * @throws UncompletedRequest if transaction was not successful
+     * @throws NoHotel if there is no hotel in the location
+     * @throws ParseException if date is not valid
      */
-    void bookTripToDepartment(String Dno, String location, String date) throws SQLException, UncompletedRequest, NoHotel, ParseException;
+    void bookTripToDepartment(String Dno, String location, String date)
+            throws SQLException, UncompletedRequest, NoHotel, ParseException;
 
     /**
-     * Get all the hotel customer trips that are to and in the date recieved, and the people going are employees
+     * Get all the hotel customer trips that are to and in the date received, and the people going are employees
      * @param location where the trip is to
      * @param date the trip date
      * @return the ssn and full name of the employee, the trip location and date and the hotel id
-     * @throws SQLException
+     * @throws SQLException  if database management fails
      */
     Vector<String> getTrips(String location, String date) throws SQLException;
 

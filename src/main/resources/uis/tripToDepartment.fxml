@@ -19,7 +19,7 @@
    <Label fx:id="TripToLbl" layoutX="233.0" layoutY="125.0" text="Choose a department:" />
    <Label fx:id="DepartureDateLbl" layoutX="235.0" layoutY="167.0" text="Departure date:" />
    <TextField fx:id="DepartureDate" layoutX="473.0" layoutY="163.0" prefHeight="26.0" prefWidth="255.0" />
-   <Label fx:id="correctLbl" alignment="CENTER" layoutX="40.0" layoutY="454.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
-   <Label fx:id="errorLbl" alignment="CENTER" layoutX="69.0" layoutY="473.0" prefHeight="18.0" prefWidth="824.0" textFill="#8e1c1c" />
+   <Label fx:id="correctLbl" alignment="CENTER" layoutX="43.0" layoutY="483.0" prefHeight="18.0" prefWidth="872.0" textFill="#169c55" />
+   <Label fx:id="errorLbl" alignment="CENTER" layoutX="72.0" layoutY="502.0" prefHeight="18.0" prefWidth="824.0" textFill="#8e1c1c" />
    <ComboBox fx:id="combBox" layoutX="473.0" layoutY="121.0" prefHeight="26.0" prefWidth="255.0" />
 </AnchorPane>

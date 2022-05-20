@@ -11,7 +11,7 @@
       <Button fx:id="backBtn" layoutX="608.0" layoutY="485.0" mnemonicParsing="false" onAction="#onClickBack" prefHeight="35.0" prefWidth="139.0" text="Back" />
       <TableView fx:id="tblRestaurants" layoutX="63.0" layoutY="66.0" prefHeight="399.0" prefWidth="686.0">
         <columns>
-          <TableColumn fx:id="columnRestaur" prefWidth="685.0" text="Restaurants that serve food liked by all managers" />
+          <TableColumn fx:id="columnRestaur" prefWidth="685.0" text="Restaurants that serve food liked by all managers and have enough capacity for all of them" />
         </columns>
       </TableView>
       <Label fx:id="errorLbl" alignment="CENTER" layoutX="63.0" layoutY="465.0" prefHeight="18.0" prefWidth="686.0" textFill="#8e1c1c" />

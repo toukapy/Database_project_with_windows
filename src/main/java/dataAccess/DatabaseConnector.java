@@ -24,8 +24,8 @@ public class DatabaseConnector {
             new com.mysql.cj.jdbc.Driver();
 
             String connectionUrl = "jdbc:mysql://dif-mysql.ehu.es:3306/dbi10";
-            String connectionUser = "DBI10";
-            String connectionPass = "DBI10";
+            String connectionUser = "DBI24";
+            String connectionPass = "DBI24";
             connector = DriverManager.getConnection(connectionUrl,connectionUser,connectionPass);
             stmt = connector.createStatement();
 

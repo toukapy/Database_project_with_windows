@@ -1,8 +1,8 @@
 package exceptions;
 
 /**
- * This class aims to represent the exception NoChange.
- * This exception is triggered if an error is thrown if no change was made in a transaction
+ * This class aims to represent the exception NoHotel.
+ * This exception is triggered if no hotel was found for a department location.
  *
  * @author LAMA.
  * @version 1.

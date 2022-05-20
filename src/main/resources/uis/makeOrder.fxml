@@ -23,7 +23,7 @@
    <TextField fx:id="menu_id" layoutX="312.0" layoutY="85.0" prefHeight="26.0" prefWidth="424.0" />
    <TextField fx:id="customer_id" layoutX="312.0" layoutY="130.0" prefHeight="26.0" prefWidth="424.0" />
    <Label fx:id="customer_idLbl" layoutX="70.0" layoutY="134.0" text="Customer id:" />
-   <Label fx:id="questionLbl" layoutX="71.0" layoutY="412.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
+   <Label fx:id="questionLbl" layoutX="71.0" layoutY="412.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the menu if it does not exist?(y/n)" />
    <TextField fx:id="answerField" layoutX="516.0" layoutY="408.0" prefHeight="35.0" prefWidth="79.0" />
    <Button layoutX="628.0" layoutY="408.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
 </AnchorPane>

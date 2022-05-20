@@ -134,14 +134,15 @@ public class DataManager {
 
 
     /**
+     * Method that gets a row of hotel_trip_customer
      *
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param tripTo
-     * @param departureDate
-     * @return
+     * @param custname String - Customer's name
+     * @param custphone String - Customer's phone
+     * @param hotelname String - Hotel's name
+     * @param hotelcity String - Hotel's city
+     * @param tripTo String - Trip's destination
+     * @param departureDate String - Trip's date
+     * @return ResultSet - Rows of the database
      * @throws SQLException if database management fails
      * @throws ParseException if date is not valid
      */
@@ -260,14 +261,14 @@ public class DataManager {
     }
 
     /**
-     *
-     * @param choice
-     * @param custname
-     * @param custphone
-     * @param hotelname
-     * @param hotelcity
-     * @param TripTo
-     * @param DepartureDate
+     * This methods adds a customer to a trip with a hotel
+     * @param choice String - whether to create information or not
+     * @param custname String - Customer's name
+     * @param custphone String - Customer's phone
+     * @param hotelname String - Hotel's name
+     * @param hotelcity String - Hotel's city
+     * @param TripTo String - Trip's destination
+     * @param DepartureDate String - Trip's date
      * @throws SQLException if database management fails
      * @throws UncompletedRequest if transaction is not completed successgully
      * @throws ParseException if date is not valid
@@ -661,16 +662,17 @@ public class DataManager {
     }
 
     /**
+     * Method to swap two guides between two trips
      *
-     * @param choice
-     * @param guidename1
-     * @param guidename2
-     * @param guidephone1
-     * @param guidephone2
-     * @param TripTo1
-     * @param TripTo2
-     * @param DepartureDate1
-     * @param DepartureDate2
+     * @param choice String - Whether to create data or not
+     * @param guidename1 String -- Guide's 1 name
+     * @param guidename2 String - Guide's 2 name
+     * @param guidephone1 String - Guide's 1 phone
+     * @param guidephone2 String - Guide's 2 phone
+     * @param TripTo1 String - Trp's 1 destination
+     * @param TripTo2 String - Trip's 2 destination
+     * @param DepartureDate1 String - Trip's 1 date
+     * @param DepartureDate2 String - Trip's 2 date
      * @throws SQLException if database management fails
      * @throws UncompletedRequest if transaction is not successful
      * @throws ParseException if date is not valid

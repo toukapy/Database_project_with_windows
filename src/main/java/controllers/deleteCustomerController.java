@@ -97,11 +97,13 @@ public class deleteCustomerController implements Controller {
     void onClickExecute() {
         errorLbl.setText("");
         correctLbl.setText("");
+        //warnings
         if ((name.getText().isEmpty() || phoneNum.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else if(trip.equals("") || departure.equals("")){
             errorLbl.setText("Please, first enter the destination and date");
         }
+        //execute
         else {
             try {
                 businessLogic.deleteCustomerFromTrip(name.getText(), phoneNum.getText(), trip, departure);
@@ -188,7 +190,7 @@ public class deleteCustomerController implements Controller {
             if (rs != null) {
                 customerTable.getItems().addAll(rs);
             } else {
-                customerTable.getItems().add("No customer in the database");
+                customerTable.getItems().add("No trips in the database");
             }
         }catch (SQLException e){
             errorLbl.setText("An error with the database occurred. Please, try again later.");

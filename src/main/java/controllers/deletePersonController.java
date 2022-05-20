@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.NoChange;
 import exceptions.NotBelong;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,7 +16,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that deletes a person from the restaurant database
+ * This class aims to deal with the window that deletes a person from the restaurants database
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -85,12 +84,13 @@ public class deletePersonController implements Controller {
     }
 
     /**
-     * Method that deletes a person from the restaurant database
+     * Method that deletes a person from the restaurants database
      */
     @FXML
     void onClickDeletePerson(){
         errorLbl.setText("");
         correctLbl.setText("");
+        //warning
         if ((name.getText().isEmpty() || id.getText().isEmpty()))
             errorLbl.setText("Please, fill name and id fields");
         else {

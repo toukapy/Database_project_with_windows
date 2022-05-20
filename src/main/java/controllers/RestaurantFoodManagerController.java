@@ -15,6 +15,7 @@ import java.util.Vector;
 
 /**
  * This class aims to deal with the window that handles getting the restaurants that offer food liked by all managers
+ * and that have enough capacity for all of them
  *
  * @author Miren, Leire and Amanda
  * @version 1

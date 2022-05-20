@@ -62,12 +62,13 @@ public class GuideAllTripYearController implements Controller {
             return new SimpleStringProperty(data.getValue());
         });
 
+        //warnings
         if(dateField.getText().isEmpty())
             errorLbl.setText("Please fill all fields.");
 
         else if(!checkYear(dateField.getText()))
             errorLbl.setText("The year has to be yyyy");
-
+        //execute query
         else{
             try {
                 Vector<String> rs = businessLogic.getTourguidesAllTripsYear(dateField.getText());

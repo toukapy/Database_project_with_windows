@@ -13,7 +13,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles getting the customers that attended all the cheapest trips
+ * This class aims to deal with the window that handles getting the employees that went to the same hotels as the CEO
  *
  * @author Miren, Leire and Amanda
  * @version 1

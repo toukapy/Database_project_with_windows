@@ -15,9 +15,7 @@ import uis.Controller;
 import uis.MainGUI;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Vector;
 /**
  * This class aims to deal with the window that handles updating a guide on the trips of a given interval of time
@@ -82,10 +80,12 @@ public class updateGuideController implements Controller {
     void onClickExecute() {
         errorLbl.setText("");
         correctLbl.setText("");
+        //warnings
         if ((tgnew.getText().isEmpty() || tgprev.getText().isEmpty() || date1.getText().isEmpty() || date2.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
         else if(tgprev.getText().equals(tgnew.getText()))
             errorLbl.setText("Please, enter a different tour-guide id");
+        //execute transaction
         else {
             try {
                 businessLogic.updateTourguide(tgprev.getText(), tgnew.getText(), date1.getText(), date2.getText());

@@ -3,7 +3,6 @@ package controllers;
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
 import exceptions.NoHotel;
-import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -16,7 +15,7 @@ import java.text.ParseException;
 import java.util.Vector;
 
 /**
- * This class aims to deal with the window that handles adding a customer to the trip database
+ * This class aims to deal with the window that handles assigning a trip to a department
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -40,7 +39,6 @@ public class tripToDepartmentController implements Controller {
     private Label errorLbl;
     @FXML
     private Label correctLbl;
-    private String choice = "";
 
 
     /**
@@ -69,7 +67,6 @@ public class tripToDepartmentController implements Controller {
         correctLbl.setText("");
         errorLbl.setText("");
         DepartureDate.setText("");
-        choice = "";
         Vector<String> d = businessLogic.getDepartmentsAndLocations();
         combBox.getItems().clear();
         combBox.getItems().addAll(d);

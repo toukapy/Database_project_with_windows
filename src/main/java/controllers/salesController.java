@@ -87,8 +87,10 @@ public class salesController implements Controller {
         correctLbl.setText("");
 
         try {
+            //warnings
             if (dish.getText().isEmpty())
                 errorLbl.setText("Please, fill all fields");
+            //execute transaction
             else {
                 businessLogic.updateDishPrice(dish.getText());
                 correctLbl.setText("Transaction executed!!");

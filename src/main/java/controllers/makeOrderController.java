@@ -96,10 +96,12 @@ public class makeOrderController implements Controller {
     void onClickMakeOrder(){
         errorLbl.setText("");
         correctLbl.setText("");
+        //warning cases
         if(choice.equals(""))
             errorLbl.setText("Please, enter your choice");
         else if ((menu_mtype.getText().isEmpty() || menu_id.getText().isEmpty() ||  customer_id.getText().isEmpty()))
             errorLbl.setText("Please, fill all fields");
+        //execute transaction
         else {
             try {
                 businessLogic.insertMenuOrder(choice, menu_mtype.getText(), menu_id.getText(), customer_id.getText());

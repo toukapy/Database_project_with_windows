@@ -14,7 +14,7 @@ import uis.MainGUI;
 import java.sql.SQLException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles getting the customers that attended all optional excursions
+ * This class aims to deal with the window that handles getting the customers that attended all trips with optional excursions
  *
  * @author Miren, Leire and Amanda
  * @version 1

@@ -2,7 +2,6 @@ package controllers;
 
 import businessLogic.BlFacade;
 import businessLogic.BlFacadeImplementation;
-import exceptions.ObjectNotCreated;
 import exceptions.UncompletedRequest;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -17,7 +16,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Vector;
 /**
- * This class aims to deal with the window that handles adding a customer to the trip database
+ * This class aims to deal with the window that handles adding a customer to the travel database
  *
  * @author Miren, Leire and Amanda
  * @version 1
@@ -105,6 +104,7 @@ public class addCustomerController implements Controller {
         correctLbl.setText("");
 
         try {
+            //warnings
             if ((custname.getText().isEmpty() || custphone.getText().isEmpty() || hotelname.getText().isEmpty() || hotelcity.getText().isEmpty() || TripTo.getText().isEmpty() || DepartureDate.getText().isEmpty()))
                 errorLbl.setText("Please, fill all fields");
             else if (!businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText()).isEmpty()) {
@@ -112,6 +112,8 @@ public class addCustomerController implements Controller {
             } else if (choice.equals("")) {
                 errorLbl.setText("Answer the question first");
             } else {
+
+                //execute
                 businessLogic.addCustomerToTrip(choice, custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
                 correctLbl.setText("Transaction executed!!");
                 Vector<String> answer = businessLogic.getCustomerTripHotel(custname.getText(), custphone.getText(), hotelname.getText(), hotelcity.getText(), TripTo.getText(), DepartureDate.getText());
@@ -132,8 +134,6 @@ public class addCustomerController implements Controller {
             errorLbl.setText("An error with the database occurred. Please, try again later or change the fields.");
         } catch (UncompletedRequest e) {
             errorLbl.setText("Transaction could not be done. Please change the fields' information.");
-        } catch (ObjectNotCreated e) {
-            errorLbl.setText("Transaction not completed. Change choice to 'y' for creating necessary intermediate objects.");
         } catch (ParseException e) {
             errorLbl.setText("Please, enter a valid date: yyyy-mm-dd");
         }

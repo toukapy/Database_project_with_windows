@@ -498,7 +498,7 @@ public class DataManager {
      */
     public ResultSet getMaximumGainedTrip() throws SQLException {
 
-        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
+        PreparedStatement stmt = connector.getConnector().prepareStatement("SELECT t.TripTo, t.DepartureDate, (t.NumDays * t.Ppday)*count(*) as cost FROM (trip as t inner join hotel_trip_customer as htc on t.TripTo = htc.TripTo and t.DepartureDate = htc.DepartureDate) WHERE (t.NumDays * t.Ppday) > 0 " +
                 "GROUP BY t.TripTo, t.DepartureDate " +
                 "HAVING (cost * count(*))  >= all (" +
                 "   SELECT (t2.NumDays * t2.Ppday) * count(*)" +
@@ -633,7 +633,6 @@ public class DataManager {
      * @throws SQLException if database management fails
      */
     public void createGuide(String guidename, String guidephone) throws UncompletedRequest, SQLException {
-        try {
             //connector.getConnector().setAutoCommit(false);
             PreparedStatement guidesNumber = connector.getConnector().prepareStatement("SELECT GuideId FROM tourguide ORDER BY GuideId;");
             ResultSet ids = guidesNumber.executeQuery();
@@ -652,12 +651,6 @@ public class DataManager {
 
             //connector.getConnector().commit();
             System.out.println("Database updated and guide added succesfully!!");
-
-        } catch (SQLException e) {
-            connector.getConnector().rollback();
-            throw new UncompletedRequest();
-        }
-
     }
 
 
@@ -704,6 +697,8 @@ public class DataManager {
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename1, guidephone1);
+                guide1 = getGuide(guidename1,guidephone1);
+                guide1.next();
             }else if(!exists && choice.equals("n")){
                 System.out.println("Guide does not exist");
                 System.out.println("Try again the transaction");
@@ -714,12 +709,14 @@ public class DataManager {
             //find first trip
             System.out.println("Finding the first trip");
             ResultSet trip1 = getTrip(TripTo1,DepartureDate1);
+            System.out.println("First trip found");
             exists = trip1.next();
             //create trip if must
             if(!exists && choice.equals("y")) {
                 System.out.println("System creating a trip");
                 insertTrip(TripTo1,DepartureDate1);
-                insertGuideInTrip(guide1.getString("GuideId"),trip1.getString("TripTo"),trip1.getString("DepartureDate"));
+                trip1 = getTrip(TripTo1,DepartureDate1);
+                trip1.next();
             //stop if trip does not exist and should not create it
             } else if(!exists && choice.equals("n")){
                 System.out.println("Trip does not exist in the database");
@@ -728,10 +725,18 @@ public class DataManager {
                 throw new UncompletedRequest();
 
             //stop if guide not in trip
-            }else if(!existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
-                System.out.println("This guide is not in this trip!!!");
-                throw new UncompletedRequest();
             }
+            System.out.println("Trip inserted");
+            if(!existGuideInTrip(guide1.getString("GuideId"),TripTo1,DepartureDate1)){
+                System.out.println("This guide is not in this trip!!!");
+                if(choice.equals("y")){
+                    insertGuideInTrip(guide1.getString("GuideId"),trip1.getString("TripTo"),trip1.getString("DepartureDate"));
+                }else{
+                    throw new UncompletedRequest();
+                }
+
+            }
+
 
             // find second tour-guide -> create if not exists
             System.out.println("Finding the second tour-guide");
@@ -741,7 +746,8 @@ public class DataManager {
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a guide");
                 createGuide(guidename2, guidephone2);
-
+                guide2 = getGuide(guidename2,guidephone2);
+                guide2.next();
             //stop if guide not exists
             }else if(!exists && choice.equals("n")){
                 System.out.println("Guide does not exist");
@@ -757,7 +763,8 @@ public class DataManager {
             if(!exists && choice.equals("y")){
                 System.out.println("System creating a trip");
                 insertTrip(TripTo2,DepartureDate2);
-                insertGuideInTrip(guide2.getString("GuideId"),trip2.getString("TripTo"),trip2.getString("DepartureDate"));
+                trip2 = getTrip(TripTo2,DepartureDate2);
+                trip2.next();
             //stop if trip does not exist and should not create it
             }else if(!exists && choice.equals("n")){
                 System.out.println("Trip does not exist in the database");
@@ -765,10 +772,17 @@ public class DataManager {
                 close();
                 throw new UncompletedRequest();
             //stop if due guide is not in the trip
-            }else if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
-                System.out.println("This guide is not in this trip!!!");
-                throw new UncompletedRequest();
             }
+
+            if(!existGuideInTrip(guide2.getString("GuideId"),TripTo2,DepartureDate2)){
+                System.out.println("This guide is not in this trip!!!");
+                if(choice.equals("y")){
+                    insertGuideInTrip(guide2.getString("GuideId"),trip2.getString("TripTo"),trip2.getString("DepartureDate"));
+                }else{
+                    throw new UncompletedRequest();
+                }
+            }
+
 
             String guideId = guide1.getString("GuideId");
             String guideId1 = guide2.getString("GuideId");

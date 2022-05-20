@@ -171,7 +171,7 @@ public class MainGUI {
      * and that have enough capacity for all of them
      */
     public void showRestaurantFoodManager()  {
-        setupScene(restaurantFoodWin.ui, "Restaurants serving food liked by all managers", 814, 595);
+        setupScene(restaurantFoodWin.ui, "Restaurants for managers", 814, 595);
         restaurantFoodWin.c.initializeInformation();
     }
 

@@ -27,7 +27,7 @@
    <Label fx:id="restaurantLbl" layoutX="77.0" layoutY="207.0" text="Liked Restaurant:" />
    <TextField fx:id="food" layoutX="197.0" layoutY="164.0" prefHeight="26.0" prefWidth="538.0" />
    <TextField fx:id="restaurant" layoutX="194.0" layoutY="202.0" prefHeight="26.0" prefWidth="545.0" />
-   <Label fx:id="questionLbl" layoutX="68.0" layoutY="446.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the objects if they do not exist?(y/n)" />
+   <Label fx:id="questionLbl" layoutX="68.0" layoutY="446.0" prefHeight="27.0" prefWidth="432.0" text="Do you want to create the preferences' objects if they do not exist?(y/n)" />
    <TextField fx:id="answerField" layoutX="513.0" layoutY="442.0" prefHeight="35.0" prefWidth="79.0" />
    <Button layoutX="625.0" layoutY="442.0" mnemonicParsing="false" onAction="#onClickAnswer" prefHeight="35.0" prefWidth="116.0" text="Answer" />
 </AnchorPane>

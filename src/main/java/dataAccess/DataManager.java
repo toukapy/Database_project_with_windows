@@ -1571,15 +1571,16 @@ public class DataManager {
 
     /**
      * Insert a new trip with the parameters recieved and then inserts a hotel trip to the hotel with most
-     * capacity in the trip location
+     * capacity in the trip location, and insert all the customers into that hotel trip
      * @param to where the trip is to
      * @param date the trip date
+     * @param cust the list with the customers that have to be in the trip
      * @return the hotel id
      * @throws SQLException
      * @throws NoHotel
      * @throws UncompletedRequest
      */
-    public String insertHotelTrip(String to, String date) throws SQLException, NoHotel, UncompletedRequest, ParseException {
+    public void insertHotelTrip(String to, String date, Vector<String> cust) throws SQLException, NoHotel, UncompletedRequest, ParseException {
 
         //Get the hotel in the city the department is in
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
@@ -1623,6 +1624,20 @@ public class DataManager {
 
                 System.out.println("Trip registered");
 
+                for(String s : cust){
+                    // Insert the customer in the trip
+                    PreparedStatement p3 = connector.getConnector().prepareStatement(
+                            "INSERT INTO hotel_trip_customer VALUES (?,?,?,?,?);");
+                    p3.setString(1,to);
+                    p3.setString(2,date);
+                    p3.setString(3,hotelId);
+                    p3.setString(4,s);
+                    p3.setString(5,"2");
+                    p3.executeUpdate();
+
+                    System.out.println("Customer registered successfully!!");
+                }
+
                 connector.getConnector().commit();
             }
         } catch (SQLException e) {
@@ -1630,8 +1645,6 @@ public class DataManager {
             connector.getConnector().rollback();
             throw new UncompletedRequest();
         }
-
-        return hotelId;
 
     }
 
@@ -1652,39 +1665,6 @@ public class DataManager {
         return rs;
     }
 
-    /**
-     * Insert a customer to a hotel_trip_customer
-     * @param to where the trip is to
-     * @param date the date of the trip
-     * @param hotelId the hotel where they are staying
-     * @param custId the customer
-     * @throws SQLException
-     */
-    public void insertCustomerToTrip(String to, String date, String hotelId, String custId) throws SQLException {
-        try {
-
-            if(customerAlreadyInTrip(to,date,hotelId,custId)){
-                System.out.println("Trip is already created");
-            }else{
-                connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement(
-                        "INSERT INTO hotel_trip_customer VALUES (?,?,?,?,?);");
-                p.setString(1,to);
-                p.setString(2,date);
-                p.setString(3,hotelId);
-                p.setString(4,custId);
-                p.setString(5,"2");
-                p.executeUpdate();
-
-                connector.getConnector().commit();
-                System.out.println("Customer registered successfully!!");
-            }
-        } catch (SQLException e) {
-            System.out.println("Database rolling back");
-            connector.getConnector().rollback();
-            e.printStackTrace();
-        }
-    }
 
     /**
      * This method resturns whether a hotel_trip_customer is already in the database

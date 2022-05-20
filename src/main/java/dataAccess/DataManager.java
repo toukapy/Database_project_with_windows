@@ -1410,8 +1410,8 @@ public class DataManager {
 
                 System.out.println("\tSsn: "+id+" recieves a 1000 dollar raise");
 
-                PreparedStatement p2 = connector.getConnector().prepareStatement("SELECT Ssn FROM dependent AS d, employee AS e WHERE " +
-                        "d.Essn=e.Ssn AND Ssn=?");
+                PreparedStatement p2 = connector.getConnector().prepareStatement("SELECT Ssn FROM dependent AS d," +
+                        " employee AS e WHERE d.Essn=e.Ssn AND Ssn=?");
                 p2.setString(1,id);
                 ResultSet rs2 = p2.executeQuery();
 
@@ -1425,7 +1425,8 @@ public class DataManager {
                 if(k>0)
                     System.out.println("\t\tWith "+k+" dependants they also recieve "+k*100+" more dollars");
 
-                PreparedStatement updateSalary = connector.getConnector().prepareStatement("UPDATE employee SET salary=? WHERE Ssn=?;");
+                PreparedStatement updateSalary = connector.getConnector().prepareStatement(
+                        "UPDATE employee SET salary=? WHERE Ssn=?;");
                 updateSalary.setString(1,Float.toString(salary));
                 updateSalary.setString(2,id);
                 updateSalary.executeUpdate();
@@ -1452,7 +1453,7 @@ public class DataManager {
                 "    FROM ( " +
                 "        SELECT htc.HotelId " +
                 "        FROM employee AS e, employee_customer AS ec, hotel_trip_customer AS htc " +
-                "WHERE htc.CustomerId=ec.Cust_Id AND e.Ssn=ec.Emp_id AND e.Super_ssn=\"\" " +
+                "        WHERE htc.CustomerId=ec.Cust_Id AND e.Ssn=ec.Emp_id AND e.Super_ssn=\"\" " +
                 "    ) AS e2 " +
                 "    WHERE NOT EXISTS ( " +
                 "        SELECT htc3.HotelId " +
@@ -1488,7 +1489,8 @@ public class DataManager {
      */
     public ResultSet getSpeakers() throws SQLException {
 
-        PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Fname, e.Lname, p.Pname, w.Hours, e2.Fname as Fn, e2.Lname as Ln " +
+        PreparedStatement p = connector.getConnector().prepareStatement("SELECT e.Fname, e.Lname, p.Pname, " +
+                "w.Hours, e2.Fname as Fn, e2.Lname as Ln " +
                 "FROM employee as e, works_on as w, project as p, department as d, employee as e2 " +
                 "WHERE e.Ssn=w.Essn AND w.Pno=p.Pnumber AND d.Dnumber=p.Dnum AND e2.Ssn=d.Mgr_ssn " +
                 "AND w.Hours > ALL (" +
@@ -1535,10 +1537,12 @@ public class DataManager {
     public ResultSet resDates(){
 
         try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT f1.nameId as nId, f2.nameId, f1.restaurname " +
+            PreparedStatement p = connector.getConnector().prepareStatement(
+                    "SELECT f1.nameId as nId, f2.nameId, f1.restaurname " +
                     "FROM frequents as f1, frequents as f2 " +
                     "WHERE f1.restaurname=f2.restaurname AND f1.nameId<>f2.nameId AND " +
-                    "EXISTS (SELECT * FROM eats as e1, eats as e2 WHERE e1.dish=e2.dish AND f1.nameId=e1.nameId AND f2.nameId=e2.nameId AND " +
+                    "EXISTS (SELECT * FROM eats as e1, eats as e2 WHERE e1.dish=e2.dish AND" +
+                    " f1.nameId=e1.nameId AND f2.nameId=e2.nameId AND " +
                     "EXISTS (SELECT * FROM serves as s WHERE s.restaurname=f1.restaurname AND s.dish=e1.dish))");
             rs = p.executeQuery();
         } catch (SQLException e) {
@@ -1552,7 +1556,7 @@ public class DataManager {
     /* HOTELS TRIPS AND CUSTOMER/EMPLOYEES RELATED*/
 
     /**
-     * Insert a new trip with the parameters recieved and then insert a hotel trip to the hotel with most
+     * Insert a new trip with the parameters recieved and then inserts a hotel trip to the hotel with most
      * capacity in the trip location
      * @param to where the trip is to
      * @param date the trip date
@@ -1561,15 +1565,16 @@ public class DataManager {
      * @throws NoHotel
      * @throws UncompletedRequest
      */
-    public String insertHotelTrip(String to, String date) throws SQLException, NoHotel, UncompletedRequest {
+    public String insertHotelTrip(String to, String date) throws SQLException, NoHotel, UncompletedRequest, ParseException {
 
-        Vector<String> trips = new Vector<>();
-
+        //Get the hotel in the city the department is in
         PreparedStatement p = connector.getConnector().prepareStatement("SELECT h.HotelId FROM hotel AS h " +
                 "WHERE h.hotelcity=? ORDER BY h.hotelcapacity DESC");
         p.setString(1, to);
         rs = p.executeQuery();
         String hotelId;
+
+        // Get the hotel if exists, throw an exception otherwise
         if (rs.next())
             hotelId = rs.getString("HotelId");
         else
@@ -1578,12 +1583,25 @@ public class DataManager {
         System.out.println("Selected hotel: "+hotelId);
 
         try {
+            connector.getConnector().setAutoCommit(false);
+
+            if(isThereATrip(to,date)){
+                System.out.println("Trip is already created");
+            } else{
+                // Insert a trip
+                PreparedStatement p1 = connector.getConnector().prepareStatement(
+                        "INSERT INTO trip VALUES (?,?,default,default,default,default);");
+                p1.setString(1,to);
+                p1.setDate(2, new Date(format.parse(date).getTime()));
+                p1.executeUpdate();
+            }
 
             if (tripExists(to, date, hotelId)) {
-                System.out.println("Trip is already created");
+                System.out.println("Hotel trip is already created");
             } else {
-                connector.getConnector().setAutoCommit(false);
-                PreparedStatement p2 = connector.getConnector().prepareStatement("INSERT INTO hotel_trip VALUES (?,?,?,default);");
+                // Insert a hotel trip using the hotel you got before
+                PreparedStatement p2 = connector.getConnector().prepareStatement(
+                        "INSERT INTO hotel_trip VALUES (?,?,?,default);");
                 p2.setString(1, to);
                 p2.setString(2, date);
                 p2.setString(3, hotelId);
@@ -1635,7 +1653,8 @@ public class DataManager {
                 System.out.println("Trip is already created");
             }else{
                 connector.getConnector().setAutoCommit(false);
-                PreparedStatement p = connector.getConnector().prepareStatement("INSERT INTO hotel_trip_customer VALUES (?,?,?,?,?);");
+                PreparedStatement p = connector.getConnector().prepareStatement(
+                        "INSERT INTO hotel_trip_customer VALUES (?,?,?,?,?);");
                 p.setString(1,to);
                 p.setString(2,date);
                 p.setString(3,hotelId);
@@ -1705,13 +1724,35 @@ public class DataManager {
     }
 
     /**
+     * This method says whether a specific trip is already in the database
+     * @param to where the trip is to
+     * @param date the date of the trip
+     * @return true if the hotel trip is in the database, false otherwise
+     * @throws SQLException
+     */
+    public boolean isThereATrip(String to, String date) throws SQLException {
+
+        try {
+            PreparedStatement p = connector.getConnector().prepareStatement("SELECT * FROM trip AS ht WHERE ht.TripTo=? AND " +
+                    "ht.DepartureDate=?");
+            p.setString(1,to);
+            p.setString(2,date);
+            rs = p.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs.next();
+    }
+
+    /**
      * Method that gets the customer if of the employees who aren't in the given department
      * @param dno the department number
      * @return the employees curtomer id
      */
     public ResultSet employeesNotInTheDepartment(String dno){
         try {
-            PreparedStatement p = connector.getConnector().prepareStatement("SELECT ec.Cust_Id FROM employee AS e INNER JOIN " +
+            PreparedStatement p = connector.getConnector().prepareStatement(
+                    "SELECT ec.Cust_Id FROM employee AS e INNER JOIN " +
                     "employee_customer AS ec ON e.Ssn=ec.Emp_id WHERE e.Dno<>?");
             p.setString(1,dno);
             rs = p.executeQuery();

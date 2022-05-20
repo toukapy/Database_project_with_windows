@@ -734,10 +734,6 @@ public class BlFacadeImplementation implements BlFacade{
 
         dbManager.open();
 
-        Vector<String> ans = new Vector<>();
-
-        dbManager.insertTrip(location,date);
-
         String h = dbManager.insertHotelTrip(location,date);
 
         ResultSet custNumbers = dbManager.employeesNotInTheDepartment(Dno);
@@ -748,10 +744,7 @@ public class BlFacadeImplementation implements BlFacade{
 
         System.out.println("Employees inserted successfully into the trip");
 
-
-
         dbManager.close();
-
 
     }
 
